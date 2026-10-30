@@ -1,3 +1,5 @@
+'use client';
+
 import * as THREE from 'three';
 
 export interface IslandWaypoint {
@@ -14,17 +16,18 @@ export interface IslandWaypoint {
   highlights: string[];
 }
 
+// Expansive, smooth spline track connecting the start and the 3 distinct island stations
 export const VOYAGE_POINTS: THREE.Vector3[] = [
-  new THREE.Vector3(0, 0, 22),       // 0.00: Departure Estuary
-  new THREE.Vector3(-8, 0, -5),       // 0.10: Approaching Outpost Reaches
-  new THREE.Vector3(-24, 0, -38),     // 0.22: Day 1 - THE LAST OUTPOST
-  new THREE.Vector3(-14, 0, -66),     // 0.38: Desert Canyon Pass
-  new THREE.Vector3(8, 0, -84),       // 0.48: Approaching Sunset Delta
-  new THREE.Vector3(26, 0, -104),     // 0.58: Day 2 - THE PANDEMONIUM
-  new THREE.Vector3(12, 0, -134),     // 0.72: River Delta Channel
-  new THREE.Vector3(-8, 0, -156),     // 0.80: Entering Festival Lagoon
-  new THREE.Vector3(-22, 0, -178),    // 0.88: Day 3 - THE CARNIVAL ISLAND
-  new THREE.Vector3(0, 0, -210),      // 1.00: Open Horizon
+  new THREE.Vector3(0, 0, 26),        // 0.00: Departure Estuary (Hero Frame)
+  new THREE.Vector3(-6, 0, 0),        // 0.10: Open Sunset Waters
+  new THREE.Vector3(-22, 0, -36),     // 0.22: Day 1 Arrival - THE LAST OUTPOST
+  new THREE.Vector3(-14, 0, -72),     // 0.38: Desert Canyon Pass
+  new THREE.Vector3(10, 0, -96),      // 0.48: Approaching Sunset Delta
+  new THREE.Vector3(28, 0, -120),     // 0.58: Day 2 Arrival - THE PANDEMONIUM
+  new THREE.Vector3(14, 0, -154),     // 0.72: River Channel
+  new THREE.Vector3(-8, 0, -178),     // 0.80: Lagoon Approach
+  new THREE.Vector3(-22, 0, -198),    // 0.88: Day 3 Arrival - THE CARNIVAL ISLAND
+  new THREE.Vector3(0, 0, -235),      // 1.00: Open Horizon
 ];
 
 export const VOYAGE_CURVE = new THREE.CatmullRomCurve3(VOYAGE_POINTS, false, 'catmullrom', 0.2);
@@ -40,7 +43,7 @@ export const ISLAND_WAYPOINTS: IslandWaypoint[] = [
     theme: 'Desert Canyons & Citadel Fortress',
     accentColor: '#E08A3C',
     image: '/images/themes/day1-last-outpost.jpg',
-    position: [-24, 0, -38],
+    position: [-28, 0, -48],
     highlights: ['Code Royale 3v3', 'AI Arcade RAG Hunt', 'Treasure Hunt', 'Opening Pro Night'],
   },
   {
@@ -53,7 +56,7 @@ export const ISLAND_WAYPOINTS: IslandWaypoint[] = [
     theme: 'Crimson Sunset & Aqueduct Cascades',
     accentColor: '#E11D48',
     image: '/images/themes/day2-pandemonium.jpg',
-    position: [26, 0, -104],
+    position: [34, 0, -125],
     highlights: ['Yukti 2.0 Quantum Hack', 'Build with Gemma', 'Battle of Bands', 'Mega Rush Esports'],
   },
   {
@@ -66,7 +69,7 @@ export const ISLAND_WAYPOINTS: IslandWaypoint[] = [
     theme: 'Luminous Pier, Ferris Wheel & Castles',
     accentColor: '#F59E0B',
     image: '/images/themes/day3-carnival-island.jpg',
-    position: [-22, 0, -178],
+    position: [-26, 0, -202],
     highlights: ['Kernel Panic Linux Fest', 'Fashion Show Runway', 'Grand DJ Night', 'Awards Finale'],
   },
 ];
