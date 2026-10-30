@@ -156,3 +156,4 @@ export default function Preloader({ onComplete }: PreloaderProps) {
     </AnimatePresence>
   );
 }
+

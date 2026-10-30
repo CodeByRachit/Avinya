@@ -19,28 +19,28 @@ import {
 
 const DAY_THEME_ACCENTS: Record<string, { color: string; label: string; shadow: string; glowRgba: string }> = {
   all: {
-    color: '#00f0ff',
+    color: '#e08a3c',
     label: 'All Days Archipelago',
-    shadow: 'rgba(0, 240, 255, 0.25)',
-    glowRgba: 'rgba(0, 240, 255, 0.08)',
+    shadow: 'rgba(224, 138, 60, 0.25)',
+    glowRgba: 'rgba(224, 138, 60, 0.08)',
   },
   '1': {
-    color: '#ffb300',
+    color: '#e08a3c',
     label: 'Day 1: The Last Outpost (Mar 12)',
-    shadow: 'rgba(255, 179, 0, 0.3)',
-    glowRgba: 'rgba(255, 179, 0, 0.1)',
+    shadow: 'rgba(224, 138, 60, 0.3)',
+    glowRgba: 'rgba(224, 138, 60, 0.1)',
   },
   '2': {
-    color: '#ff007f',
+    color: '#e11d48',
     label: 'Day 2: The Pandemonium (Mar 13)',
-    shadow: 'rgba(255, 0, 127, 0.3)',
-    glowRgba: 'rgba(255, 0, 127, 0.1)',
+    shadow: 'rgba(225, 29, 72, 0.3)',
+    glowRgba: 'rgba(225, 29, 72, 0.1)',
   },
   '3': {
-    color: '#00f0ff',
+    color: '#f59e0b',
     label: 'Day 3: The Carnival Island (Mar 14)',
-    shadow: 'rgba(0, 240, 255, 0.3)',
-    glowRgba: 'rgba(0, 240, 255, 0.1)',
+    shadow: 'rgba(245, 158, 11, 0.3)',
+    glowRgba: 'rgba(245, 158, 11, 0.1)',
   },
 };
 

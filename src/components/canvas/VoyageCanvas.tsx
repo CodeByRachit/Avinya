@@ -21,13 +21,8 @@ export default function VoyageCanvas({ progress = 0, onWaypointReached }: Voyage
 
   if (!mounted) {
     return (
-      <div className="fixed inset-0 z-0 bg-[#030712] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 rounded-full border-2 border-avinya-cyan/30 border-t-avinya-cyan animate-spin" />
-          <span className="font-mono text-xs uppercase tracking-widest text-white/40">
-            INITIALIZING 3D CONTINUUM...
-          </span>
-        </div>
+      <div className="fixed inset-0 z-0 bg-[#07090e] flex items-center justify-center">
+        <div className="w-8 h-8 rounded-full border-2 border-amber-300 border-t-transparent animate-spin" />
       </div>
     );
   }
@@ -35,7 +30,7 @@ export default function VoyageCanvas({ progress = 0, onWaypointReached }: Voyage
   return (
     <div className="fixed inset-0 z-0 pointer-events-auto w-full h-full">
       <Canvas
-        camera={{ position: [0, 4.5, 28], fov: 46, near: 0.1, far: 350 }}
+        camera={{ position: [0, 4.2, 26], fov: 44, near: 0.1, far: 350 }}
         dpr={[1, 1.5]}
         gl={{
           antialias: true,
@@ -44,31 +39,31 @@ export default function VoyageCanvas({ progress = 0, onWaypointReached }: Voyage
           stencil: false,
         }}
       >
-        <color attach="background" args={['#030712']} />
-        <fog attach="fog" args={['#030712', 18, 135]} />
+        <color attach="background" args={['#07090e']} />
+        <fog attach="fog" args={['#07090e', 18, 140]} />
 
-        {/* Ambient & Base Cosmic Lights */}
-        <ambientLight intensity={0.5} />
+        {/* Ambient Warm Moonlight */}
+        <ambientLight intensity={0.65} color="#e2e8f0" />
         <directionalLight
-          position={[20, 40, 10]}
-          intensity={1.2}
-          color="#90b8f8"
+          position={[25, 45, 15]}
+          intensity={1.4}
+          color="#fef3c7"
           castShadow
         />
 
         <Suspense fallback={null}>
-          {/* Bioluminescent Ocean Mesh */}
+          {/* Natural Reflective Ocean Water */}
           <BioluminescentOcean />
 
-          {/* Glowing Catmull-Rom Spline Track */}
+          {/* Celestial Shimmer Navigation Wake */}
           <SplineTrack />
 
-          {/* 3 Themed Island Biomes */}
-          <IslandLastOutpost position={[-26, 0, -38]} />
-          <IslandPandemonium position={[28, 0, -102]} />
-          <IslandCarnival position={[-24, 0, -178]} />
+          {/* 3 Themed Island Biomes (Directly from Artworks) */}
+          <IslandLastOutpost position={[-24, 0, -38]} />
+          <IslandPandemonium position={[26, 0, -104]} />
+          <IslandCarnival position={[-22, 0, -178]} />
 
-          {/* Animated 3D Cyber Boat & Dynamic Camera Follow Rig */}
+          {/* Handcrafted Wooden Voyager Boat & Follow Camera Rig */}
           <SceneController
             progress={progress}
             onWaypointReached={onWaypointReached}
@@ -78,4 +73,3 @@ export default function VoyageCanvas({ progress = 0, onWaypointReached }: Voyage
     </div>
   );
 }
-

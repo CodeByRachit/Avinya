@@ -39,7 +39,7 @@ export default function EventModal({ event, onClose }: EventModalProps) {
   if (!event) return null;
 
   const isTech = event.category === 'technical';
-  const accentColor = isTech ? '#00f0ff' : '#ff007f';
+  const accentColor = isTech ? '#38bdf8' : '#fb7185';
 
   return (
     <AnimatePresence>

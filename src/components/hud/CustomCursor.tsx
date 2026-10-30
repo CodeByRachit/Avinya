@@ -14,7 +14,6 @@ export default function CustomCursor() {
   const targetRef = useRef({ x: -100, y: -100 });
 
   useEffect(() => {
-    // Only run on desktop with fine pointer
     if (typeof window === 'undefined' || !window.matchMedia('(pointer: fine)').matches) {
       return;
     }
@@ -26,7 +25,6 @@ export default function CustomCursor() {
       setPosition({ x: e.clientX, y: e.clientY });
       if (!isVisible) setIsVisible(true);
 
-      // Check hovered element
       const target = e.target as HTMLElement | null;
       if (!target) return;
 
@@ -53,13 +51,12 @@ export default function CustomCursor() {
     document.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('mouseenter', handleMouseEnter);
 
-    // Smooth animation loop for trailing ring
     let animationId: number;
     const lerp = (start: number, end: number, factor: number) => start + (end - start) * factor;
 
     const render = () => {
-      posRef.current.x = lerp(posRef.current.x, targetRef.current.x, 0.18);
-      posRef.current.y = lerp(posRef.current.y, targetRef.current.y, 0.18);
+      posRef.current.x = lerp(posRef.current.x, targetRef.current.x, 0.2);
+      posRef.current.y = lerp(posRef.current.y, targetRef.current.y, 0.2);
       setTrailingPos({ x: posRef.current.x, y: posRef.current.y });
       animationId = requestAnimationFrame(render);
     };
@@ -83,9 +80,9 @@ export default function CustomCursor() {
     <div className="hidden lg:block pointer-events-none fixed inset-0 z-[9999] overflow-hidden">
       {/* Precision Inner Dot */}
       <div
-        className="fixed top-0 left-0 w-2 h-2 -ml-1 -mt-1 bg-avinya-cyan rounded-full shadow-[0_0_8px_#00F0FF] transition-transform duration-75 ease-out"
+        className="fixed top-0 left-0 w-2 h-2 -ml-1 -mt-1 bg-amber-200 rounded-full transition-transform duration-75 ease-out"
         style={{
-          transform: `translate3d(${position.x}px, ${position.y}px, 0) scale(${isClicking ? 0.6 : isHovered ? 1.4 : 1})`,
+          transform: `translate3d(${position.x}px, ${position.y}px, 0) scale(${isClicking ? 0.6 : isHovered ? 1.3 : 1})`,
         }}
       />
 
@@ -93,17 +90,17 @@ export default function CustomCursor() {
       <div
         className={`fixed top-0 left-0 rounded-full border transition-all duration-300 ease-out flex items-center justify-center ${
           isHovered
-            ? 'w-14 h-14 -ml-7 -mt-7 border-avinya-cyan/70 bg-avinya-cyan/10 backdrop-blur-[2px] shadow-[0_0_20px_rgba(0,240,255,0.35)]'
+            ? 'w-12 h-12 -ml-6 -mt-6 border-amber-300/60 bg-amber-400/10 backdrop-blur-[1px]'
             : isClicking
-            ? 'w-7 h-7 -ml-3.5 -mt-3.5 border-avinya-magenta bg-avinya-magenta/20 shadow-[0_0_15px_rgba(255,0,127,0.5)]'
-            : 'w-9 h-9 -ml-4.5 -mt-4.5 border-white/30 bg-transparent'
+            ? 'w-6 h-6 -ml-3 -mt-3 border-amber-400 bg-amber-400/20'
+            : 'w-8 h-8 -ml-4 -mt-4 border-white/20 bg-transparent'
         }`}
         style={{
           transform: `translate3d(${trailingPos.x}px, ${trailingPos.y}px, 0) scale(${isClicking ? 0.8 : 1})`,
         }}
       >
         {cursorText && (
-          <span className="font-mono text-[9px] uppercase tracking-wider text-avinya-cyan font-bold px-1 animate-pulse">
+          <span className="font-mono text-[8px] uppercase tracking-wider text-amber-200 font-semibold px-1">
             {cursorText}
           </span>
         )}
@@ -111,4 +108,3 @@ export default function CustomCursor() {
     </div>
   );
 }
-

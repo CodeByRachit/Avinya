@@ -132,25 +132,25 @@ function AstronautHelmet() {
           </mesh>
         </group>
 
-        {/* Gyroscopic Orbital Portal Ring 1 (Cyan) */}
+        {/* Gyroscopic Orbital Portal Ring 1 (Gold) */}
         <mesh ref={ring1Ref}>
-          <torusGeometry args={[3.8, 0.05, 12, 64]} />
+          <torusGeometry args={[3.8, 0.04, 12, 64]} />
           <meshStandardMaterial
-            color="#00f0ff"
-            emissive="#00f0ff"
-            emissiveIntensity={1.2}
+            color="#f59e0b"
+            emissive="#d97706"
+            emissiveIntensity={0.8}
             transparent
             opacity={0.85}
           />
         </mesh>
 
-        {/* Gyroscopic Orbital Portal Ring 2 (Magenta) */}
+        {/* Gyroscopic Orbital Portal Ring 2 (Silver) */}
         <mesh ref={ring2Ref} rotation={[Math.PI / 3, 0, 0]}>
-          <torusGeometry args={[4.4, 0.04, 12, 64]} />
+          <torusGeometry args={[4.4, 0.035, 12, 64]} />
           <meshStandardMaterial
-            color="#ff007f"
-            emissive="#ff007f"
-            emissiveIntensity={1.2}
+            color="#e2e8f0"
+            emissive="#94a3b8"
+            emissiveIntensity={0.6}
             transparent
             opacity={0.7}
           />

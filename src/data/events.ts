@@ -11,6 +11,7 @@ export interface DayTheme {
   accentColor: string;
   glowColor: string;
   description: string;
+  image: string;
 }
 
 export interface FestEvent {
@@ -38,30 +39,33 @@ export const DAY_THEMES: Record<EventDay, DayTheme> = {
     date: 'March 12, 2027',
     codename: 'THE LAST OUTPOST',
     themeTitle: 'The Last Outpost',
-    themeSubtitle: 'Dune Desert & Arrakis Frontier Aesthetic',
-    accentColor: '#FFB300',
-    glowColor: 'rgba(255, 179, 0, 0.4)',
-    description: 'Arid dunes, golden spice winds, and high-stakes survival. The expedition commences under the scorched sun.',
+    themeSubtitle: 'Dune Desert & Mountain Fortress Citadel',
+    accentColor: '#E08A3C',
+    glowColor: 'rgba(224, 138, 60, 0.35)',
+    description: 'Arid sandstone canyons, towering planetary moons, and ancient stone fortresses. The expedition commences under the scorched desert sky.',
+    image: '/images/themes/day1-last-outpost.jpg',
   },
   2: {
     day: 2,
     date: 'March 13, 2027',
     codename: 'THE PANDEMONIUM',
     themeTitle: 'The Pandemonium',
-    themeSubtitle: 'Synthwave Cyberpunk & Neon Dystopia',
-    accentColor: '#00F0FF',
-    glowColor: 'rgba(0, 240, 255, 0.45)',
-    description: 'Electric overdrive, chrome horizons, synth basslines, and subterranean neural networks firing in sync.',
+    themeSubtitle: 'Sunset River Delta & Cybernetic Spires',
+    accentColor: '#E11D48',
+    glowColor: 'rgba(225, 29, 72, 0.35)',
+    description: 'A crimson synth sunset over tranquil tropical waters, towering aqueduct waterfalls, and futuristic skyscraper spires rising into velvet clouds.',
+    image: '/images/themes/day2-pandemonium.jpg',
   },
   3: {
     day: 3,
     date: 'March 14, 2027',
     codename: 'THE CARNIVAL ISLAND',
     themeTitle: 'The Carnival Island',
-    themeSubtitle: 'Festival Night & Bioluminescent Revelry',
-    accentColor: '#FF007F',
-    glowColor: 'rgba(255, 0, 127, 0.45)',
-    description: 'Kaleidoscopic luminescence, celestial carnival revels, grand theatrical stages, and the ultimate crescendo.',
+    themeSubtitle: 'Festival Night, Luminous Pier & Ferris Wheel',
+    accentColor: '#F59E0B',
+    glowColor: 'rgba(245, 158, 11, 0.35)',
+    description: 'Golden incandescent festoon lights, a glowing waterfront Ferris wheel, circus pavilions, and fairy-tale castle illuminations reflected on the nocturnal bay.',
+    image: '/images/themes/day3-carnival-island.jpg',
   },
 };
 

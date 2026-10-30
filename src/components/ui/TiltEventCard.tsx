@@ -21,7 +21,7 @@ export default function TiltEventCard({
   const [isHovered, setIsHovered] = useState(false);
 
   const isTech = event.category === 'technical';
-  const eventAccent = isTech ? '#00f0ff' : '#ff007f';
+  const eventAccent = isTech ? '#38bdf8' : '#fb7185';
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
