@@ -3,7 +3,7 @@
 import React, { useRef, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import { VOYAGE_CURVE, ISLAND_WAYPOINTS } from './voyageConfig';
+import { VOYAGE_CURVE } from './voyageConfig';
 import CyberBoat from './CyberBoat';
 
 interface SceneControllerProps {
@@ -16,9 +16,8 @@ export default function SceneController({ progress, onWaypointReached }: SceneCo
   const currentProgressRef = useRef(0);
   const boatRef = useRef<THREE.Group>(null);
   const lookTargetRef = useRef(new THREE.Vector3(0, 0, 0));
-
-  // Dynamic boat accent color matching the active day
-  const [boatAccent, setBoatAccent] = React.useState('#00f0ff');
+  const currentFogColor = useRef(new THREE.Color('#0e1830'));
+  const targetFogColor = useRef(new THREE.Color('#0e1830'));
 
   // Responsive camera FOV setup
   useEffect(() => {
@@ -45,7 +44,7 @@ export default function SceneController({ progress, onWaypointReached }: SceneCo
     const point = VOYAGE_CURVE.getPointAt(t);
 
     // Get tangent direction slightly ahead
-    const aheadT = Math.min(0.9999, t + 0.02);
+    const aheadT = Math.min(0.9999, t + 0.018);
     const aheadPoint = VOYAGE_CURVE.getPointAt(aheadT);
     const tangent = new THREE.Vector3().subVectors(aheadPoint, point).normalize();
 
@@ -58,19 +57,30 @@ export default function SceneController({ progress, onWaypointReached }: SceneCo
       boatRef.current.rotation.y = angle + Math.PI; // Face forward along the voyage
     }
 
-    // Dynamic boat accent color shift
+    // Dynamic Atmosphere Fog Morphing aligned with the 3 Theme Artworks
     if (t < 0.38) {
-      if (boatAccent !== '#f59e0b') setBoatAccent('#f59e0b');
+      // Day 1: The Last Outpost (Warm Desert Terracotta / Sandstone Amber)
+      const weight = Math.max(0, 1 - Math.abs(t - 0.22) * 4.5);
+      targetFogColor.current.set('#0e1830').lerp(new THREE.Color('#381c10'), weight * 0.85);
     } else if (t < 0.72) {
-      if (boatAccent !== '#f43f5e') setBoatAccent('#f43f5e');
+      // Day 2: The Pandemonium (Sunset Crimson / Coral Wine)
+      const weight = Math.max(0, 1 - Math.abs(t - 0.58) * 4.5);
+      targetFogColor.current.set('#0e1830').lerp(new THREE.Color('#3b1228'), weight * 0.85);
     } else {
-      if (boatAccent !== '#00f0ff') setBoatAccent('#00f0ff');
+      // Day 3: The Carnival Island (Festive Nocturnal Amber / Lagoon Navy)
+      const weight = Math.max(0, 1 - Math.abs(t - 0.88) * 4.5);
+      targetFogColor.current.set('#0e1830').lerp(new THREE.Color('#16253d'), weight * 0.85);
     }
 
-    // Camera follow rig: third-person trailing behind the skiff on water
+    currentFogColor.current.lerp(targetFogColor.current, delta * 2.0);
+    if (scene.fog) {
+      scene.fog.color.copy(currentFogColor.current);
+    }
+
+    // Camera follow rig: situated to give a sweeping third-person view of the skiff on water
     const isMobile = state.size.width < 768;
-    const camDistance = isMobile ? 11.0 : 9.2;
-    const camHeight = isMobile ? 4.8 : 4.0;
+    const camDistance = isMobile ? 11.5 : 9.6;
+    const camHeight = isMobile ? 5.2 : 4.4;
 
     const desiredCamPos = new THREE.Vector3(
       point.x - tangent.x * camDistance,
@@ -78,22 +88,22 @@ export default function SceneController({ progress, onWaypointReached }: SceneCo
       point.z - tangent.z * camDistance
     );
 
-    // Frame the floating portal cards as we navigate past them
-    if (t > 0.12 && t < 0.38) {
-      desiredCamPos.x += 2.2; // Frame Outpost Portal on the left
-    } else if (t >= 0.38 && t < 0.72) {
-      desiredCamPos.x -= 2.4; // Frame Pandemonium Portal on the right
-    } else if (t >= 0.72) {
-      desiredCamPos.x += 2.2; // Frame Carnival Portal on the left
+    // Frame the islands majestically as we approach them
+    if (t < 0.38) {
+      desiredCamPos.x += 1.8; // Frame Outpost Citadel on the left
+    } else if (t < 0.72) {
+      desiredCamPos.x -= 1.8; // Frame Sunset Aqueducts on the right
+    } else {
+      desiredCamPos.x += 1.5; // Frame Carnival Ferris Wheel on the left
     }
 
-    camera.position.lerp(desiredCamPos, delta * 2.8);
+    camera.position.lerp(desiredCamPos, delta * 2.5);
 
-    // Look target slightly ahead and downwards to keep the boat in the lower screen space
+    // Look target ahead of the boat (angled slightly down towards the water to keep the boat in lower third)
     const desiredLookTarget = new THREE.Vector3(
-      point.x + tangent.x * 5.5,
-      point.y + 0.3,
-      point.z + tangent.z * 5.5
+      point.x + tangent.x * 6,
+      point.y + 0.35,
+      point.z + tangent.z * 6
     );
 
     lookTargetRef.current.lerp(desiredLookTarget, delta * 3.5);
@@ -102,9 +112,9 @@ export default function SceneController({ progress, onWaypointReached }: SceneCo
 
   return (
     <group>
-      {/* Sleek Glowing Cyber Skiff */}
+      {/* Handcrafted 3D Wooden Voyager Boat */}
       <group ref={boatRef}>
-        <CyberBoat accentColor={boatAccent} />
+        <CyberBoat />
       </group>
     </group>
   );

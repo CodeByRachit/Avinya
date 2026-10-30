@@ -21,7 +21,7 @@ export default function VoyageCanvas({ progress = 0, onWaypointReached }: Voyage
 
   if (!mounted) {
     return (
-      <div className="fixed inset-0 z-0 bg-gradient-to-b from-[#0f172a] via-[#1e1b4b] to-[#070b14] flex items-center justify-center">
+      <div className="fixed inset-0 z-0 bg-gradient-to-b from-[#0b1329] via-[#111c3b] to-[#070c18] flex items-center justify-center">
         <div className="w-8 h-8 rounded-full border-2 border-amber-300 border-t-transparent animate-spin" />
       </div>
     );
@@ -30,34 +30,34 @@ export default function VoyageCanvas({ progress = 0, onWaypointReached }: Voyage
   return (
     <div className="fixed inset-0 z-0 pointer-events-auto w-full h-full overflow-hidden">
       {/* ======================================================== */}
-      {/* RICH ANIMATED GRADIENT ATMOSPHERE (NO PITCH BLACK VOID)  */}
+      {/* 1. CINEMATIC MULTI-TIERED SKY GRADIENT & HORIZON GLOWS   */}
       {/* ======================================================== */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Deep Cosmic Sky Base */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a1224] via-[#101b38] to-[#060b14]" />
+        {/* Deep Cosmic Twilight Sky */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#081024] via-[#0e1a38] to-[#060c18]" />
 
-        {/* Ambient Thematic Glow Orbs */}
-        {/* Warm Desert Amber (Day 1 Horizon) */}
-        <div className="absolute top-1/4 -left-20 w-[42rem] h-[34rem] bg-amber-600/15 rounded-full blur-[140px] animate-pulse" />
+        {/* Ambient Thematic Glow Orbs for the 3 Days */}
+        {/* Day 1: Warm Desert Sunrise / Moon Amber Glow */}
+        <div className="absolute top-1/4 -left-20 w-[44rem] h-[36rem] bg-amber-500/15 rounded-full blur-[140px] animate-pulse" />
 
-        {/* Synthwave Magenta Sunset (Day 2 Sky) */}
+        {/* Day 2: Synthwave Crimson Sunset Sky */}
         <div
-          className="absolute top-1/3 -right-20 w-[46rem] h-[36rem] bg-rose-600/15 rounded-full blur-[160px] animate-pulse"
+          className="absolute top-1/3 -right-20 w-[48rem] h-[38rem] bg-rose-500/15 rounded-full blur-[160px] animate-pulse"
           style={{ animationDuration: '6s' }}
         />
 
-        {/* Luminous Cyan Lagoon Reflection (Day 3 Pier) */}
-        <div className="absolute bottom-1/4 left-1/3 w-[50rem] h-[30rem] bg-cyan-500/15 rounded-full blur-[160px]" />
+        {/* Day 3: Luminous Carnival Lagoon Glow */}
+        <div className="absolute bottom-1/4 left-1/3 w-[50rem] h-[30rem] bg-cyan-400/15 rounded-full blur-[160px]" />
 
-        {/* Subtle Horizon Vignette */}
-        <div className="absolute inset-0 bg-radial from-transparent via-[#080d18]/40 to-[#04060c]/80" />
+        {/* Subtle Vignette Framing */}
+        <div className="absolute inset-0 bg-radial from-transparent via-[#060a14]/30 to-[#03060c]/75" />
       </div>
 
       {/* ======================================================== */}
-      {/* THREE.JS WEBGL CANVAS                                   */}
+      {/* 2. THREE.JS WEBGL CANVAS                                 */}
       {/* ======================================================== */}
       <Canvas
-        camera={{ position: [0, 4.2, 26], fov: 42, near: 0.1, far: 400 }}
+        camera={{ position: [0, 4.4, 26], fov: 42, near: 0.1, far: 400 }}
         dpr={[1, 1.5]}
         gl={{
           antialias: true,
@@ -66,57 +66,57 @@ export default function VoyageCanvas({ progress = 0, onWaypointReached }: Voyage
           stencil: false,
         }}
       >
-        {/* Soft, colorful distance fog (never pitch black) */}
-        <fog attach="fog" args={['#0e172e', 45, 240]} />
+        {/* Colorful, distant depth fog (Never pitch black, never suffocates nearby models) */}
+        <fog attach="fog" args={['#0e1830', 55, 260]} />
 
         {/* ======================================================== */}
-        {/* CINEMATIC HIGH-VISIBILITY LIGHTING                      */}
+        {/* 3. BRIGHT, HIGH-CONTRAST CINEMATIC LIGHTING RIG          */}
         {/* ======================================================== */}
-        {/* Bright Ambient Light */}
-        <ambientLight intensity={1.9} color="#cbd5e1" />
+        {/* Bright Ambient Fill */}
+        <ambientLight intensity={1.85} color="#dbeafe" />
 
-        {/* Sky / Water Bounce Hemisphere Light */}
-        <hemisphereLight args={['#38bdf8', '#1e1b4b', 1.5]} />
+        {/* Sky / Ground Bounce Hemisphere Light */}
+        <hemisphereLight args={['#38bdf8', '#1e1b4b', 1.4]} />
 
-        {/* Primary Warm Sun / Moon Directional Key Light */}
+        {/* Primary Warm Sunlight / Moonshine Directional Key */}
         <directionalLight
-          position={[35, 50, 25]}
+          position={[35, 55, 25]}
           intensity={2.8}
-          color="#ffedd5"
+          color="#fffbeb"
           castShadow
         />
 
-        {/* Electric Cool Cyan Rim / Fill Light */}
+        {/* Cool Cyan Rim / Fill Light */}
         <directionalLight
-          position={[-35, 35, -25]}
-          intensity={1.9}
+          position={[-35, 40, -20]}
+          intensity={1.8}
           color="#38bdf8"
         />
 
-        {/* Rose Accent Light */}
+        {/* Sunset Magenta Ambient Fill */}
         <directionalLight
-          position={[20, -10, -40]}
-          intensity={1.2}
+          position={[25, -15, -45]}
+          intensity={1.3}
           color="#f43f5e"
         />
 
         <Suspense fallback={null}>
-          {/* Luminous Animated Water Plane */}
+          {/* Luminous Natural Reflective Water Plane */}
           <BioluminescentOcean />
 
-          {/* Illuminated Glowing Teal Spline Path */}
+          {/* Illuminated Glowing Teal Spline Navigation Wake */}
           <SplineTrack />
 
-          {/* Day 1: The Last Outpost - 3D Dune Desert Portal Card */}
-          <IslandLastOutpost position={[-24, 6.5, -42]} />
+          {/* Island 1: The Last Outpost (Desert Canyon Citadel & Moon) */}
+          <IslandLastOutpost position={[-24, 0, -42]} />
 
-          {/* Day 2: The Pandemonium - 3D Synthwave Cyberpunk Portal Card */}
-          <IslandPandemonium position={[26, 6.5, -108]} />
+          {/* Island 2: The Pandemonium (Cyberpunk City Spires & Sunset Sun) */}
+          <IslandPandemonium position={[26, 0, -108]} />
 
-          {/* Day 3: The Carnival Island - 3D Festive Pier Portal Card */}
-          <IslandCarnival position={[-20, 6.5, -182]} />
+          {/* Island 3: The Carnival Island (Ferris Wheel, Big-Top Tents & Boardwalk) */}
+          <IslandCarnival position={[-20, 0, -182]} />
 
-          {/* Camera Follow Rig & Navigating Sleek Voyager Skiff */}
+          {/* Handcrafted Wooden Voyager Boat & Follow Camera Rig */}
           <SceneController
             progress={progress}
             onWaypointReached={onWaypointReached}

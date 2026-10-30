@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import HeroOverlay from '@/components/sections/HeroOverlay';
 import VoyageHUD from '@/components/hud/VoyageHUD';
 import ThemeShowcaseSection from '@/components/sections/ThemeShowcaseSection';
@@ -116,70 +117,109 @@ export default function Home() {
 
           {/* Island 1 Announcement Overlay (Active around t = 0.16 to 0.36) */}
           <div
-            className="absolute top-28 left-6 sm:left-16 z-10 pointer-events-none transition-all duration-500"
+            className="absolute inset-0 z-10 flex flex-col justify-center items-start px-6 sm:px-16 pointer-events-none transition-all duration-500"
             style={{
               opacity: voyageProgress >= 0.16 && voyageProgress <= 0.36 ? 1 : 0,
               transform: `translateY(${
-                voyageProgress >= 0.16 && voyageProgress <= 0.36 ? 0 : 15
+                voyageProgress >= 0.16 && voyageProgress <= 0.36 ? 0 : 20
               }px)`,
             }}
           >
-            <div className="glass-panel px-5 py-3 rounded-2xl border border-amber-400/40 bg-slate-950/60 backdrop-blur-xl shadow-[0_15px_40px_rgba(245,158,11,0.25)] flex items-center gap-3">
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping" />
-              <div>
-                <span className="font-mono text-[10px] text-amber-300 font-bold block">
+            <div className="max-w-md glass-panel p-5 rounded-2xl border border-amber-500/30 bg-[#0e0a07]/85 shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden relative">
+              <div className="relative w-full h-28 rounded-xl overflow-hidden mb-3 border border-white/10">
+                <Image
+                  src="/images/themes/day1-last-outpost.jpg"
+                  alt="The Last Outpost"
+                  fill
+                  className="object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                <span className="absolute bottom-2 left-3 font-mono text-[10px] text-amber-300 font-bold">
                   DAY 01 // MARCH 12
                 </span>
-                <h2 className="font-syne text-lg sm:text-xl font-black text-white">
-                  THE LAST OUTPOST
-                </h2>
               </div>
+
+              <h2 className="font-syne text-2xl font-black text-white">
+                THE LAST OUTPOST
+              </h2>
+              <p className="font-syne text-xs text-amber-300 font-medium mt-0.5">
+                Dune Desert & Mountain Fortress
+              </p>
+              <p className="font-grotesk text-xs text-white/70 mt-2 leading-relaxed">
+                Arid sandstone canyons & CP relays under the giant desert moon.
+              </p>
             </div>
           </div>
 
           {/* Island 2 Announcement Overlay (Active around t = 0.50 to 0.68) */}
           <div
-            className="absolute top-28 right-6 sm:right-16 z-10 pointer-events-none transition-all duration-500 text-right"
+            className="absolute inset-0 z-10 flex flex-col justify-center items-end px-6 sm:px-16 pointer-events-none transition-all duration-500"
             style={{
               opacity: voyageProgress >= 0.50 && voyageProgress <= 0.68 ? 1 : 0,
               transform: `translateY(${
-                voyageProgress >= 0.50 && voyageProgress <= 0.68 ? 0 : 15
+                voyageProgress >= 0.50 && voyageProgress <= 0.68 ? 0 : 20
               }px)`,
             }}
           >
-            <div className="glass-panel px-5 py-3 rounded-2xl border border-rose-400/40 bg-slate-950/60 backdrop-blur-xl shadow-[0_15px_40px_rgba(244,63,94,0.25)] flex items-center gap-3">
-              <div>
-                <span className="font-mono text-[10px] text-rose-300 font-bold block">
+            <div className="max-w-md glass-panel p-5 rounded-2xl border border-rose-500/30 bg-[#12080d]/85 shadow-[0_20px_50px_rgba(0,0,0,0.8)] text-right overflow-hidden relative">
+              <div className="relative w-full h-28 rounded-xl overflow-hidden mb-3 border border-white/10">
+                <Image
+                  src="/images/themes/day2-pandemonium.jpg"
+                  alt="The Pandemonium"
+                  fill
+                  className="object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                <span className="absolute bottom-2 right-3 font-mono text-[10px] text-rose-300 font-bold">
                   DAY 02 // MARCH 13
                 </span>
-                <h2 className="font-syne text-lg sm:text-xl font-black text-white">
-                  THE PANDEMONIUM
-                </h2>
               </div>
-              <span className="w-2.5 h-2.5 rounded-full bg-rose-400 animate-ping" />
+
+              <h2 className="font-syne text-2xl font-black text-white">
+                THE PANDEMONIUM
+              </h2>
+              <p className="font-syne text-xs text-rose-300 font-medium mt-0.5">
+                Sunset River Delta & Spires
+              </p>
+              <p className="font-grotesk text-xs text-white/70 mt-2 leading-relaxed">
+                Cybernetic spires & quantum hacks beneath the crimson sunset.
+              </p>
             </div>
           </div>
 
           {/* Island 3 Announcement Overlay (Active around t = 0.80 to 0.98) */}
           <div
-            className="absolute top-28 left-6 sm:left-16 z-10 pointer-events-none transition-all duration-500"
+            className="absolute inset-0 z-10 flex flex-col justify-center items-start px-6 sm:px-16 pointer-events-none transition-all duration-500"
             style={{
               opacity: voyageProgress >= 0.80 && voyageProgress <= 0.98 ? 1 : 0,
               transform: `translateY(${
-                voyageProgress >= 0.80 && voyageProgress <= 0.98 ? 0 : 15
+                voyageProgress >= 0.80 && voyageProgress <= 0.98 ? 0 : 20
               }px)`,
             }}
           >
-            <div className="glass-panel px-5 py-3 rounded-2xl border border-cyan-400/40 bg-slate-950/60 backdrop-blur-xl shadow-[0_15px_40px_rgba(6,182,212,0.25)] flex items-center gap-3">
-              <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
-              <div>
-                <span className="font-mono text-[10px] text-cyan-300 font-bold block">
+            <div className="max-w-md glass-panel p-5 rounded-2xl border border-amber-400/30 bg-[#0e0c07]/85 shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden relative">
+              <div className="relative w-full h-28 rounded-xl overflow-hidden mb-3 border border-white/10">
+                <Image
+                  src="/images/themes/day3-carnival-island.jpg"
+                  alt="The Carnival Island"
+                  fill
+                  className="object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                <span className="absolute bottom-2 left-3 font-mono text-[10px] text-amber-300 font-bold">
                   DAY 03 // MARCH 14
                 </span>
-                <h2 className="font-syne text-lg sm:text-xl font-black text-white">
-                  THE CARNIVAL ISLAND
-                </h2>
               </div>
+
+              <h2 className="font-syne text-2xl font-black text-white">
+                THE CARNIVAL ISLAND
+              </h2>
+              <p className="font-syne text-xs text-amber-300 font-medium mt-0.5">
+                Luminous Pier & Ferris Wheel
+              </p>
+              <p className="font-grotesk text-xs text-white/70 mt-2 leading-relaxed">
+                Illuminated boardwalk, runway couture & pro DJ night.
+              </p>
             </div>
           </div>
 

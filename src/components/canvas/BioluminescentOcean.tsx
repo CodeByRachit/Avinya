@@ -7,70 +7,87 @@ import * as THREE from 'three';
 const OceanShader = {
   uniforms: {
     uTime: { value: 0 },
-    uDeepColor: { value: new THREE.Color('#08162b') },
-    uSurfaceColor: { value: new THREE.Color('#0c2d4a') },
-    uGlintColor: { value: new THREE.Color('#00f0ff') },
-    uSpecularColor: { value: new THREE.Color('#ffffff') },
+    uDeepColor: { value: new THREE.Color('#050811') },
+    uSurfaceColor: { value: new THREE.Color('#0e172a') },
+    uReflectionColor: { value: new THREE.Color('#e08a3c') },
+    uSpecularColor: { value: new THREE.Color('#f59e0b') },
   },
   vertexShader: `
     uniform float uTime;
     varying vec2 vUv;
     varying float vElevation;
+    varying vec3 vNormalVec;
     varying vec3 vWorldPosition;
 
-    // Compounded wave displacement
-    float getWave(vec2 p, float t) {
-      float w = 0.0;
-      w += sin(p.x * 0.06 + t * 0.9) * cos(p.y * 0.05 + t * 0.7) * 0.38;
-      w += sin(p.x * 0.12 - t * 1.1) * sin(p.y * 0.09 + t * 0.8) * 0.18;
-      w += sin((p.x + p.y) * 0.2 + t * 1.5) * 0.06;
-      return w;
+    // Smooth compounded natural wave function
+    float getWaveElevation(vec2 pos, float time) {
+      float elevation = 0.0;
+      
+      // Primary ocean swell
+      elevation += sin(pos.x * 0.05 + time * 0.8) * cos(pos.y * 0.04 + time * 0.6) * 0.45;
+      
+      // Secondary cross swell
+      elevation += sin(pos.x * 0.10 - time * 1.1) * sin(pos.y * 0.08 + time * 0.9) * 0.22;
+      
+      // Fine capillary ripples
+      elevation += sin((pos.x + pos.y) * 0.22 + time * 1.6) * 0.08;
+
+      return elevation;
     }
 
     void main() {
       vUv = uv;
       vec3 pos = position;
-      float elevation = getWave(pos.xy, uTime);
+
+      float elevation = getWaveElevation(pos.xy, uTime);
       pos.z += elevation;
       vElevation = elevation;
 
-      vec4 worldPos = modelMatrix * vec4(pos, 1.0);
-      vWorldPosition = worldPos.xyz;
+      // Approximate surface normal for lighting reflection
+      float delta = 0.12;
+      float eX = getWaveElevation(pos.xy + vec2(delta, 0.0), uTime);
+      float eY = getWaveElevation(pos.xy + vec2(0.0, delta), uTime);
+      vec3 computedNormal = normalize(vec3(-(eX - elevation) / delta, -(eY - elevation) / delta, 1.0));
+      vNormalVec = normalMatrix * computedNormal;
 
-      gl_Position = projectionMatrix * viewMatrix * worldPos;
+      vec4 worldPosition = modelMatrix * vec4(pos, 1.0);
+      vWorldPosition = worldPosition.xyz;
+
+      gl_Position = projectionMatrix * viewMatrix * worldPosition;
     }
   `,
   fragmentShader: `
     uniform float uTime;
     uniform vec3 uDeepColor;
     uniform vec3 uSurfaceColor;
-    uniform vec3 uGlintColor;
+    uniform vec3 uReflectionColor;
     uniform vec3 uSpecularColor;
 
     varying vec2 vUv;
     varying float vElevation;
+    varying vec3 vNormalVec;
     varying vec3 vWorldPosition;
 
     void main() {
-      // Natural water depth blend
-      float depthMix = smoothstep(-0.4, 0.5, vElevation);
-      vec3 water = mix(uDeepColor, uSurfaceColor, depthMix);
+      // Natural depth gradient
+      float depthMix = smoothstep(-0.5, 0.6, vElevation);
+      vec3 waterBase = mix(uDeepColor, uSurfaceColor, depthMix);
 
-      // Luminous bioluminescent teal wave crest highlights
-      float crest = smoothstep(0.12, 0.42, vElevation);
-      water = mix(water, uGlintColor, crest * 0.45);
+      // Warm nocturnal surface reflection (reflecting celestial moons & lanterns)
+      float crestGlint = smoothstep(0.2, 0.55, vElevation);
+      vec3 waterWithGlint = mix(waterBase, uReflectionColor, crestGlint * 0.4);
 
-      // Micro specular shimmer on ripple peaks
-      float shimmer = sin(vUv.x * 120.0 + uTime * 1.6) * sin(vUv.y * 120.0 - uTime * 1.3);
-      float spec = step(0.93, shimmer) * crest * 0.5;
-      vec3 finalColor = water + uSpecularColor * spec;
+      // Micro specular shimmer
+      float shimmer = sin(vUv.x * 90.0 + uTime * 1.4) * sin(vUv.y * 90.0 - uTime * 1.2);
+      float spec = step(0.92, shimmer) * crestGlint * 0.35;
+      vec3 finalColor = waterWithGlint + uSpecularColor * spec;
 
-      // Soft distance falloff
+      // Soft distance fog falloff
       float dist = length(vWorldPosition.xz);
-      float fade = smoothstep(140.0, 320.0, dist);
-      finalColor = mix(finalColor, uDeepColor * 0.8, fade);
+      float fogFactor = smoothstep(110.0, 260.0, dist);
+      finalColor = mix(finalColor, uDeepColor, fogFactor);
 
-      gl_FragColor = vec4(finalColor, 0.94);
+      gl_FragColor = vec4(finalColor, 0.96);
     }
   `,
 };
@@ -82,17 +99,17 @@ export default function BioluminescentOcean() {
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
-      uDeepColor: { value: new THREE.Color('#08162b') },
-      uSurfaceColor: { value: new THREE.Color('#0c2d4a') },
-      uGlintColor: { value: new THREE.Color('#00f0ff') },
-      uSpecularColor: { value: new THREE.Color('#ffffff') },
+      uDeepColor: { value: new THREE.Color('#050811') },
+      uSurfaceColor: { value: new THREE.Color('#0e172a') },
+      uReflectionColor: { value: new THREE.Color('#d97706') },
+      uSpecularColor: { value: new THREE.Color('#f59e0b') },
     }),
     []
   );
 
   useFrame((_, delta) => {
     if (materialRef.current) {
-      materialRef.current.uniforms.uTime.value += delta * 1.1;
+      materialRef.current.uniforms.uTime.value += delta * 1.0;
     }
   });
 
@@ -100,10 +117,10 @@ export default function BioluminescentOcean() {
     <mesh
       ref={meshRef}
       rotation={[-Math.PI / 2, 0, 0]}
-      position={[0, -0.18, -90]}
+      position={[0, -0.22, -90]}
       receiveShadow
     >
-      <planeGeometry args={[440, 440, 140, 140]} />
+      <planeGeometry args={[420, 420, 140, 140]} />
       <shaderMaterial
         ref={materialRef}
         vertexShader={OceanShader.vertexShader}
