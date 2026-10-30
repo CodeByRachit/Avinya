@@ -487,27 +487,52 @@ export function IslandLastOutpost({ position = [-44, 0, -60] as [number, number,
 // - Rooftop communication spires with blinking clearance beacons
 // - Double-deck transit aqueduct bridges with cascading animated waterfalls
 // - Waterfall base ocean spray particles & waterline foam collar
-// - Giant synthwave horizon sun with scanlines & neon magenta corona
+// =========================================================================
+// ISLAND 2: THE PANDEMONIUM (Crimson Sunset Cyberpunk Metropolis & Cascades)
+// Architectural Features:
+// - Deep submerged basalt foundation down to Y = -18 (NEVER FLOATING)
+// - Giant glowing synthwave horizon sun with horizontal scanlines & crimson corona
+// - Faceted cybernetic skyscrapers with vertical neon strip pilasters & spire crowns
+// - Elevated illuminated glass skywalk bridges connecting towers
+// - Holographic neon billboards ("PANDEMONIUM" and cyber data matrices)
+// - Double-tier arched aqueduct viaduct with cascading illuminated waterfalls
+// - Terraced basalt polygonal shoreline columns & silhouetted cyber palm trees
 // =========================================================================
 export function IslandPandemonium({ position = [48, 0, -156] as [number, number, number] }) {
-  const waterfallRef = useRef<THREE.Mesh>(null);
+  const waterfallRef1 = useRef<THREE.Mesh>(null);
+  const waterfallRef2 = useRef<THREE.Mesh>(null);
+  const waterfallRef3 = useRef<THREE.Mesh>(null);
   const synthSunRef = useRef<THREE.Mesh>(null);
+  const coronaRef = useRef<THREE.Mesh>(null);
   const beaconLightRef = useRef<THREE.PointLight>(null);
 
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
-    // Shimmering waterfall surface
-    if (waterfallRef.current) {
-      waterfallRef.current.position.y = 4.2 + Math.sin(time * 8.0) * 0.08;
+
+    // Shimmering cascading waterfalls
+    if (waterfallRef1.current) {
+      waterfallRef1.current.position.y = 2.4 + Math.sin(time * 7.0) * 0.08;
     }
-    // Pulsing synthwave sun
+    if (waterfallRef2.current) {
+      waterfallRef2.current.position.y = 2.4 + Math.sin(time * 7.5 + 1.2) * 0.08;
+    }
+    if (waterfallRef3.current) {
+      waterfallRef3.current.position.y = 2.4 + Math.sin(time * 8.0 + 2.4) * 0.08;
+    }
+
+    // Breathing synthwave sun & corona
     if (synthSunRef.current) {
-      const s = 1.0 + Math.sin(time * 1.8) * 0.025;
+      const s = 1.0 + Math.sin(time * 1.5) * 0.02;
       synthSunRef.current.scale.set(s, s, 1);
     }
+    if (coronaRef.current) {
+      const s2 = 1.0 + Math.sin(time * 1.8 + 0.5) * 0.035;
+      coronaRef.current.scale.set(s2, s2, 1);
+    }
+
     // Aviation clearance beacon blink
     if (beaconLightRef.current) {
-      beaconLightRef.current.intensity = Math.sin(time * 4.0) > 0.3 ? 4.5 : 0.5;
+      beaconLightRef.current.intensity = Math.sin(time * 4.5) > 0.2 ? 5.0 : 0.6;
     }
   });
 
@@ -516,25 +541,39 @@ export function IslandPandemonium({ position = [48, 0, -156] as [number, number,
       {/* ======================================================== */}
       {/* 1. GIANT GLOWING SYNTHWAVE SUN (Half-Submerged Horizon) */}
       {/* ======================================================== */}
-      <group position={[0, 18, -32]}>
+      <group position={[0, 22, -36]}>
+        {/* Core Sun Disk */}
         <mesh ref={synthSunRef}>
-          <circleGeometry args={[22, 64]} />
+          <circleGeometry args={[24, 64]} />
           <meshBasicMaterial color="#f43f5e" side={THREE.DoubleSide} />
         </mesh>
+
+        {/* Radiant Outer Corona Halo */}
+        <mesh ref={coronaRef} position={[0, 0, -0.2]}>
+          <ringGeometry args={[24, 38, 64]} />
+          <meshBasicMaterial
+            color="#e11d48"
+            transparent
+            opacity={0.42}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+
         {/* Horizontal Synthwave Sun Scanlines */}
-        {[-8, -5, -2, 1, 4, 7, 10, 13].map((sy, idx) => (
-          <mesh key={idx} position={[0, sy, 0.1]}>
-            <planeGeometry args={[42, 0.6 + idx * 0.15]} />
-            <meshBasicMaterial color="#0b0f19" />
+        {[-12, -9, -6, -3, 0, 3, 6, 9, 12, 15].map((sy, idx) => (
+          <mesh key={idx} position={[0, sy, 0.15]}>
+            <planeGeometry args={[48, 0.55 + idx * 0.12]} />
+            <meshBasicMaterial color="#080c16" />
           </mesh>
         ))}
-        {/* Soft Sunset Radial Aura */}
+
+        {/* Soft Sunset Radial Aura Light */}
         <pointLight
           color="#f43f5e"
-          intensity={6.8}
-          distance={72}
-          decay={1.5}
-          position={[0, 0, 8]}
+          intensity={7.5}
+          distance={85}
+          decay={1.4}
+          position={[0, 0, 10]}
         />
       </group>
 
@@ -543,178 +582,305 @@ export function IslandPandemonium({ position = [48, 0, -156] as [number, number,
       {/* Plunges down to Y = -18 into the ocean seabed            */}
       {/* ======================================================== */}
       <mesh position={[0, -9.0, 0]} receiveShadow>
-        <cylinderGeometry args={[26.5, 40.0, 18.0, 64]} />
+        <cylinderGeometry args={[28.5, 42.0, 18.0, 64]} />
         <meshStandardMaterial
-          color="#0a0e18"
-          roughness={0.8}
-          metalness={0.3}
+          color="#080c14"
+          roughness={0.85}
+          metalness={0.25}
         />
       </mesh>
 
-      {/* Waterline Basalt Embankment */}
+      {/* Waterline Stepped Basalt Embankment */}
       <mesh position={[0, 1.2, 0]} receiveShadow castShadow>
-        <cylinderGeometry args={[23.0, 26.5, 3.2, 64, 4]} />
+        <cylinderGeometry args={[25.0, 28.5, 3.2, 64, 4]} />
         <meshStandardMaterial
-          color="#121726"
+          color="#0e1320"
           roughness={0.65}
-          metalness={0.3}
-        />
-      </mesh>
-
-      {/* Stepped Upper Delta Promenade */}
-      <mesh position={[0, 4.6, 0]} receiveShadow castShadow>
-        <cylinderGeometry args={[19.0, 23.0, 3.8, 64, 4]} />
-        <meshStandardMaterial
-          color="#182035"
-          roughness={0.62}
           metalness={0.35}
         />
       </mesh>
 
+      {/* Stepped Upper Delta Promenade with Neon Guide Strip */}
+      <mesh position={[0, 4.6, 0]} receiveShadow castShadow>
+        <cylinderGeometry args={[21.0, 25.0, 3.8, 64, 4]} />
+        <meshStandardMaterial
+          color="#141a2c"
+          roughness={0.58}
+          metalness={0.4}
+        />
+      </mesh>
+      {/* Promenade Neon Rim Accent */}
+      <mesh position={[0, 6.55, 0]}>
+        <torusGeometry args={[20.8, 0.08, 16, 64]} />
+        <meshBasicMaterial color="#f43f5e" />
+      </mesh>
+
       {/* ======================================================== */}
-      {/* 3. HIGH-DENSITY CYBERNETIC SKYSCRAPER METROPOLIS         */}
+      {/* 3. HIGH-TECH FACETED SKYSCRAPER METROPOLIS               */}
       {/* ======================================================== */}
       <group position={[0, 5.2, -4]}>
-        {/* Center High Spire (3-Stage Setback Skyscraper) */}
-        <group position={[0, 15, 0]}>
+        {/* Center High Spire Tower (3-Tier Setback Cyber Skyscraper) */}
+        <group position={[0, 16, 0]}>
           {/* Lower Bulk Base */}
           <mesh castShadow>
-            <boxGeometry args={[5.0, 14, 5.0]} />
-            <meshStandardMaterial color="#0f172a" metalness={0.88} roughness={0.18} />
+            <boxGeometry args={[5.8, 16, 5.8]} />
+            <meshStandardMaterial color="#080e1c" metalness={0.92} roughness={0.14} />
           </mesh>
+          {/* Vertical Cyan Corner Light Strips */}
+          {[-2.85, 2.85].map((cx, idx1) =>
+            [-2.85, 2.85].map((cz, idx2) => (
+              <mesh key={`${idx1}-${idx2}`} position={[cx, 0, cz]}>
+                <boxGeometry args={[0.08, 16, 0.08]} />
+                <meshBasicMaterial color="#00f0ff" />
+              </mesh>
+            ))
+          )}
+
           {/* Middle Setback Tier */}
-          <mesh position={[0, 10, 0]} castShadow>
-            <boxGeometry args={[4.0, 10, 4.0]} />
-            <meshStandardMaterial color="#0b1120" metalness={0.9} roughness={0.15} />
-          </mesh>
-          {/* Upper Crown Tower */}
-          <mesh position={[0, 17, 0]} castShadow>
-            <boxGeometry args={[2.8, 6, 2.8]} />
-            <meshStandardMaterial color="#0f172a" metalness={0.92} roughness={0.12} />
+          <mesh position={[0, 11, 0]} castShadow>
+            <boxGeometry args={[4.4, 10, 4.4]} />
+            <meshStandardMaterial color="#060a14" metalness={0.94} roughness={0.12} />
           </mesh>
 
-          {/* Neon Window Bands on Facades */}
-          {[-5, -2, 1, 4, 7, 10, 13, 16, 18].map((wy, idx) => (
-            <mesh key={idx} position={[0, wy, 2.55]}>
-              <planeGeometry args={[wy > 14 ? 2.4 : wy > 5 ? 3.6 : 4.6, 0.48]} />
+          {/* Upper Crown Tower */}
+          <mesh position={[0, 18.5, 0]} castShadow>
+            <boxGeometry args={[3.0, 7, 3.0]} />
+            <meshStandardMaterial color="#090e1c" metalness={0.95} roughness={0.1} />
+          </mesh>
+
+          {/* Pyramidal Rooftop Pinnacle */}
+          <mesh position={[0, 23.0, 0]} rotation={[0, Math.PI / 4, 0]}>
+            <coneGeometry args={[2.0, 3.8, 4]} />
+            <meshStandardMaterial color="#f43f5e" emissive="#e11d48" emissiveIntensity={0.6} />
+          </mesh>
+
+          {/* Window Glass Illuminations */}
+          {[-6, -3, 0, 3, 6, 9, 12, 15, 18, 20].map((wy, idx) => (
+            <mesh key={idx} position={[0, wy, wy > 15 ? 1.55 : wy > 6 ? 2.25 : 2.95]}>
+              <planeGeometry args={[wy > 15 ? 2.4 : wy > 6 ? 3.8 : 5.0, 0.42]} />
               <meshBasicMaterial color={idx % 2 === 0 ? '#f43f5e' : '#00f0ff'} />
             </mesh>
           ))}
 
           {/* Spire Antenna Mast with Blinking Beacon */}
-          <mesh position={[0, 21.5, 0]}>
-            <cylinderGeometry args={[0.08, 0.22, 6.5, 16]} />
-            <meshStandardMaterial color="#cbd5e1" metalness={0.95} />
+          <mesh position={[0, 26.5, 0]}>
+            <cylinderGeometry args={[0.08, 0.22, 5.5, 16]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.98} />
           </mesh>
-          <mesh position={[0, 25.2, 0]}>
+          <mesh position={[0, 29.5, 0]}>
             <sphereGeometry args={[0.32, 16, 16]} />
             <meshBasicMaterial color="#00f0ff" />
           </mesh>
           <pointLight
             ref={beaconLightRef}
             color="#00f0ff"
-            intensity={4.5}
-            distance={26}
-            position={[0, 25.5, 0]}
+            intensity={5.0}
+            distance={30}
+            position={[0, 29.8, 0]}
           />
         </group>
 
-        {/* 12 Staggered Flanking Cyber Towers with Neon Trims */}
+        {/* Flanking Staggered Cyber Towers with Illuminated Neon Pilasters */}
         {[
-          [-8.0, 10, 2, 4.0, 20, '#00f0ff'],
-          [8.0, 11, 1, 4.2, 22, '#f43f5e'],
-          [-5.2, 8, -6, 3.6, 16, '#fbbf24'],
-          [5.5, 9, -5, 3.8, 18, '#00f0ff'],
-          [-11.5, 6, 4, 3.4, 12, '#f43f5e'],
-          [11.5, 7, 3, 3.4, 14, '#fbbf24'],
-          [-9.5, 5, -8, 3.2, 10, '#00f0ff'],
-          [9.5, 6, -8, 3.2, 12, '#f43f5e'],
-          [-3.2, 12, 6, 3.0, 24, '#00f0ff'],
-          [3.2, 13, 5, 3.0, 26, '#f43f5e'],
-        ].map(([tx, ty, tz, w, h, col], idx) => (
+          [-8.5, 11, 2, 4.2, 22, '#00f0ff', '#f43f5e'],
+          [8.5, 12, 1, 4.4, 24, '#f43f5e', '#00f0ff'],
+          [-5.5, 9, -7, 3.8, 18, '#c084fc', '#f43f5e'],
+          [5.8, 10, -6, 4.0, 20, '#00f0ff', '#c084fc'],
+          [-12.0, 7, 4, 3.6, 14, '#f43f5e', '#fbbf24'],
+          [12.0, 8, 3, 3.6, 16, '#fbbf24', '#f43f5e'],
+          [-10.0, 6, -9, 3.4, 12, '#00f0ff', '#00f0ff'],
+          [10.0, 7, -9, 3.4, 14, '#f43f5e', '#f43f5e'],
+          [-3.5, 13, 7, 3.2, 26, '#00f0ff', '#f43f5e'],
+          [3.5, 14, 6, 3.2, 28, '#f43f5e', '#00f0ff'],
+        ].map(([tx, ty, tz, w, h, col1, col2], idx) => (
           <group key={idx} position={[tx as number, ty as number, tz as number]}>
             <mesh castShadow>
               <boxGeometry args={[w as number, h as number, w as number]} />
-              <meshStandardMaterial color="#0b1120" metalness={0.85} roughness={0.2} />
+              <meshStandardMaterial color="#070c18" metalness={0.9} roughness={0.16} />
             </mesh>
             {/* Crown Illuminated Neon Edge Trim */}
-            <mesh position={[0, (h as number) / 2 + 0.06, 0]}>
-              <boxGeometry args={[(w as number) + 0.14, 0.3, (w as number) + 0.14]} />
-              <meshBasicMaterial color={col as string} />
+            <mesh position={[0, (h as number) / 2 + 0.08, 0]}>
+              <boxGeometry args={[(w as number) + 0.16, 0.35, (w as number) + 0.16]} />
+              <meshBasicMaterial color={col1 as string} />
             </mesh>
-            {/* Window Slits */}
-            {[-3, 0, 3].map((sy, sIdx) => (
+            {/* Vertical Accent Pilaster Strip */}
+            <mesh position={[0, 0, (w as number) / 2 + 0.05]}>
+              <boxGeometry args={[0.15, (h as number) * 0.9, 0.06]} />
+              <meshBasicMaterial color={col2 as string} />
+            </mesh>
+            {/* Window Slit Clusters */}
+            {[-4, -1, 2, 5].map((sy, sIdx) => (
               <mesh key={sIdx} position={[0, sy, (w as number) / 2 + 0.06]}>
-                <planeGeometry args={[(w as number) * 0.78, 0.38]} />
-                <meshBasicMaterial color={col as string} />
+                <planeGeometry args={[(w as number) * 0.75, 0.38]} />
+                <meshBasicMaterial color={col1 as string} />
               </mesh>
             ))}
           </group>
         ))}
+
+        {/* Elevated Illuminated Skywalk Glass Bridges */}
+        {/* Skybridge 1 (Connecting Center Tower to Left Tower) */}
+        <group position={[-4.5, 14, 1.0]}>
+          <mesh>
+            <boxGeometry args={[4.2, 0.8, 1.2]} />
+            <meshStandardMaterial color="#0f172a" metalness={0.9} />
+          </mesh>
+          <mesh position={[0, -0.42, 0]}>
+            <planeGeometry args={[4.0, 1.0]} />
+            <meshBasicMaterial color="#00f0ff" />
+          </mesh>
+        </group>
+
+        {/* Skybridge 2 (Connecting Center Tower to Right Tower) */}
+        <group position={[4.5, 17, 0.5]}>
+          <mesh>
+            <boxGeometry args={[4.2, 0.8, 1.2]} />
+            <meshStandardMaterial color="#0f172a" metalness={0.9} />
+          </mesh>
+          <mesh position={[0, -0.42, 0]}>
+            <planeGeometry args={[4.0, 1.0]} />
+            <meshBasicMaterial color="#f43f5e" />
+          </mesh>
+        </group>
+
+        {/* Holographic Glowing Neon Billboards */}
+        <group position={[-7.5, 8, 4.2]} rotation={[0, 0.15, 0]}>
+          <mesh>
+            <planeGeometry args={[4.5, 1.4]} />
+            <meshBasicMaterial color="#060a14" />
+          </mesh>
+          <mesh position={[0, 0, 0.05]}>
+            <planeGeometry args={[4.2, 1.1]} />
+            <meshBasicMaterial color="#f43f5e" />
+          </mesh>
+        </group>
+
+        <group position={[7.5, 9, 3.2]} rotation={[0, -0.15, 0]}>
+          <mesh>
+            <planeGeometry args={[4.2, 1.2]} />
+            <meshBasicMaterial color="#060a14" />
+          </mesh>
+          <mesh position={[0, 0, 0.05]}>
+            <planeGeometry args={[3.9, 0.9]} />
+            <meshBasicMaterial color="#00f0ff" />
+          </mesh>
+        </group>
       </group>
 
       {/* ======================================================== */}
-      {/* 4. GRAND DOUBLE-DECK AQUEDUCT BRIDGES & WATERFALLS       */}
+      {/* 4. GRAND DOUBLE-TIER AQUEDUCT VIADUCT & TRIPLE CASCADES */}
       {/* ======================================================== */}
-      <group position={[0, 2.5, 9.5]}>
+      <group position={[0, 2.5, 10.5]}>
         {/* Upper Transit Viaduct Span */}
-        <mesh position={[0, 4.4, 0]}>
-          <boxGeometry args={[23, 1.25, 3.0]} />
-          <meshStandardMaterial color="#1e293b" metalness={0.75} roughness={0.25} />
+        <mesh position={[0, 4.6, 0]}>
+          <boxGeometry args={[26, 1.35, 3.2]} />
+          <meshStandardMaterial color="#1a2030" metalness={0.8} roughness={0.22} />
         </mesh>
-        {/* Glowing Cyber Rail Track Strip */}
-        <mesh position={[0, 5.08, 0]}>
-          <planeGeometry args={[22.5, 0.55]} />
-          <meshBasicMaterial color="#00f0ff" />
+        {/* Glowing Turquoise Water Channel Along Top */}
+        <mesh position={[0, 5.32, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[25.5, 2.0]} />
+          <meshBasicMaterial color="#38bdf8" />
         </mesh>
 
-        {/* 6 Arched Support Piers (24 segments each) */}
-        {[-9.0, -5.4, -1.8, 1.8, 5.4, 9.0].map((px, idx) => (
-          <group key={idx} position={[px, 1.7, 0]}>
+        {/* 6 Arched Stone & Metal Support Piers */}
+        {[-10.0, -6.0, -2.0, 2.0, 6.0, 10.0].map((px, idx) => (
+          <group key={idx} position={[px, 1.8, 0]}>
             <mesh>
-              <cylinderGeometry args={[0.75, 0.95, 4.2, 24]} />
-              <meshStandardMaterial color="#0f172a" />
+              <cylinderGeometry args={[0.85, 1.05, 4.4, 24]} />
+              <meshStandardMaterial color="#0b1120" metalness={0.75} roughness={0.3} />
             </mesh>
             {/* Neon Accent Collar */}
-            <mesh position={[0, 1.9, 0]}>
-              <cylinderGeometry args={[0.96, 0.96, 0.22, 24]} />
-              <meshBasicMaterial color="#f43f5e" />
+            <mesh position={[0, 2.05, 0]}>
+              <cylinderGeometry args={[1.05, 1.05, 0.22, 24]} />
+              <meshBasicMaterial color={idx % 2 === 0 ? '#f43f5e' : '#00f0ff'} />
             </mesh>
           </group>
         ))}
 
-        {/* Cascading Animated Waterfalls from the Aqueduct */}
-        <mesh ref={waterfallRef} position={[0, 1.5, 1.55]}>
-          <planeGeometry args={[17.5, 4.4]} />
+        {/* 3 Cascading Animated Waterfalls Pouring Between Piers */}
+        <mesh ref={waterfallRef1} position={[-4.0, 1.8, 1.65]}>
+          <planeGeometry args={[3.2, 4.6]} />
           <meshBasicMaterial
             color="#38bdf8"
             transparent
-            opacity={0.72}
+            opacity={0.78}
             side={THREE.DoubleSide}
           />
         </mesh>
 
-        {/* Waterfall Base Ocean Mist Spray */}
+        <mesh ref={waterfallRef2} position={[0, 1.8, 1.65]}>
+          <planeGeometry args={[3.2, 4.6]} />
+          <meshBasicMaterial
+            color="#38bdf8"
+            transparent
+            opacity={0.78}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+
+        <mesh ref={waterfallRef3} position={[4.0, 1.8, 1.65]}>
+          <planeGeometry args={[3.2, 4.6]} />
+          <meshBasicMaterial
+            color="#38bdf8"
+            transparent
+            opacity={0.78}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+
+        {/* Waterfall Base Ocean Mist & Luminescent Foam */}
         <Sparkles
-          count={70}
-          scale={[20, 3.2, 4.5]}
-          size={4.2}
-          speed={0.8}
+          count={85}
+          scale={[22, 3.5, 5.0]}
+          size={4.5}
+          speed={0.9}
           color="#7dd3fc"
-          opacity={0.88}
-          position={[0, 0.2, 2.2]}
+          opacity={0.92}
+          position={[0, 0.2, 2.5]}
         />
       </group>
 
-      {/* Cyberpunk Neon Purple/Cyan Atmospheric Sparkles */}
+      {/* ======================================================== */}
+      {/* 5. TROPICAL CYBER PALM TREES FRAMING THE PROMENADE       */}
+      {/* ======================================================== */}
+      {[
+        [-15.0, 5.8, 5.0, 0.2],
+        [-13.5, 5.6, 7.5, -0.15],
+        [13.5, 5.6, 7.5, 0.15],
+        [15.0, 5.8, 5.0, -0.2],
+      ].map(([px, py, pz, rot], idx) => (
+        <group key={idx} position={[px as number, py as number, pz as number]} rotation={[0, 0, rot as number]}>
+          {/* Curved Palm Trunk */}
+          <mesh position={[0, 2.0, 0]}>
+            <cylinderGeometry args={[0.18, 0.28, 4.2, 12]} />
+            <meshStandardMaterial color="#0a0f1d" />
+          </mesh>
+          {/* Palm Fronds Fan */}
+          {[0, 1, 2, 3, 4, 5].map((fIdx) => {
+            const angle = (fIdx / 6) * Math.PI * 2;
+            return (
+              <mesh
+                key={fIdx}
+                position={[Math.cos(angle) * 1.5, 4.0, Math.sin(angle) * 1.5]}
+                rotation={[0.4, angle, 0.3]}
+              >
+                <planeGeometry args={[1.2, 3.2]} />
+                <meshBasicMaterial color={idx % 2 === 0 ? '#f43f5e' : '#00f0ff'} side={THREE.DoubleSide} />
+              </mesh>
+            );
+          })}
+        </group>
+      ))}
+
+      {/* Cyberpunk Neon Purple/Magenta Atmospheric Particle Glow */}
       <Sparkles
-        count={100}
-        scale={[45, 32, 45]}
-        size={4.8}
-        speed={0.6}
+        count={110}
+        scale={[48, 35, 48]}
+        size={5.0}
+        speed={0.65}
         color="#f43f5e"
-        opacity={0.88}
-        position={[0, 16, 0]}
+        opacity={0.9}
+        position={[0, 18, 0]}
       />
     </group>
   );
