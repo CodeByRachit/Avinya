@@ -152,27 +152,27 @@ export default function CyberBoat({ position = [0, 0, 0], rotation = [0, 0, 0] }
         </mesh>
 
         {/* Wooden Voyager Mast */}
-        <mesh position={[0, 1.45, 0.15]}>
-          <cylinderGeometry args={[0.04, 0.06, 2.2, 10]} />
+        <mesh position={[0, 1.1, 0.15]}>
+          <cylinderGeometry args={[0.04, 0.055, 1.5, 10]} />
           <meshStandardMaterial color="#6e462d" roughness={0.7} />
         </mesh>
 
         {/* Furled Canvas Sail on Boom */}
-        <mesh position={[0, 1.8, 0.35]} rotation={[0.1, 0, 0]}>
-          <cylinderGeometry args={[0.1, 0.08, 1.4, 8]} />
+        <mesh position={[0, 1.3, 0.3]} rotation={[0.1, 0, 0]}>
+          <cylinderGeometry args={[0.08, 0.07, 1.2, 8]} />
           <meshStandardMaterial color="#e5dfd5" roughness={0.9} />
         </mesh>
 
         {/* Brass Mast Collar & Ring */}
-        <mesh position={[0, 0.55, 0.15]}>
-          <cylinderGeometry args={[0.08, 0.08, 0.15, 12]} />
+        <mesh position={[0, 0.5, 0.15]}>
+          <cylinderGeometry args={[0.07, 0.07, 0.12, 12]} />
           <meshStandardMaterial color="#cba153" metalness={0.9} roughness={0.3} />
         </mesh>
 
         {/* ======================================================== */}
         {/* BRASS VOYAGE LANTERN (Bow Warm Amber Beacon)            */}
         {/* ======================================================== */}
-        <group position={[0, 0.95, -1.65]}>
+        <group position={[0, 0.82, -1.65]}>
           {/* Lantern Brass Frame */}
           <mesh position={[0, 0, 0]}>
             <cylinderGeometry args={[0.1, 0.12, 0.28, 8]} />

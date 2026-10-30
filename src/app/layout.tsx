@@ -4,7 +4,6 @@ import './globals.css';
 import SmoothScroll from '@/components/providers/SmoothScroll';
 import Navbar from '@/components/navigation/Navbar';
 import CustomCursor from '@/components/hud/CustomCursor';
-import HudOverlay from '@/components/hud/HudOverlay';
 
 const orbitron = Orbitron({
   subsets: ['latin'],
@@ -86,9 +85,6 @@ export default function RootLayout({
         <SmoothScroll>
           {/* Custom Interactive Magnetic Cursor */}
           <CustomCursor />
-
-          {/* Real-time Telemetry and Coordinates HUD */}
-          <HudOverlay />
 
           {/* Floating Glassmorphic Pill Navbar */}
           <Navbar />

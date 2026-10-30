@@ -125,9 +125,8 @@ export default function Home() {
               }px)`,
             }}
           >
-            <div className="max-w-lg glass-panel p-6 sm:p-7 rounded-3xl border border-amber-500/30 bg-[#0e0a07]/85 shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden relative">
-              {/* Thumbnail of Image 1 */}
-              <div className="relative w-full h-32 rounded-xl overflow-hidden mb-4 border border-white/10">
+            <div className="max-w-md glass-panel p-5 rounded-2xl border border-amber-500/30 bg-[#0e0a07]/85 shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden relative">
+              <div className="relative w-full h-28 rounded-xl overflow-hidden mb-3 border border-white/10">
                 <Image
                   src="/images/themes/day1-last-outpost.jpg"
                   alt="The Last Outpost"
@@ -136,18 +135,18 @@ export default function Home() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                 <span className="absolute bottom-2 left-3 font-mono text-[10px] text-amber-300 font-bold">
-                  DAY 01 // MARCH 12, 2027
+                  DAY 01 // MARCH 12
                 </span>
               </div>
 
-              <h2 className="font-syne text-2xl sm:text-3xl font-black text-white">
+              <h2 className="font-syne text-2xl font-black text-white">
                 THE LAST OUTPOST
               </h2>
-              <p className="font-syne text-xs sm:text-sm text-amber-300 font-medium mt-0.5">
-                Dune Desert & Mountain Fortress Citadel
+              <p className="font-syne text-xs text-amber-300 font-medium mt-0.5">
+                Dune Desert & Mountain Fortress
               </p>
-              <p className="font-grotesk text-xs text-white/70 mt-2.5 leading-relaxed">
-                Step foot onto the arid sandstone canyons beneath the giant rising moon. Featuring Code Royale 3v3 relay, AI Arcade RAG Hunt, and the opening pro night.
+              <p className="font-grotesk text-xs text-white/70 mt-2 leading-relaxed">
+                Arid sandstone canyons & CP relays under the giant desert moon.
               </p>
             </div>
           </div>
@@ -162,9 +161,8 @@ export default function Home() {
               }px)`,
             }}
           >
-            <div className="max-w-lg glass-panel p-6 sm:p-7 rounded-3xl border border-rose-500/30 bg-[#12080d]/85 shadow-[0_20px_50px_rgba(0,0,0,0.8)] text-right overflow-hidden relative">
-              {/* Thumbnail of Image 2 */}
-              <div className="relative w-full h-32 rounded-xl overflow-hidden mb-4 border border-white/10">
+            <div className="max-w-md glass-panel p-5 rounded-2xl border border-rose-500/30 bg-[#12080d]/85 shadow-[0_20px_50px_rgba(0,0,0,0.8)] text-right overflow-hidden relative">
+              <div className="relative w-full h-28 rounded-xl overflow-hidden mb-3 border border-white/10">
                 <Image
                   src="/images/themes/day2-pandemonium.jpg"
                   alt="The Pandemonium"
@@ -173,18 +171,18 @@ export default function Home() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                 <span className="absolute bottom-2 right-3 font-mono text-[10px] text-rose-300 font-bold">
-                  DAY 02 // MARCH 13, 2027
+                  DAY 02 // MARCH 13
                 </span>
               </div>
 
-              <h2 className="font-syne text-2xl sm:text-3xl font-black text-white">
+              <h2 className="font-syne text-2xl font-black text-white">
                 THE PANDEMONIUM
               </h2>
-              <p className="font-syne text-xs sm:text-sm text-rose-300 font-medium mt-0.5">
-                Sunset River Delta & Cybernetic Spires
+              <p className="font-syne text-xs text-rose-300 font-medium mt-0.5">
+                Sunset River Delta & Spires
               </p>
-              <p className="font-grotesk text-xs text-white/70 mt-2.5 leading-relaxed">
-                The wooden boat glides under massive aqueduct waterfalls beneath the giant crimson sun. Featuring Yukti 2.0 Quantum Hackathon, Build with Gemma, and Battle of Bands.
+              <p className="font-grotesk text-xs text-white/70 mt-2 leading-relaxed">
+                Cybernetic spires & quantum hacks beneath the crimson sunset.
               </p>
             </div>
           </div>
@@ -199,9 +197,8 @@ export default function Home() {
               }px)`,
             }}
           >
-            <div className="max-w-lg glass-panel p-6 sm:p-7 rounded-3xl border border-amber-400/30 bg-[#0e0c07]/85 shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden relative">
-              {/* Thumbnail of Image 3 */}
-              <div className="relative w-full h-32 rounded-xl overflow-hidden mb-4 border border-white/10">
+            <div className="max-w-md glass-panel p-5 rounded-2xl border border-amber-400/30 bg-[#0e0c07]/85 shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden relative">
+              <div className="relative w-full h-28 rounded-xl overflow-hidden mb-3 border border-white/10">
                 <Image
                   src="/images/themes/day3-carnival-island.jpg"
                   alt="The Carnival Island"
@@ -210,18 +207,18 @@ export default function Home() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                 <span className="absolute bottom-2 left-3 font-mono text-[10px] text-amber-300 font-bold">
-                  DAY 03 // MARCH 14, 2027
+                  DAY 03 // MARCH 14
                 </span>
               </div>
 
-              <h2 className="font-syne text-2xl sm:text-3xl font-black text-white">
+              <h2 className="font-syne text-2xl font-black text-white">
                 THE CARNIVAL ISLAND
               </h2>
-              <p className="font-syne text-xs sm:text-sm text-amber-300 font-medium mt-0.5">
-                Luminous Pier, Ferris Wheel & Pro DJ Night
+              <p className="font-syne text-xs text-amber-300 font-medium mt-0.5">
+                Luminous Pier & Ferris Wheel
               </p>
-              <p className="font-grotesk text-xs text-white/70 mt-2.5 leading-relaxed">
-                Arriving at the illuminated festival boardwalk beneath the glowing Ferris wheel. Featuring Kernel Panic Linux Fest, Fashion Show runway, and the Grand DJ night.
+              <p className="font-grotesk text-xs text-white/70 mt-2 leading-relaxed">
+                Illuminated boardwalk, runway couture & pro DJ night.
               </p>
             </div>
           </div>
@@ -250,16 +247,13 @@ export default function Home() {
             <div>
               <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-amber-400/30 bg-amber-400/10 font-mono text-xs text-amber-200 mb-4">
                 <Compass className="w-3.5 h-3.5" />
-                <span>THE TECHNO-CULTURAL FLAGSHIP OF IIIT DHARWAD</span>
+                <span>FLAGSHIP OF IIIT DHARWAD</span>
               </div>
               <h2 className="font-syne text-3xl sm:text-5xl font-extrabold text-white leading-tight">
                 <CyberScramble text="WHERE CODE, HARDWARE & ARTISTRY CONVERGE" />
               </h2>
-              <p className="font-grotesk text-base text-white/70 mt-6 leading-relaxed">
-                Avinya 2027 marks the monumental annual gathering at the Indian Institute of Information Technology, Dharwad. Bringing together thousands of visionary technologists, artists, and competitors from institutions across India.
-              </p>
-              <p className="font-grotesk text-base text-white/70 mt-3 leading-relaxed">
-                Designed as a navigable 3-day voyage, every day completely transforms the campus into a cinematic realm—from the sandstone citadel of The Last Outpost to the sunset river delta of The Pandemonium and the festive boardwalk of The Carnival Island.
+              <p className="font-grotesk text-base text-white/75 mt-5 leading-relaxed">
+                Avinya 2027 is a 3-day voyage across three cinematic realms—from the arid desert citadel of The Last Outpost, through the crimson sunset delta of The Pandemonium, to the luminous boardwalk of The Carnival Island.
               </p>
 
               <div className="grid grid-cols-3 gap-4 mt-8 pt-6 border-t border-white/10 font-mono">

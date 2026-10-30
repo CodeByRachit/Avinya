@@ -23,7 +23,7 @@ export default function SceneController({ progress, onWaypointReached }: SceneCo
   useEffect(() => {
     if ('isPerspectiveCamera' in camera && camera.isPerspectiveCamera) {
       const isMobile = window.innerWidth < 768;
-      camera.fov = isMobile ? 54 : 44;
+      camera.fov = isMobile ? 52 : 42;
       camera.updateProjectionMatrix();
     }
   }, [camera]);
@@ -77,10 +77,10 @@ export default function SceneController({ progress, onWaypointReached }: SceneCo
       scene.fog.color.copy(currentFogColor.current);
     }
 
-    // Camera follow rig: third-person trailing behind the wooden boat
+    // Camera follow rig: situated to give a sweeping third-person view of the skiff on water
     const isMobile = state.size.width < 768;
-    const camDistance = isMobile ? 11 : 8.8;
-    const camHeight = isMobile ? 4.8 : 3.8;
+    const camDistance = isMobile ? 11.5 : 9.6;
+    const camHeight = isMobile ? 5.2 : 4.4;
 
     const desiredCamPos = new THREE.Vector3(
       point.x - tangent.x * camDistance,
@@ -88,22 +88,22 @@ export default function SceneController({ progress, onWaypointReached }: SceneCo
       point.z - tangent.z * camDistance
     );
 
-    // Frame the islands majestically
+    // Frame the islands majestically as we approach them
     if (t < 0.38) {
-      desiredCamPos.x += 1.6; // Frame Outpost Citadel on the left
+      desiredCamPos.x += 1.8; // Frame Outpost Citadel on the left
     } else if (t < 0.72) {
       desiredCamPos.x -= 1.8; // Frame Sunset Aqueducts on the right
     } else {
-      desiredCamPos.x += 1.4; // Frame Carnival Ferris Wheel on the left
+      desiredCamPos.x += 1.5; // Frame Carnival Ferris Wheel on the left
     }
 
     camera.position.lerp(desiredCamPos, delta * 2.5);
 
-    // Look target ahead of the boat
+    // Look target ahead of the boat (angled slightly down towards the water to keep the boat in lower third)
     const desiredLookTarget = new THREE.Vector3(
-      point.x + tangent.x * 5,
-      point.y + 0.9,
-      point.z + tangent.z * 5
+      point.x + tangent.x * 6,
+      point.y + 0.35,
+      point.z + tangent.z * 6
     );
 
     lookTargetRef.current.lerp(desiredLookTarget, delta * 3.5);
