@@ -73,3 +73,4 @@ export default function HeroOverlay({ onBoardVoyage }: HeroOverlayProps) {
     </section>
   );
 }
+

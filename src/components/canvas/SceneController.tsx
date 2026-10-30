@@ -120,3 +120,4 @@ export default function SceneController({ progress, onWaypointReached }: SceneCo
     </group>
   );
 }
+

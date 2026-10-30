@@ -78,3 +78,4 @@ export default function VoyageCanvas({ progress = 0, onWaypointReached }: Voyage
     </div>
   );
 }
+

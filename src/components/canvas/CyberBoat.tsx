@@ -202,3 +202,4 @@ export default function CyberBoat({ position = [0, 0, 0], rotation = [0, 0, 0] }
     </group>
   );
 }
+

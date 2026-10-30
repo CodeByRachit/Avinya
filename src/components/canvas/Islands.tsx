@@ -372,3 +372,4 @@ export function IslandCarnival({ position = [-24, 0, -178] as [number, number, n
     </group>
   );
 }
+

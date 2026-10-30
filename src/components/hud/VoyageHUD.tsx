@@ -129,3 +129,4 @@ export default function VoyageHUD({ progress, onSelectWaypoint }: VoyageHUDProps
     </aside>
   );
 }
+

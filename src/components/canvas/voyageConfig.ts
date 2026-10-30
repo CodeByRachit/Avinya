@@ -66,3 +66,4 @@ export const ISLAND_WAYPOINTS: IslandWaypoint[] = [
     highlights: ['Kernel Panic Linux Fest', 'Fashion Show Runway', 'Grand DJ Night', 'Awards Finale'],
   },
 ];
+

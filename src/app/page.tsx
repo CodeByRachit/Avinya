@@ -2,22 +2,17 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import dynamic from 'next/dynamic';
-import { FEST_EVENTS, DAY_THEMES, EventCategory, EventDay } from '@/data/events';
 import HeroOverlay from '@/components/sections/HeroOverlay';
 import VoyageHUD from '@/components/hud/VoyageHUD';
+import EventsSection from '@/components/sections/EventsSection';
+import Hack2FutureSection from '@/components/sections/Hack2FutureSection';
 import { useLenis } from '@/components/providers/SmoothScroll';
 import {
-  Calendar,
-  MapPin,
   Sparkles,
   Terminal,
-  Flame,
-  ArrowUpRight,
-  Filter,
-  CheckCircle2,
-  Clock,
   Compass,
-  Search,
+  ArrowUpRight,
+  CheckCircle2,
 } from 'lucide-react';
 
 // Dynamic import of 3D Canvas with ssr disabled for flawless WebGL mounting
@@ -38,9 +33,6 @@ const VoyageCanvas = dynamic(() => import('@/components/canvas/VoyageCanvas'), {
 export default function Home() {
   const { lenis } = useLenis();
   const [voyageProgress, setVoyageProgress] = useState(0);
-  const [selectedCategory, setSelectedCategory] = useState<'all' | EventCategory>('all');
-  const [selectedDay, setSelectedDay] = useState<'all' | EventDay>('all');
-  const [searchQuery, setSearchQuery] = useState('');
   const voyageTrackRef = useRef<HTMLDivElement>(null);
 
   // Sync scroll progress with 3D boat voyage
@@ -88,20 +80,6 @@ export default function Home() {
     handleSelectWaypoint(0.22);
   }, [handleSelectWaypoint]);
 
-  // Filter events based on active category, day, and search query
-  const filteredEvents = FEST_EVENTS.filter((e) => {
-    const matchesCategory = selectedCategory === 'all' || e.category === selectedCategory;
-    const matchesDay = selectedDay === 'all' || e.day === selectedDay;
-    const matchesSearch =
-      searchQuery === '' ||
-      e.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      e.club.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      e.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      e.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
-
-    return matchesCategory && matchesDay && matchesSearch;
-  });
-
   return (
     <main className="relative w-full min-h-screen text-white">
       {/* ======================================================== */}
@@ -110,7 +88,7 @@ export default function Home() {
       <VoyageCanvas progress={voyageProgress} />
 
       {/* ======================================================== */}
-      {/* 2. DEDICATED 3D VOYAGE SCROLL TRACK (300vh of 3D Steer) */}
+      {/* 2. DEDICATED 3D VOYAGE SCROLL TRACK (320vh of 3D Steer) */}
       {/* ======================================================== */}
       <div id="voyage" ref={voyageTrackRef} className="relative h-[320vh] w-full">
         {/* Sticky Hero & Island Overlays inside the Voyage Track */}
@@ -258,9 +236,9 @@ export default function Home() {
       </div>
 
       {/* ======================================================== */}
-      {/* 3. GROUND DETAIL SECTIONS: EVENTS, HACKATHON & ACCESS    */}
+      {/* 3. GROUND DETAIL SECTIONS: ABOUT, EVENTS, HACK2FUTURE   */}
       {/* ======================================================== */}
-      <div className="relative z-20 bg-gradient-to-b from-transparent via-[#030408]/90 to-[#020306] backdrop-blur-md pt-20">
+      <div className="relative z-20 bg-gradient-to-b from-transparent via-[#030408]/95 to-[#020306] backdrop-blur-md pt-20">
         {/* Section: About Avinya 2027 */}
         <section id="about" className="max-w-7xl mx-auto px-4 sm:px-6 py-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -346,233 +324,20 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Section: Complete 24 Events Arena with Interactive Controls */}
-        <section id="events" className="max-w-7xl mx-auto px-4 sm:px-6 py-24">
-          <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-12">
-            <div>
-              <span className="font-mono text-xs uppercase tracking-widest text-avinya-cyan flex items-center gap-2">
-                <Compass className="w-3.5 h-3.5" />
-                COMPLETE OFFICIAL SCHEDULE
-              </span>
-              <h2 className="font-orbitron text-3xl sm:text-5xl font-black text-white mt-2">
-                THE 24 ARENA EVENTS
-              </h2>
-              <p className="font-grotesk text-white/60 text-sm sm:text-base mt-2 max-w-2xl">
-                Filter by track or day to explore all 17 cultural celebrations and 7 engineering showdowns.
-              </p>
-            </div>
+        {/* ======================================================== */}
+        {/* 4. INTERACTIVE ISLAND EVENT COMMAND DECK SECTION        */}
+        {/* ======================================================== */}
+        <EventsSection />
 
-            {/* Search Input */}
-            <div className="relative w-full md:w-72">
-              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40" />
-              <input
-                type="text"
-                placeholder="Search event, club, or tech..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-full bg-white/5 border border-white/10 text-white placeholder-white/40 font-grotesk text-xs focus:outline-none focus:border-avinya-cyan transition-colors"
-              />
-            </div>
-          </div>
+        {/* ======================================================== */}
+        {/* 5. DEDICATED HACK2FUTURE ASTRONAUT & DEEP-SPACE SECTION */}
+        {/* ======================================================== */}
+        <Hack2FutureSection />
 
-          {/* Interactive Filter Pills */}
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-10 pb-6 border-b border-white/10">
-            {/* Category filter */}
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-mono text-xs text-white/40 mr-1 flex items-center gap-1">
-                <Filter className="w-3 h-3" /> TRACK:
-              </span>
-              {(['all', 'cultural', 'technical'] as const).map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-1.5 rounded-full text-xs font-grotesk uppercase tracking-wider transition-all ${
-                    selectedCategory === cat
-                      ? cat === 'cultural'
-                        ? 'bg-avinya-magenta text-white font-bold shadow-[0_0_15px_rgba(255,0,127,0.5)]'
-                        : cat === 'technical'
-                        ? 'bg-avinya-cyan text-black font-bold shadow-[0_0_15px_rgba(0,240,255,0.5)]'
-                        : 'bg-white text-black font-bold shadow-[0_0_15px_rgba(255,255,255,0.4)]'
-                      : 'bg-white/5 text-white/60 hover:text-white border border-white/10'
-                  }`}
-                >
-                  {cat === 'all' ? 'All (24)' : cat === 'cultural' ? 'Cultural (17)' : 'Technical (7)'}
-                </button>
-              ))}
-            </div>
-
-            {/* Day filter */}
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-mono text-xs text-white/40 mr-1 flex items-center gap-1">
-                <Calendar className="w-3 h-3" /> DAY:
-              </span>
-              {(['all', 1, 2, 3] as const).map((d) => (
-                <button
-                  key={d}
-                  onClick={() => setSelectedDay(d)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-mono uppercase tracking-wider transition-all ${
-                    selectedDay === d
-                      ? 'bg-gradient-to-r from-avinya-cyan to-avinya-magenta text-white font-bold'
-                      : 'bg-white/5 text-white/60 hover:text-white border border-white/10'
-                  }`}
-                >
-                  {d === 'all' ? 'All 3 Days' : `Day 0${d}`}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Events Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredEvents.map((event) => {
-              const isTech = event.category === 'technical';
-              const accentColor = isTech ? '#00f0ff' : '#ff007f';
-
-              return (
-                <div
-                  key={event.id}
-                  className="glass-panel p-6 rounded-2xl border border-white/10 hover:border-white/30 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden"
-                >
-                  {/* Top Day & Category Bar */}
-                  <div>
-                    <div className="flex items-center justify-between mb-3 text-xs font-mono">
-                      <span
-                        className="px-2.5 py-0.5 rounded-full font-semibold"
-                        style={{
-                          backgroundColor: `${accentColor}18`,
-                          color: accentColor,
-                          border: `1px solid ${accentColor}35`,
-                        }}
-                      >
-                        DAY 0{event.day} • {event.category.toUpperCase()}
-                      </span>
-                      <span className="text-white/50 flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        {event.time.split('-')[0].trim()}
-                      </span>
-                    </div>
-
-                    <h3 className="font-orbitron text-xl font-bold text-white group-hover:text-avinya-cyan transition-colors">
-                      {event.title}
-                    </h3>
-
-                    {/* Club metadata */}
-                    <div className="mt-2 text-xs font-grotesk text-white/70">
-                      <span className="font-mono text-avinya-gold font-semibold">Organizing Club: </span>
-                      <span className="text-white font-medium">{event.club}</span>
-                    </div>
-
-                    {/* Venue */}
-                    <div className="mt-1 text-xs font-mono text-white/50 flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-avinya-cyan/70 shrink-0" />
-                      <span>{event.venue}</span>
-                    </div>
-
-                    {/* Description */}
-                    <p className="mt-4 text-xs sm:text-sm text-white/70 font-grotesk leading-relaxed">
-                      {event.description}
-                    </p>
-                  </div>
-
-                  {/* Footer Tags & Meta */}
-                  <div className="mt-6 pt-4 border-t border-white/10 flex flex-col gap-3">
-                    <div className="flex flex-wrap gap-1.5">
-                      {event.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="font-mono text-[9px] px-2 py-0.5 rounded bg-white/5 border border-white/10 text-white/60"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    <div className="flex items-center justify-between text-xs font-mono pt-1 text-white/50">
-                      <span>TEAM: {event.teamSize || 'Individual'}</span>
-                      <a
-                        href="#register"
-                        className="text-avinya-cyan font-bold hover:underline flex items-center gap-1"
-                      >
-                        REGISTER <ArrowUpRight className="w-3 h-3" />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {filteredEvents.length === 0 && (
-            <div className="text-center py-20 font-mono text-white/50">
-              NO EVENTS MATCHED CRITERIA. RESET FILTERS TO EXPLORE ALL 24 ARENAS.
-            </div>
-          )}
-        </section>
-
-        {/* Section: Hack2Future Flagship Hackathon */}
-        <section id="hack2future" className="max-w-7xl mx-auto px-4 sm:px-6 py-24">
-          <div className="glass-panel p-8 sm:p-14 rounded-3xl border border-avinya-cyan/30 relative overflow-hidden bg-gradient-to-br from-avinya-cyan/10 via-black/80 to-avinya-magenta/10 shadow-[0_0_60px_rgba(0,240,255,0.15)]">
-            <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-avinya-cyan/20 border border-avinya-cyan/40 text-avinya-cyan font-mono text-xs uppercase tracking-wider mb-4">
-                <Flame className="w-4 h-4 text-avinya-cyan animate-pulse" />
-                FLAGSHIP NATIONAL 36-HOUR HACKATHON
-              </div>
-
-              <h2 className="font-orbitron text-4xl sm:text-6xl font-black text-white tracking-tight">
-                HACK2FUTURE
-              </h2>
-
-              <p className="font-syne text-lg text-white/80 font-medium mt-2">
-                March 12-14, 2027 • IIIT Dharwad Campus
-              </p>
-
-              <p className="font-grotesk text-white/70 text-sm sm:text-base mt-4 leading-relaxed">
-                The centerpiece engineering competition of Avinya 2027. Bring together a squad of 2 to 4 visionaries and build across Autonomous Agentic AI, Quantum Cryptography, Hardware/FPGA integration, and Decentralized Infrastructure.
-              </p>
-
-              {/* Hackathon Key Stats */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 font-mono">
-                <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                  <span className="text-[10px] text-white/40 block">PRIZE POOL</span>
-                  <span className="font-orbitron text-xl sm:text-2xl font-bold text-avinya-gold">
-                    ₹3,00,000+
-                  </span>
-                </div>
-                <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                  <span className="text-[10px] text-white/40 block">DURATION</span>
-                  <span className="font-orbitron text-xl sm:text-2xl font-bold text-white">
-                    36 HOURS
-                  </span>
-                </div>
-                <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                  <span className="text-[10px] text-white/40 block">SQUAD SIZE</span>
-                  <span className="font-orbitron text-xl sm:text-2xl font-bold text-avinya-cyan">
-                    2-4 MEMBERS
-                  </span>
-                </div>
-                <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                  <span className="text-[10px] text-white/40 block">VENUE</span>
-                  <span className="font-orbitron text-xl sm:text-2xl font-bold text-avinya-magenta">
-                    INCUBATION HALL
-                  </span>
-                </div>
-              </div>
-
-              <div className="mt-8 flex flex-wrap gap-4">
-                <a
-                  href="#register"
-                  className="px-8 py-3.5 rounded-full bg-gradient-to-r from-avinya-cyan to-avinya-magenta text-white font-orbitron font-bold text-xs tracking-wider uppercase shadow-[0_0_25px_rgba(0,240,255,0.4)] hover:shadow-[0_0_35px_rgba(255,0,127,0.6)] transition-all"
-                  data-cursor-text="APPLY"
-                >
-                  Register Team for Hack2Future
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Section: Register / Pass Procurement */}
-        <section id="register" className="max-w-4xl mx-auto px-4 sm:px-6 py-24 text-center">
+        {/* ======================================================== */}
+        {/* 6. PASS PROCUREMENT & REGISTRATION GATEWAY               */}
+        {/* ======================================================== */}
+        <section id="register" className="max-w-4xl mx-auto px-4 sm:px-6 py-28 text-center">
           <div className="glass-panel p-10 sm:p-16 rounded-3xl border border-white/15 relative overflow-hidden bg-black/80">
             <span className="font-mono text-xs uppercase tracking-widest text-avinya-magenta flex items-center justify-center gap-2">
               <Sparkles className="w-3.5 h-3.5" />
@@ -590,6 +355,7 @@ export default function Home() {
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
                 type="button"
+                onClick={() => alert("Delegate Registration Gateway: Pass secured for Avinya 2027! See you on campus March 12-14.")}
                 className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-avinya-cyan via-purple-600 to-avinya-magenta text-white font-orbitron font-bold text-xs sm:text-sm tracking-wider uppercase shadow-[0_0_30px_rgba(0,240,255,0.4)] hover:shadow-[0_0_40px_rgba(255,0,127,0.6)] transition-all"
                 data-cursor-text="REGISTER"
               >
@@ -603,7 +369,7 @@ export default function Home() {
               </a>
             </div>
 
-            <div className="mt-8 flex items-center justify-center gap-6 text-xs font-mono text-white/40">
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs font-mono text-white/40">
               <span className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                 VERIFIED COLLEGE ID REQUIRED
