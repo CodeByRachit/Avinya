@@ -12,7 +12,7 @@ const OceanicBlueShader = {
     uCrestColor: { value: new THREE.Color('#38bdf8') },    // Azure wave crest
     uSunReflection: { value: new THREE.Color('#f59e0b') }, // Warm golden evening sun reflection
     uSpecularSun: { value: new THREE.Color('#fef08a') },   // Bright sun glint
-    uSunPosition: { value: new THREE.Vector3(30, 22, -150) },
+    uSunPosition: { value: new THREE.Vector3(40, 52, -450) },
   },
   vertexShader: `
     uniform float uTime;
@@ -120,7 +120,7 @@ export default function BioluminescentOcean() {
       uCrestColor: { value: new THREE.Color('#38bdf8') },
       uSunReflection: { value: new THREE.Color('#f59e0b') },
       uSpecularSun: { value: new THREE.Color('#fef08a') },
-      uSunPosition: { value: new THREE.Vector3(30, 22, -150) },
+      uSunPosition: { value: new THREE.Vector3(40, 52, -450) },
     }),
     []
   );

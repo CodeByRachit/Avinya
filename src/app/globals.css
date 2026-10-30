@@ -113,3 +113,52 @@ body {
     cursor: pointer !important;
   }
 }
+
+/* ========================================================================= */
+/* DYNAMIC MOVING COLOR & LIGHT BEAM ANIMATIONS                              */
+/* ========================================================================= */
+@keyframes beamSweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes beamSweepReverse {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+@keyframes shimmerText {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulseAura {
+  0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.25; }
+  50% { transform: scale(1.18) translate(5px, -5px); opacity: 0.6; }
+}
+
+@keyframes borderRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-beam-sweep {
+  animation: beamSweep 2.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-beam-sweep-rev {
+  animation: beamSweepReverse 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-shimmer-text {
+  background-size: 200% auto;
+  animation: shimmerText 3.5s linear infinite;
+}
+
+.animate-pulse-aura {
+  animation: pulseAura 4.5s ease-in-out infinite;
+}
+
+.animate-border-rotate {
+  animation: borderRotate 8s linear infinite;
+}

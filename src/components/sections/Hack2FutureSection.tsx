@@ -240,35 +240,60 @@ export default function Hack2FutureSection() {
                   onClick={() => setActiveTrack(track.id)}
                   className={`glass-panel p-6 rounded-2xl border transition-all duration-300 cursor-pointer flex flex-col justify-between group relative overflow-hidden ${
                     isActive
-                      ? 'border-amber-400/60 bg-white/[0.06] shadow-xl scale-[1.02]'
-                      : 'border-white/10 hover:border-white/25 hover:bg-white/[0.03]'
+                      ? 'bg-white/[0.07] scale-[1.02]'
+                      : 'border-white/10 hover:border-white/30 hover:bg-white/[0.04]'
                   }`}
                   style={{
-                    boxShadow: isActive ? `0 0 30px -5px ${track.accentColor}30` : 'none',
+                    borderColor: isActive ? track.accentColor : undefined,
+                    boxShadow: isActive
+                      ? `0 0 35px -5px ${track.accentColor}55, inset 0 0 20px ${track.accentColor}15`
+                      : undefined,
                   }}
                 >
-                  {/* Top Glow Stripe */}
+                  {/* Animated Sweeping Neon Border Beam Along Top */}
+                  <div className="absolute top-0 left-0 right-0 h-[2.5px] overflow-hidden pointer-events-none">
+                    <div
+                      className="w-full h-full animate-beam-sweep"
+                      style={{
+                        background: `linear-gradient(90deg, transparent 0%, ${track.accentColor} 30%, #ffffff 50%, ${track.accentColor} 70%, transparent 100%)`,
+                        boxShadow: `0 0 12px ${track.accentColor}`,
+                      }}
+                    />
+                  </div>
+
+                  {/* Animated Moving Ambient Color Aura Bubbles */}
                   <div
-                    className="absolute top-0 left-0 right-0 h-1 transition-opacity duration-300"
+                    className="absolute -top-16 -right-16 w-44 h-44 rounded-full blur-2xl pointer-events-none transition-all duration-700 animate-pulse-aura"
                     style={{
-                      background: `linear-gradient(90deg, transparent, ${track.accentColor}, transparent)`,
-                      opacity: isActive ? 1 : 0.4,
+                      backgroundColor: `${track.accentColor}25`,
+                    }}
+                  />
+                  <div
+                    className="absolute -bottom-16 -left-16 w-36 h-36 rounded-full blur-2xl pointer-events-none transition-all duration-700 animate-pulse-aura"
+                    style={{
+                      backgroundColor: `${track.accentColor}18`,
+                      animationDelay: '1.5s',
                     }}
                   />
 
-                  <div>
+                  <div className="relative z-10">
                     {/* Header Row */}
                     <div className="flex items-center justify-between mb-4">
-                      <span className="font-mono text-[10px] uppercase font-bold tracking-widest text-white/40">
+                      <span className="font-mono text-[10px] uppercase font-bold tracking-widest text-white/50">
                         {track.code}
                       </span>
                       <div
-                        className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
+                        className="relative w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-110 shadow-lg"
                         style={{
-                          backgroundColor: `${track.accentColor}18`,
-                          border: `1px solid ${track.accentColor}40`,
+                          backgroundColor: `${track.accentColor}22`,
+                          border: `1px solid ${track.accentColor}60`,
+                          boxShadow: `0 0 14px ${track.accentColor}35`,
                         }}
                       >
+                        <div
+                          className="absolute inset-0 rounded-lg animate-ping opacity-20 pointer-events-none"
+                          style={{ backgroundColor: track.accentColor }}
+                        />
                         <Icon className="w-4 h-4" style={{ color: track.accentColor }} />
                       </div>
                     </div>
@@ -277,9 +302,12 @@ export default function Hack2FutureSection() {
                       {track.title}
                     </h4>
 
+                    {/* Animated Shimmering Gradient Subtitle */}
                     <span
-                      className="font-syne text-xs font-semibold mt-1 block"
-                      style={{ color: track.accentColor }}
+                      className="font-syne text-xs font-semibold mt-1 block animate-shimmer-text bg-clip-text text-transparent"
+                      style={{
+                        backgroundImage: `linear-gradient(90deg, ${track.accentColor} 0%, #ffffff 50%, ${track.accentColor} 100%)`,
+                      }}
                     >
                       {track.subtitle}
                     </span>
@@ -290,7 +318,7 @@ export default function Hack2FutureSection() {
                   </div>
 
                   {/* Tech stack badges */}
-                  <div className="mt-6 pt-4 border-t border-white/10">
+                  <div className="relative z-10 mt-6 pt-4 border-t border-white/10">
                     <span className="font-mono text-[9px] uppercase tracking-wider text-white/40 block mb-2">
                       KEY ACCELERATORS:
                     </span>
@@ -298,7 +326,7 @@ export default function Hack2FutureSection() {
                       {track.techStack.map((tech) => (
                         <span
                           key={tech}
-                          className="font-mono text-[9px] px-2 py-0.5 rounded bg-white/[0.04] border border-white/10 text-white/60"
+                          className="font-mono text-[9px] px-2 py-0.5 rounded bg-white/[0.04] border border-white/10 text-white/70 group-hover:border-white/20 transition-colors"
                         >
                           {tech}
                         </span>

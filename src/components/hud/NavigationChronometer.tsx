@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Calendar, MapPin, Sparkles } from 'lucide-react';
+import { Calendar, MapPin, Clock, Sparkles, Radio, CheckCircle2 } from 'lucide-react';
 
 interface TimeLeft {
   days: number;
@@ -43,70 +43,139 @@ export default function NavigationChronometer() {
     return () => clearInterval(interval);
   }, []);
 
+  // Compute live progress percentages for the visual micro-gauges
+  const hoursProgress = Math.min(100, Math.max(0, ((24 - timeLeft.hours) / 24) * 100));
+  const minutesProgress = Math.min(100, Math.max(0, ((60 - timeLeft.minutes) / 60) * 100));
+  const secondsProgress = Math.min(100, Math.max(0, ((60 - timeLeft.seconds) / 60) * 100));
+
   return (
-    <div className="w-full max-w-4xl mx-auto my-14 px-4 sm:px-6">
-      <div className="relative rounded-2xl p-6 sm:p-8 border border-white/[0.08] bg-[#0c101a]/85 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.6),inset_0_1px_0_0_rgba(255,255,255,0.08)] overflow-hidden">
+    <div className="w-full max-w-5xl mx-auto my-16 px-4 sm:px-6">
+      <div className="relative rounded-2xl p-6 sm:p-8 border border-white/10 bg-[#0c101a]/95 backdrop-blur-xl shadow-[0_24px_64px_rgba(0,0,0,0.7),inset_0_1px_0_0_rgba(255,255,255,0.1)] overflow-hidden">
+        {/* Subtle Ambient Amber Glow in Background */}
+        <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full bg-amber-500/10 blur-[100px]" />
+
         {/* Top Header */}
         <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-white/[0.08]">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/10 flex items-center justify-center shrink-0">
-              <Calendar className="w-5 h-5 text-amber-300" />
+          <div className="flex items-center gap-3.5">
+            <div className="w-11 h-11 rounded-xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center shrink-0 text-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.2)]">
+              <Calendar className="w-5 h-5" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <span className="font-syne font-bold text-base text-white tracking-tight">
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <h3 className="font-syne font-bold text-base sm:text-lg text-white tracking-tight">
                   Countdown to Avinya 2027
-                </span>
-                <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-amber-400/10 text-amber-300 border border-amber-400/20">
+                </h3>
+                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-amber-400/15 text-amber-300 border border-amber-400/30 shadow-sm">
                   March 12 – 14, 2027
                 </span>
               </div>
               <span className="text-xs text-white/50 font-grotesk block mt-0.5">
-                Flagship Techno-Cultural Fest of IIIT Dharwad
+                Official Embarkation Sequence · IIIT Dharwad Main Campus
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 text-xs font-grotesk text-emerald-400/90 bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-500/20">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Live Countdown Active</span>
+          <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3.5 py-1.5 rounded-full border border-emerald-500/25 shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
+            <span className="tracking-wide">LIVE CHRONOMETER SYNC</span>
           </div>
         </div>
 
-        {/* 4 Clean Countdown Metric Blocks */}
+        {/* 4 Professional Countdown Metric Cards with Precision Typography & Micro-Gauges */}
         <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 my-6">
-          {[
-            { label: 'Days Remaining', value: timeLeft.days, sub: 'Days to Kickoff' },
-            { label: 'Hours', value: timeLeft.hours, sub: 'Hours' },
-            { label: 'Minutes', value: timeLeft.minutes, sub: 'Minutes' },
-            { label: 'Seconds', value: timeLeft.seconds, sub: 'Seconds' },
-          ].map((item, idx) => (
-            <div
-              key={item.label}
-              className="relative p-5 sm:p-6 rounded-xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/15 transition-all flex flex-col items-center justify-center text-center group"
-            >
-              <span className="text-[11px] font-mono uppercase tracking-wider text-white/40 mb-1">
-                {item.label}
-              </span>
-              <div className="font-syne text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight tabular-nums my-1">
-                {String(item.value).padStart(2, '0')}
-              </div>
-              <span className="text-[11px] font-grotesk text-white/45 mt-1">
-                {item.sub}
-              </span>
+          {/* 1. DAYS */}
+          <div className="p-5 sm:p-6 rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-white/[0.01] hover:border-amber-400/40 hover:bg-white/[0.05] transition-all flex flex-col items-center justify-between text-center group shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]">
+            <span className="text-[11px] font-mono uppercase tracking-widest text-amber-400/90 font-semibold mb-2">
+              DAYS
+            </span>
+            <div className="font-grotesk text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight tabular-nums my-1 drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
+              {String(timeLeft.days).padStart(2, '0')}
             </div>
-          ))}
+            <div className="w-full mt-3 pt-3 border-t border-white/[0.06] flex flex-col items-center gap-1.5">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-white/40">
+                T-MINUS STAGE
+              </span>
+              <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                <div className="h-full bg-amber-400 rounded-full" style={{ width: '100%' }} />
+              </div>
+            </div>
+          </div>
+
+          {/* 2. HOURS */}
+          <div className="p-5 sm:p-6 rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-white/[0.01] hover:border-amber-400/40 hover:bg-white/[0.05] transition-all flex flex-col items-center justify-between text-center group shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]">
+            <span className="text-[11px] font-mono uppercase tracking-widest text-amber-400/90 font-semibold mb-2">
+              HOURS
+            </span>
+            <div className="font-grotesk text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight tabular-nums my-1 drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
+              {String(timeLeft.hours).padStart(2, '0')}
+            </div>
+            <div className="w-full mt-3 pt-3 border-t border-white/[0.06] flex flex-col items-center gap-1.5">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-white/40">
+                DIURNAL CYCLE
+              </span>
+              <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-amber-400 rounded-full transition-all duration-500"
+                  style={{ width: `${hoursProgress}%` }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* 3. MINUTES */}
+          <div className="p-5 sm:p-6 rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-white/[0.01] hover:border-amber-400/40 hover:bg-white/[0.05] transition-all flex flex-col items-center justify-between text-center group shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]">
+            <span className="text-[11px] font-mono uppercase tracking-widest text-amber-400/90 font-semibold mb-2">
+              MINUTES
+            </span>
+            <div className="font-grotesk text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight tabular-nums my-1 drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
+              {String(timeLeft.minutes).padStart(2, '0')}
+            </div>
+            <div className="w-full mt-3 pt-3 border-t border-white/[0.06] flex flex-col items-center gap-1.5">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-white/40">
+                HOUR FRACTION
+              </span>
+              <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-amber-400 rounded-full transition-all duration-500"
+                  style={{ width: `${minutesProgress}%` }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* 4. SECONDS */}
+          <div className="p-5 sm:p-6 rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-white/[0.01] hover:border-amber-400/40 hover:bg-white/[0.05] transition-all flex flex-col items-center justify-between text-center group shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]">
+            <span className="text-[11px] font-mono uppercase tracking-widest text-amber-400/90 font-semibold mb-2 flex items-center gap-1.5">
+              <span>SECONDS</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
+            </span>
+            <div className="font-grotesk text-4xl sm:text-5xl lg:text-6xl font-extrabold text-amber-300 tracking-tight tabular-nums my-1 drop-shadow-[0_2px_14px_rgba(245,158,11,0.4)]">
+              {String(timeLeft.seconds).padStart(2, '0')}
+            </div>
+            <div className="w-full mt-3 pt-3 border-t border-white/[0.06] flex flex-col items-center gap-1.5">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-white/40">
+                REAL-TIME PULSE
+              </span>
+              <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-amber-400 to-orange-400 rounded-full transition-all duration-300"
+                  style={{ width: `${secondsProgress}%` }}
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Bottom Information Footer */}
-        <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-2 pt-4 border-t border-white/[0.06] text-xs font-grotesk text-white/50">
-          <div className="flex items-center gap-1.5">
-            <MapPin className="w-3.5 h-3.5 text-white/40" />
-            <span>Campus Arena: IIIT Dharwad Main Campus, Karnataka</span>
+        <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-white/[0.08] text-xs font-grotesk text-white/60">
+          <div className="flex items-center gap-2">
+            <MapPin className="w-3.5 h-3.5 text-amber-400" />
+            <span>Campus Arena: IIIT Dharwad Main Campus · Hubballi-Dharwad, Karnataka</span>
           </div>
-          <span className="text-white/40 font-mono text-[11px]">
-            GATES OPEN AT 09:00 AM IST
-          </span>
+          <div className="flex items-center gap-2 text-white/50 font-mono text-[11px]">
+            <Clock className="w-3.5 h-3.5 text-amber-400" />
+            <span>GATES UNLOCK: MARCH 12, 09:00 AM IST</span>
+          </div>
         </div>
       </div>
     </div>
