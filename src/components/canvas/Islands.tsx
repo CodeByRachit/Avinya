@@ -1,28 +1,36 @@
 'use client';
 
-import React, { useRef, useMemo } from 'react';
+import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Sparkles } from '@react-three/drei';
 import * as THREE from 'three';
 
 // =========================================================================
 // ISLAND 1: THE LAST OUTPOST (Dune Desert Mountain Citadel)
+// Set across the water on the LEFT: Sandstone canyon mesas, mountain fortress,
+// arched viaduct bridges, fire braziers, and a giant celestial moon.
 // =========================================================================
-export function IslandLastOutpost({ position = [-24, 0, -42] as [number, number, number] }) {
+export function IslandLastOutpost({ position = [-44, 0, -60] as [number, number, number] }) {
   const flagsRef = useRef<THREE.Group>(null);
   const moonRef = useRef<THREE.Mesh>(null);
+  const brazierLightRef = useRef<THREE.PointLight>(null);
 
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
-    // Gentle flag flutter in desert breeze
+    // Pennant flags fluttering in the desert wind
     if (flagsRef.current) {
-      flagsRef.current.children.forEach((child, i) => {
-        child.rotation.y = Math.sin(time * 3.0 + i) * 0.2;
+      flagsRef.current.children.forEach((flag, idx) => {
+        flag.rotation.y = Math.sin(time * 3.5 + idx * 1.8) * 0.22;
+        flag.rotation.z = Math.cos(time * 2.8 + idx) * 0.08;
       });
     }
-    // Subtle moon breathing glow
+    // Gentle celestial moon breathing
     if (moonRef.current) {
-      moonRef.current.position.y = 28 + Math.sin(time * 0.5) * 0.3;
+      moonRef.current.position.y = 26 + Math.sin(time * 0.4) * 0.4;
+    }
+    // Flickering desert citadel fire braziers
+    if (brazierLightRef.current) {
+      brazierLightRef.current.intensity = 4.2 + Math.sin(time * 12) * 0.6 + Math.sin(time * 24) * 0.3;
     }
   });
 
@@ -31,7 +39,7 @@ export function IslandLastOutpost({ position = [-24, 0, -42] as [number, number,
       {/* ======================================================== */}
       {/* 1. GIANT CELESTIAL SANDSTONE MOON ON THE HORIZON        */}
       {/* ======================================================== */}
-      <group position={[6, 28, -26]}>
+      <group position={[6, 26, -24]}>
         <mesh ref={moonRef}>
           <sphereGeometry args={[18, 36, 36]} />
           <meshBasicMaterial color="#ffe8cc" />
@@ -54,11 +62,11 @@ export function IslandLastOutpost({ position = [-24, 0, -42] as [number, number,
       </group>
 
       {/* ======================================================== */}
-      {/* 2. LAYERED SANDSTONE CANYON MESAS & BLUFFS               */}
+      {/* 2. LAYERED SANDSTONE CANYON MESAS & STRATA               */}
       {/* ======================================================== */}
       {/* Main Base Canyon Plateau */}
       <mesh position={[0, 2.5, 0]} receiveShadow castShadow>
-        <cylinderGeometry args={[18, 24, 5.0, 16]} />
+        <cylinderGeometry args={[19, 25, 5.0, 18]} />
         <meshStandardMaterial
           color="#8c502b"
           roughness={0.9}
@@ -69,7 +77,7 @@ export function IslandLastOutpost({ position = [-24, 0, -42] as [number, number,
 
       {/* Upper Stepped Sandstone Tier */}
       <mesh position={[0, 6.2, 0]} receiveShadow castShadow>
-        <cylinderGeometry args={[14, 17, 4.0, 14]} />
+        <cylinderGeometry args={[15, 18, 4.0, 16]} />
         <meshStandardMaterial
           color="#a35f33"
           roughness={0.85}
@@ -78,13 +86,14 @@ export function IslandLastOutpost({ position = [-24, 0, -42] as [number, number,
         />
       </mesh>
 
-      {/* Flanking Jagged Mesa Spires */}
+      {/* Flanking Jagged Mesa Spires & Rock Pillars */}
       {[
-        [-14, 7, 4, 3.2, 9],
-        [15, 6, -6, 2.8, 8],
-        [-10, 5, -12, 3.0, 7],
-        [12, 6.5, 10, 3.5, 9],
-        [-16, 4, -4, 2.5, 6],
+        [-15, 7, 5, 3.4, 9.5],
+        [16, 6, -6, 3.0, 8.5],
+        [-11, 5, -13, 3.2, 7.5],
+        [13, 6.5, 11, 3.6, 9.5],
+        [-17, 4, -5, 2.8, 6.5],
+        [18, 4.5, 4, 2.6, 6.0],
       ].map(([x, y, z, r, h], idx) => (
         <group key={idx} position={[x, y, z]}>
           <mesh castShadow receiveShadow>
@@ -96,10 +105,24 @@ export function IslandLastOutpost({ position = [-24, 0, -42] as [number, number,
             />
           </mesh>
           <mesh position={[0, h / 2 + 0.8, 0]}>
-            <coneGeometry args={[r * 0.75, 2.2, 8]} />
+            <coneGeometry args={[r * 0.75, 2.4, 8]} />
             <meshStandardMaterial color="#5a2e16" roughness={0.9} flatShading />
           </mesh>
         </group>
+      ))}
+
+      {/* Shoreline Boulders & Rock Outcrops */}
+      {[
+        [-16, 0.4, 18, 2.4],
+        [-8, 0.3, 21, 1.8],
+        [6, 0.4, 20, 2.2],
+        [18, 0.3, 16, 2.6],
+        [21, 0.2, -8, 2.0],
+      ].map(([bx, by, bz, bs], idx) => (
+        <mesh key={idx} position={[bx, by, bz]} castShadow receiveShadow>
+          <dodecahedronGeometry args={[bs, 1]} />
+          <meshStandardMaterial color="#6e3c1d" roughness={0.95} flatShading />
+        </mesh>
       ))}
 
       {/* ======================================================== */}
@@ -108,83 +131,132 @@ export function IslandLastOutpost({ position = [-24, 0, -42] as [number, number,
       <group position={[0, 8.2, 0]}>
         {/* Central Bastion Keep */}
         <mesh position={[0, 4.5, 0]} castShadow receiveShadow>
-          <boxGeometry args={[7.5, 9, 7.5]} />
+          <boxGeometry args={[8.0, 9, 8.0]} />
           <meshStandardMaterial color="#b46f3e" roughness={0.8} />
         </mesh>
 
         {/* Central High Spire Tower */}
         <group position={[0, 10.5, 0]}>
           <mesh castShadow>
-            <cylinderGeometry args={[1.4, 2.0, 6, 10]} />
+            <cylinderGeometry args={[1.5, 2.1, 6.5, 10]} />
             <meshStandardMaterial color="#96582f" roughness={0.75} />
           </mesh>
           {/* Conical Watchtower Roof */}
-          <mesh position={[0, 4.2, 0]}>
-            <coneGeometry args={[1.8, 3.2, 10]} />
+          <mesh position={[0, 4.5, 0]}>
+            <coneGeometry args={[1.9, 3.4, 10]} />
             <meshStandardMaterial color="#4a2612" roughness={0.7} />
           </mesh>
           {/* Spire Golden Finial */}
-          <mesh position={[0, 6.0, 0]}>
-            <sphereGeometry args={[0.25, 8, 8]} />
+          <mesh position={[0, 6.4, 0]}>
+            <sphereGeometry args={[0.28, 8, 8]} />
             <meshStandardMaterial color="#fbbf24" metalness={0.9} roughness={0.2} />
           </mesh>
         </group>
 
         {/* Four Corner Watchtowers with Arched Windows */}
         {[
-          [-4.5, 4.5, 4.5],
-          [4.5, 4.5, 4.5],
-          [-4.5, 4.5, -4.5],
-          [4.5, 4.5, -4.5],
+          [-4.8, 4.8, 4.8],
+          [4.8, 4.8, 4.8],
+          [-4.8, 4.8, -4.8],
+          [4.8, 4.8, -4.8],
         ].map(([tx, ty, tz], idx) => (
           <group key={idx} position={[tx, ty, tz]}>
             <mesh castShadow>
-              <cylinderGeometry args={[1.2, 1.4, 8, 8]} />
+              <cylinderGeometry args={[1.3, 1.5, 8.5, 8]} />
               <meshStandardMaterial color="#8c502b" roughness={0.8} />
             </mesh>
-            <mesh position={[0, 4.8, 0]}>
-              <coneGeometry args={[1.4, 2.4, 8]} />
+            <mesh position={[0, 5.1, 0]}>
+              <coneGeometry args={[1.5, 2.6, 8]} />
               <meshStandardMaterial color="#4a2612" roughness={0.7} />
             </mesh>
-            {/* Glowing Amber Window */}
-            <mesh position={[0, 2.0, 1.25]}>
-              <planeGeometry args={[0.4, 0.8]} />
+            {/* Glowing Amber Arched Window */}
+            <mesh position={[0, 2.2, 1.35]}>
+              <planeGeometry args={[0.45, 0.9]} />
               <meshBasicMaterial color="#fbbf24" />
             </mesh>
           </group>
         ))}
 
         {/* Grand Fortress Canyon Archway Viaduct Bridge */}
-        <group position={[0, 1.5, 7.5]}>
-          <mesh position={[-3.2, 0, 0]}>
-            <boxGeometry args={[1.2, 5, 1.2]} />
+        <group position={[0, 1.5, 7.8]}>
+          <mesh position={[-3.5, 0, 0]}>
+            <boxGeometry args={[1.3, 5.2, 1.3]} />
             <meshStandardMaterial color="#7c4322" />
           </mesh>
-          <mesh position={[3.2, 0, 0]}>
-            <boxGeometry args={[1.2, 5, 1.2]} />
+          <mesh position={[3.5, 0, 0]}>
+            <boxGeometry args={[1.3, 5.2, 1.3]} />
             <meshStandardMaterial color="#7c4322" />
           </mesh>
-          <mesh position={[0, 2.8, 0]}>
-            <boxGeometry args={[7.6, 0.8, 2.0]} />
+          <mesh position={[0, 3.0, 0]}>
+            <boxGeometry args={[8.2, 0.85, 2.2]} />
             <meshStandardMaterial color="#96582f" />
           </mesh>
         </group>
+
+        {/* Flickering Rampart Fire Braziers */}
+        <group position={[0, 9.2, 4.2]}>
+          <mesh>
+            <cylinderGeometry args={[0.35, 0.22, 0.45, 8]} />
+            <meshStandardMaterial color="#2d1c10" roughness={0.8} />
+          </mesh>
+          <mesh position={[0, 0.28, 0]}>
+            <sphereGeometry args={[0.18, 8, 8]} />
+            <meshBasicMaterial color="#f97316" />
+          </mesh>
+          <pointLight
+            ref={brazierLightRef}
+            color="#f97316"
+            intensity={4.2}
+            distance={18}
+          />
+        </group>
+
+        {/* Second Braziers on Flanking Towers */}
+        {[-4.8, 4.8].map((bx, idx) => (
+          <group key={idx} position={[bx, 9.5, 4.8]}>
+            <mesh position={[0, 0.25, 0]}>
+              <sphereGeometry args={[0.14, 8, 8]} />
+              <meshBasicMaterial color="#f97316" />
+            </mesh>
+            <pointLight color="#f97316" intensity={2.5} distance={10} />
+          </group>
+        ))}
+      </group>
+
+      {/* Stone Harbor Quay & Dock Posts on the Waterline */}
+      <group position={[0, 0.5, 18]}>
+        <mesh receiveShadow>
+          <boxGeometry args={[10, 0.6, 5]} />
+          <meshStandardMaterial color="#6a3e20" roughness={0.8} />
+        </mesh>
+        {[-4, 0, 4].map((px, idx) => (
+          <group key={idx} position={[px, 0.6, 2.2]}>
+            <mesh>
+              <cylinderGeometry args={[0.15, 0.18, 1.2, 8]} />
+              <meshStandardMaterial color="#3a2213" roughness={0.7} />
+            </mesh>
+            <mesh position={[0, 0.65, 0]}>
+              <sphereGeometry args={[0.1, 8, 8]} />
+              <meshBasicMaterial color="#f59e0b" />
+            </mesh>
+          </group>
+        ))}
       </group>
 
       {/* Fluttering Citadel Pennant Flags */}
       <group ref={flagsRef} position={[0, 18, 0]}>
         {[
-          [0, 6.2, 0],
-          [-4.5, 3.5, 4.5],
-          [4.5, 3.5, 4.5],
+          [0, 6.8, 0],
+          [-4.8, 3.8, 4.8],
+          [4.8, 3.8, 4.8],
         ].map(([fx, fy, fz], idx) => (
           <group key={idx} position={[fx, fy, fz]}>
-            <mesh position={[0, 0.8, 0]}>
-              <cylinderGeometry args={[0.04, 0.04, 1.8, 6]} />
+            <mesh position={[0, 0.9, 0]}>
+              <cylinderGeometry args={[0.045, 0.045, 2.0, 6]} />
               <meshStandardMaterial color="#2d1c10" />
             </mesh>
-            <mesh position={[0.45, 1.3, 0]}>
-              <boxGeometry args={[0.85, 0.45, 0.02]} />
+            <mesh position={[0.5, 1.4, 0]}>
+              <boxGeometry args={[0.95, 0.48, 0.02]} />
               <meshStandardMaterial color="#dc2626" roughness={0.6} />
             </mesh>
           </group>
@@ -193,9 +265,9 @@ export function IslandLastOutpost({ position = [-24, 0, -42] as [number, number,
 
       {/* Floating Desert Sandstorm Embers */}
       <Sparkles
-        count={75}
-        scale={[38, 24, 38]}
-        size={4.0}
+        count={85}
+        scale={[42, 26, 42]}
+        size={4.2}
         speed={0.5}
         color="#f59e0b"
         opacity={0.8}
@@ -205,10 +277,10 @@ export function IslandLastOutpost({ position = [-24, 0, -42] as [number, number,
       {/* Warm Golden Island Directional & Ambient Lighting */}
       <pointLight
         color="#f59e0b"
-        intensity={4.5}
-        distance={42}
+        intensity={4.8}
+        distance={48}
         decay={1.6}
-        position={[0, 16, 6]}
+        position={[0, 16, 8]}
       />
     </group>
   );
@@ -216,8 +288,10 @@ export function IslandLastOutpost({ position = [-24, 0, -42] as [number, number,
 
 // =========================================================================
 // ISLAND 2: THE PANDEMONIUM (Synthwave Cyberpunk River Delta)
+// Set across the water on the RIGHT: 9 tiered cyber skyscrapers, neon window
+// grids, double-deck aqueducts, animated waterfalls, and giant synthwave sun.
 // =========================================================================
-export function IslandPandemonium({ position = [26, 0, -108] as [number, number, number] }) {
+export function IslandPandemonium({ position = [48, 0, -156] as [number, number, number] }) {
   const waterfallRef = useRef<THREE.Mesh>(null);
   const synthSunRef = useRef<THREE.Mesh>(null);
 
@@ -265,7 +339,7 @@ export function IslandPandemonium({ position = [26, 0, -108] as [number, number,
       {/* 2. RIVER DELTA CLIFF BASE                                */}
       {/* ======================================================== */}
       <mesh position={[0, 2.5, 0]} receiveShadow castShadow>
-        <cylinderGeometry args={[18, 22, 5.0, 16]} />
+        <cylinderGeometry args={[20, 24, 5.0, 18]} />
         <meshStandardMaterial
           color="#161b2e"
           roughness={0.7}
@@ -278,38 +352,40 @@ export function IslandPandemonium({ position = [26, 0, -108] as [number, number,
       {/* 3. CYBERNETIC MEGAPOLIS SKYSCRAPER TOWERS                 */}
       {/* ======================================================== */}
       <group position={[0, 5.0, -4]}>
-        {/* Tower 1 (Center High Spire) */}
+        {/* Center High Spire */}
         <group position={[0, 14, 0]}>
           <mesh castShadow>
-            <boxGeometry args={[4.2, 28, 4.2]} />
+            <boxGeometry args={[4.4, 28, 4.4]} />
             <meshStandardMaterial color="#0f172a" metalness={0.85} roughness={0.2} />
           </mesh>
           {/* Neon Window Bands */}
           {[-8, -4, 0, 4, 8, 11].map((wy, idx) => (
-            <mesh key={idx} position={[0, wy, 2.15]}>
-              <planeGeometry args={[3.6, 0.5]} />
+            <mesh key={idx} position={[0, wy, 2.25]}>
+              <planeGeometry args={[3.8, 0.55]} />
               <meshBasicMaterial color={idx % 2 === 0 ? '#f43f5e' : '#00f0ff'} />
             </mesh>
           ))}
-          {/* Spire Antenna */}
+          {/* Spire Antenna with Blinking Warning Beacon */}
           <mesh position={[0, 15.5, 0]}>
             <cylinderGeometry args={[0.08, 0.18, 5, 8]} />
             <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
           </mesh>
           <mesh position={[0, 18.2, 0]}>
-            <sphereGeometry args={[0.25, 8, 8]} />
+            <sphereGeometry args={[0.28, 8, 8]} />
             <meshBasicMaterial color="#00f0ff" />
           </mesh>
         </group>
 
-        {/* Flanking Cyber Towers */}
+        {/* Flanking Staggered Cyber Towers */}
         {[
-          [-6.5, 10, 2, 3.4, 20, '#00f0ff'],
-          [6.5, 11, 1, 3.6, 22, '#f43f5e'],
-          [-4.0, 8, -6, 3.0, 16, '#fbbf24'],
-          [4.5, 9, -5, 3.2, 18, '#00f0ff'],
-          [-9.5, 6, 4, 2.8, 12, '#f43f5e'],
-          [9.5, 7, 3, 2.8, 14, '#fbbf24'],
+          [-7.0, 10, 2, 3.6, 20, '#00f0ff'],
+          [7.0, 11, 1, 3.8, 22, '#f43f5e'],
+          [-4.5, 8, -6, 3.2, 16, '#fbbf24'],
+          [4.8, 9, -5, 3.4, 18, '#00f0ff'],
+          [-10.5, 6, 4, 3.0, 12, '#f43f5e'],
+          [10.5, 7, 3, 3.0, 14, '#fbbf24'],
+          [-8.5, 5, -8, 2.8, 10, '#00f0ff'],
+          [8.5, 6, -8, 2.8, 12, '#f43f5e'],
         ].map(([tx, ty, tz, w, h, col], idx) => (
           <group key={idx} position={[tx as number, ty as number, tz as number]}>
             <mesh castShadow>
@@ -328,30 +404,30 @@ export function IslandPandemonium({ position = [26, 0, -108] as [number, number,
       {/* ======================================================== */}
       {/* 4. GRAND ARCHED AQUEDUCT BRIDGES & WATERFALLS            */}
       {/* ======================================================== */}
-      <group position={[0, 2.5, 7.5]}>
+      <group position={[0, 2.5, 8.5]}>
         {/* Aqueduct Main Span */}
         <mesh position={[0, 3.8, 0]}>
-          <boxGeometry args={[19, 1.2, 2.4]} />
+          <boxGeometry args={[20, 1.2, 2.6]} />
           <meshStandardMaterial color="#1e293b" metalness={0.7} roughness={0.3} />
         </mesh>
         {/* Arched Support Piers */}
-        {[-7, -3.5, 0, 3.5, 7].map((px, idx) => (
+        {[-7.5, -3.8, 0, 3.8, 7.5].map((px, idx) => (
           <group key={idx} position={[px, 1.4, 0]}>
             <mesh>
-              <boxGeometry args={[1.2, 3.6, 2.2]} />
+              <boxGeometry args={[1.3, 3.6, 2.4]} />
               <meshStandardMaterial color="#0f172a" />
             </mesh>
             {/* Glowing Accent Band */}
-            <mesh position={[0, 1.6, 1.15]}>
-              <planeGeometry args={[0.9, 0.2]} />
+            <mesh position={[0, 1.6, 1.25]}>
+              <planeGeometry args={[1.0, 0.22]} />
               <meshBasicMaterial color="#f43f5e" />
             </mesh>
           </group>
         ))}
 
         {/* Cascading Animated Waterfalls from the Bridge */}
-        <mesh ref={waterfallRef} position={[0, 1.2, 1.22]}>
-          <planeGeometry args={[14, 3.8]} />
+        <mesh ref={waterfallRef} position={[0, 1.2, 1.32]}>
+          <planeGeometry args={[15, 3.8]} />
           <meshBasicMaterial
             color="#38bdf8"
             transparent
@@ -359,13 +435,24 @@ export function IslandPandemonium({ position = [26, 0, -108] as [number, number,
             side={THREE.DoubleSide}
           />
         </mesh>
+
+        {/* Waterfall Base Ocean Mist Spray */}
+        <Sparkles
+          count={50}
+          scale={[16, 2.5, 3]}
+          size={3.8}
+          speed={0.8}
+          color="#7dd3fc"
+          opacity={0.85}
+          position={[0, 0.2, 1.8]}
+        />
       </group>
 
       {/* Cyberpunk Neon Purple/Cyan Atmospheric Sparkles */}
       <Sparkles
-        count={80}
-        scale={[36, 26, 36]}
-        size={4.2}
+        count={85}
+        scale={[38, 28, 38]}
+        size={4.4}
         speed={0.6}
         color="#f43f5e"
         opacity={0.85}
@@ -377,8 +464,10 @@ export function IslandPandemonium({ position = [26, 0, -108] as [number, number,
 
 // =========================================================================
 // ISLAND 3: THE CARNIVAL ISLAND (Festive Pier & Illuminated Ferris Wheel)
+// Set across the water on the LEFT: Grand rotating Ferris wheel with upright
+// swinging gondolas, striped circus marquees, boardwalk pier, and fairy lights.
 // =========================================================================
-export function IslandCarnival({ position = [-20, 0, -182] as [number, number, number] }) {
+export function IslandCarnival({ position = [-46, 0, -248] as [number, number, number] }) {
   const wheelRef = useRef<THREE.Group>(null);
   const gondolasRef = useRef<THREE.Group>(null);
 
@@ -386,11 +475,11 @@ export function IslandCarnival({ position = [-20, 0, -182] as [number, number, n
   const wheelRadius = 8.5;
 
   useFrame((state, delta) => {
-    // Ferris wheel rotation
+    // Smooth Ferris wheel rotation
     if (wheelRef.current) {
       wheelRef.current.rotation.z += delta * 0.22;
     }
-    // Keep gondolas swinging upright via counter-rotation
+    // Counter-rotate gondolas so they remain upright as wheel spins
     if (gondolasRef.current) {
       gondolasRef.current.children.forEach((gondola) => {
         gondola.rotation.z = -(wheelRef.current?.rotation.z || 0);
@@ -404,7 +493,7 @@ export function IslandCarnival({ position = [-20, 0, -182] as [number, number, n
       {/* 1. CARNIVAL DOCK & PROMONTORY BASE                       */}
       {/* ======================================================== */}
       <mesh position={[0, 2.0, 0]} receiveShadow castShadow>
-        <cylinderGeometry args={[17, 22, 4.0, 18]} />
+        <cylinderGeometry args={[18, 23, 4.0, 18]} />
         <meshStandardMaterial
           color="#1e1814"
           roughness={0.8}
@@ -520,10 +609,10 @@ export function IslandCarnival({ position = [-20, 0, -182] as [number, number, n
       {/* 3. CARNIVAL BIG-TOP FESTIVAL TENTS (Striped Canopies)    */}
       {/* ======================================================== */}
       {[
-        [-10, 4.0, 5, 4.0, 5.5, '#dc2626'],
-        [10, 4.0, 4, 3.5, 4.8, '#f59e0b'],
-        [-6, 4.0, 11, 2.8, 3.8, '#dc2626'],
-        [7, 4.0, 10, 3.0, 4.2, '#f59e0b'],
+        [-11, 4.0, 5, 4.2, 5.8, '#dc2626'],
+        [11, 4.0, 4, 3.6, 5.0, '#f59e0b'],
+        [-7, 4.0, 11, 3.0, 4.0, '#dc2626'],
+        [8, 4.0, 10, 3.2, 4.4, '#f59e0b'],
       ].map(([tx, ty, tz, r, h, col], idx) => (
         <group key={idx} position={[tx as number, ty as number, tz as number]}>
           {/* Main Tent Wall Cylinder */}
@@ -538,7 +627,7 @@ export function IslandCarnival({ position = [-20, 0, -182] as [number, number, n
           </mesh>
           {/* Roof Pennant Flag */}
           <mesh position={[0, 2.4 + (h as number) + 0.4, 0]}>
-            <boxGeometry args={[0.6, 0.3, 0.02]} />
+            <boxGeometry args={[0.65, 0.32, 0.02]} />
             <meshBasicMaterial color="#fbbf24" />
           </mesh>
         </group>
@@ -547,14 +636,14 @@ export function IslandCarnival({ position = [-20, 0, -182] as [number, number, n
       {/* ======================================================== */}
       {/* 4. WOODEN BOARDWALK PIER & WATER DOCK POSTS              */}
       {/* ======================================================== */}
-      <group position={[0, 1.6, 15]}>
+      <group position={[0, 1.6, 16]}>
         {/* Main Boardwalk Pier Deck */}
         <mesh receiveShadow>
-          <boxGeometry args={[14, 0.5, 6]} />
+          <boxGeometry args={[15, 0.5, 6]} />
           <meshStandardMaterial color="#3d2b1f" roughness={0.7} />
         </mesh>
         {/* Pilings extending down into water */}
-        {[-6, -2, 2, 6].map((wx, idx) => (
+        {[-6.5, -2.2, 2.2, 6.5].map((wx, idx) => (
           <group key={idx} position={[wx, -1.2, 2.6]}>
             <mesh>
               <cylinderGeometry args={[0.18, 0.18, 2.4, 8]} />
@@ -562,7 +651,7 @@ export function IslandCarnival({ position = [-20, 0, -182] as [number, number, n
             </mesh>
             {/* Pier Post Lantern */}
             <mesh position={[0, 1.8, 0]}>
-              <sphereGeometry args={[0.15, 8, 8]} />
+              <sphereGeometry args={[0.16, 8, 8]} />
               <meshBasicMaterial color="#ffb74d" />
             </mesh>
           </group>
@@ -571,9 +660,9 @@ export function IslandCarnival({ position = [-20, 0, -182] as [number, number, n
 
       {/* Warm Incandescent Festival Sparkles */}
       <Sparkles
-        count={85}
-        scale={[38, 24, 38]}
-        size={4.0}
+        count={90}
+        scale={[40, 25, 40]}
+        size={4.2}
         speed={0.5}
         color="#fbbf24"
         opacity={0.85}

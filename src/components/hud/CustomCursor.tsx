@@ -9,6 +9,7 @@ export default function CustomCursor() {
   const [isClicking, setIsClicking] = useState(false);
   const [cursorText, setCursorText] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [isOverScrollable, setIsOverScrollable] = useState(false);
 
   const posRef = useRef({ x: -100, y: -100 });
   const targetRef = useRef({ x: -100, y: -100 });
@@ -23,12 +24,22 @@ export default function CustomCursor() {
     const handleMouseMove = (e: MouseEvent) => {
       targetRef.current = { x: e.clientX, y: e.clientY };
       setPosition({ x: e.clientX, y: e.clientY });
-      if (!isVisible) setIsVisible(true);
 
       const target = e.target as HTMLElement | null;
       if (!target) return;
 
-      const interactive = target.closest('a, button, [role="button"], input, select, textarea, [data-cursor]');
+      // Yield to native cursor over scrollbars, modal dialogs, and scroll containers
+      const overScroll = !!target.closest('[data-lenis-prevent], [role="dialog"], .modal-container, select, input, textarea');
+      setIsOverScrollable(overScroll);
+
+      if (overScroll || document.body.classList.contains('modal-open')) {
+        setIsVisible(false);
+        return;
+      }
+
+      if (!isVisible) setIsVisible(true);
+
+      const interactive = target.closest('a, button, [role="button"], [data-cursor]');
       const customLabel = target.closest('[data-cursor-text]')?.getAttribute('data-cursor-text');
 
       if (customLabel) {
@@ -74,7 +85,7 @@ export default function CustomCursor() {
     };
   }, [isVisible]);
 
-  if (!isVisible) return null;
+  if (!isVisible || isOverScrollable) return null;
 
   return (
     <div className="hidden lg:block pointer-events-none fixed inset-0 z-[9999] overflow-hidden">

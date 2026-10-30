@@ -4,14 +4,10 @@ import React, { useState } from 'react';
 import {
   MapPin,
   Navigation,
-  Compass,
   Users,
   Calendar,
-  Layers,
-  Sparkles,
-  Info,
-  Clock,
   ArrowUpRight,
+  Check,
 } from 'lucide-react';
 import CyberScramble from '@/components/ui/CyberScramble';
 
@@ -159,12 +155,12 @@ export default function CampusVenueGuide() {
       {/* Header */}
       <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-12">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-avinya-cyan/30 bg-avinya-cyan/10 font-mono text-xs text-avinya-cyan mb-3">
-            <Navigation className="w-3.5 h-3.5 text-avinya-cyan" />
-            <span>CAMPUS RADAR // ON-GROUND DIRECTORY</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.04] font-grotesk text-xs text-white/80 mb-3">
+            <Navigation className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="font-mono text-[11px] uppercase tracking-wider">CAMPUS RADAR · ON-GROUND DIRECTORY</span>
           </div>
 
-          <h2 className="font-orbitron text-3xl sm:text-5xl font-black text-white tracking-tight">
+          <h2 className="font-syne text-3xl sm:text-5xl font-bold text-white tracking-tight">
             <CyberScramble text="CAMPUS VENUE GUIDE" />
           </h2>
 
@@ -174,133 +170,143 @@ export default function CampusVenueGuide() {
         </div>
 
         <div className="flex items-center gap-2 font-mono text-xs text-white/50 bg-white/[0.03] px-4 py-2 rounded-xl border border-white/10">
-          <MapPin className="w-4 h-4 text-avinya-gold" />
+          <MapPin className="w-4 h-4 text-amber-400" />
           <span>IIIT DHARWAD • HUBBALLI-DHARWAD, KARNATAKA</span>
         </div>
       </div>
 
       {/* Main Interactive Guide Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Venue Selector List (9 Venues) */}
-        <div className="lg:col-span-5 flex flex-col gap-2.5 max-h-[580px] overflow-y-auto pr-1">
-          {CAMPUS_VENUES.map((venue) => {
-            const isSelected = selectedVenue.id === venue.id;
+        {/* Left Venue Selector List (9 Venues) - Fully Scrollable */}
+        <div className="lg:col-span-5 flex flex-col gap-2">
+          <div
+            className="flex flex-col gap-2.5 max-h-[580px] overflow-y-auto overscroll-contain pr-2 select-none"
+            data-lenis-prevent="true"
+            style={{
+              scrollbarWidth: 'thin',
+              scrollbarColor: 'rgba(255, 255, 255, 0.25) rgba(255, 255, 255, 0.03)',
+            }}
+          >
+            {CAMPUS_VENUES.map((venue) => {
+              const isSelected = selectedVenue.id === venue.id;
 
-            return (
-              <button
-                key={venue.id}
-                type="button"
-                onClick={() => setSelectedVenue(venue)}
-                className={`text-left p-3.5 sm:p-4 rounded-xl border transition-all duration-200 flex items-center justify-between group ${
-                  isSelected
-                    ? 'glass-panel bg-white/10 border-white/40 shadow-lg scale-[1.01]'
-                    : 'bg-white/[0.02] border-white/5 hover:border-white/20 hover:bg-white/[0.04]'
-                }`}
-                style={{
-                  borderLeftColor: venue.accentColor,
-                  borderLeftWidth: '4px',
-                }}
-              >
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-[10px] text-white/40 font-bold uppercase">
-                      {venue.code}
-                    </span>
-                    <span className="text-white/20">•</span>
-                    <span className="font-mono text-[10px] text-white/60">
-                      {venue.capacity}
+              return (
+                <button
+                  key={venue.id}
+                  type="button"
+                  onClick={() => setSelectedVenue(venue)}
+                  className={`text-left p-3.5 sm:p-4 rounded-xl border transition-all duration-200 flex items-center justify-between group cursor-pointer ${
+                    isSelected
+                      ? 'bg-white/10 border-white/30 shadow-[0_4px_20px_rgba(0,0,0,0.5)] translate-x-1'
+                      : 'bg-white/[0.02] border-white/[0.07] hover:border-white/20 hover:bg-white/[0.05]'
+                  }`}
+                  style={{
+                    borderLeftColor: venue.accentColor,
+                    borderLeftWidth: '4px',
+                  }}
+                >
+                  <div className="min-w-0 pr-3">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-[10px] text-white/40 font-bold uppercase">
+                        {venue.code}
+                      </span>
+                      <span className="text-white/20">•</span>
+                      <span className="font-mono text-[10px] text-white/60">
+                        {venue.capacity}
+                      </span>
+                    </div>
+                    <h4 className="font-syne text-sm sm:text-base font-bold text-white mt-1 group-hover:text-amber-100 transition-colors truncate">
+                      {venue.name}
+                    </h4>
+                    <span className="font-grotesk text-xs text-white/50 block mt-0.5 truncate">
+                      {venue.location}
                     </span>
                   </div>
-                  <h4 className="font-orbitron text-sm sm:text-base font-bold text-white mt-1 group-hover:text-avinya-cyan transition-colors">
-                    {venue.name}
-                  </h4>
-                  <span className="font-grotesk text-xs text-white/50 block mt-0.5 truncate">
-                    {venue.location}
-                  </span>
-                </div>
 
-                <div
-                  className="w-2.5 h-2.5 rounded-full transition-transform duration-200 shrink-0 ml-2"
-                  style={{
-                    backgroundColor: venue.accentColor,
-                    transform: isSelected ? 'scale(1.3)' : 'scale(1)',
-                    boxShadow: isSelected ? `0 0 10px ${venue.accentColor}` : 'none',
-                  }}
-                />
-              </button>
-            );
-          })}
+                  <div
+                    className="w-2.5 h-2.5 rounded-full transition-transform duration-200 shrink-0"
+                    style={{
+                      backgroundColor: venue.accentColor,
+                      transform: isSelected ? 'scale(1.3)' : 'scale(1)',
+                      boxShadow: isSelected ? `0 0 10px ${venue.accentColor}` : 'none',
+                    }}
+                  />
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Scroll hint indicator */}
+          <div className="px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.05] text-center text-[11px] font-mono text-white/40 flex items-center justify-between">
+            <span>9 VENUES TOTAL</span>
+            <span className="text-white/60">SCROLL LIST TO EXPLORE ALL ↓</span>
+          </div>
         </div>
 
         {/* Right Active Venue Details Display Card */}
         <div className="lg:col-span-7">
           <div
-            className="glass-panel p-6 sm:p-8 rounded-3xl border relative overflow-hidden transition-all duration-300"
+            className="p-6 sm:p-8 rounded-2xl border border-white/[0.12] bg-[#0c101a]/90 backdrop-blur-xl relative overflow-hidden transition-all duration-300 shadow-[0_16px_40px_rgba(0,0,0,0.6)]"
             style={{
-              borderColor: `${selectedVenue.accentColor}50`,
-              boxShadow: `0 0 40px -10px ${selectedVenue.accentColor}25`,
+              borderColor: `${selectedVenue.accentColor}40`,
             }}
           >
-            {/* Top Glow Stripe */}
-            <div
-              className="absolute top-0 left-0 right-0 h-1"
-              style={{
-                background: `linear-gradient(90deg, transparent, ${selectedVenue.accentColor}, transparent)`,
-              }}
-            />
-
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
               <span
-                className="font-mono text-xs uppercase font-bold tracking-wider px-3 py-1 rounded-full border"
+                className="font-mono text-xs uppercase font-bold tracking-wider px-3 py-1 rounded-md border"
                 style={{
-                  backgroundColor: `${selectedVenue.accentColor}18`,
-                  borderColor: `${selectedVenue.accentColor}40`,
+                  backgroundColor: `${selectedVenue.accentColor}15`,
+                  borderColor: `${selectedVenue.accentColor}35`,
                   color: selectedVenue.accentColor,
                 }}
               >
-                SECTOR // {selectedVenue.code}
+                VENUE · {selectedVenue.code}
               </span>
               <span className="font-mono text-xs text-white/60 flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5" />
+                <Users className="w-3.5 h-3.5 text-white/40" />
                 {selectedVenue.capacity}
               </span>
             </div>
 
-            <h3 className="font-orbitron text-2xl sm:text-3xl font-black text-white">
+            <h3 className="font-syne text-2xl sm:text-3xl font-bold text-white tracking-tight">
               {selectedVenue.name}
             </h3>
 
             {/* Campus Landmark & Location */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-6 font-mono text-xs">
-              <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/10">
-                <span className="text-[10px] text-white/40 block mb-1">BUILDING & LEVEL</span>
-                <span className="text-white font-medium">{selectedVenue.location}</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-6 font-grotesk text-xs">
+              <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08]">
+                <span className="text-[10px] text-white/40 block mb-1 font-mono uppercase tracking-wider">
+                  BUILDING & LEVEL
+                </span>
+                <span className="text-white font-medium text-sm">{selectedVenue.location}</span>
               </div>
-              <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/10">
-                <span className="text-[10px] text-white/40 block mb-1">WALKING LANDMARK</span>
-                <span className="text-white font-medium">{selectedVenue.landmark}</span>
+              <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08]">
+                <span className="text-[10px] text-white/40 block mb-1 font-mono uppercase tracking-wider">
+                  WALKING LANDMARK
+                </span>
+                <span className="text-white font-medium text-sm">{selectedVenue.landmark}</span>
               </div>
             </div>
 
             {/* Events Hosted At This Venue */}
             <div className="mb-6">
-              <h4 className="font-mono text-xs uppercase tracking-widest text-white/50 mb-3 flex items-center gap-2">
-                <Calendar className="w-3.5 h-3.5 text-avinya-cyan" />
+              <h4 className="font-mono text-xs uppercase tracking-widest text-white/45 mb-3 flex items-center gap-2">
+                <Calendar className="w-3.5 h-3.5 text-cyan-400" />
                 SCHEDULED EVENTS AT THIS VENUE ({selectedVenue.eventsHosted.length})
               </h4>
               <div className="space-y-2">
                 {selectedVenue.eventsHosted.map((eventTitle) => (
                   <div
                     key={eventTitle}
-                    className="p-3 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-between group hover:border-white/20 transition-colors"
+                    className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] flex items-center justify-between group hover:border-white/20 transition-colors"
                   >
                     <span className="font-grotesk text-xs sm:text-sm text-white font-medium">
                       {eventTitle}
                     </span>
                     <a
                       href="#events"
-                      className="text-avinya-cyan text-xs font-mono inline-flex items-center gap-1 opacity-70 group-hover:opacity-100 transition-opacity"
+                      className="text-cyan-400 text-xs font-mono inline-flex items-center gap-1 opacity-70 group-hover:opacity-100 transition-opacity"
                     >
                       SCHEDULE <ArrowUpRight className="w-3 h-3" />
                     </a>
@@ -310,17 +316,18 @@ export default function CampusVenueGuide() {
             </div>
 
             {/* Venue Amenities */}
-            <div className="pt-4 border-t border-white/10">
-              <span className="font-mono text-[10px] uppercase tracking-wider text-white/40 block mb-2">
+            <div className="pt-4 border-t border-white/[0.08]">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-white/40 block mb-2.5">
                 ON-SITE FACILITIES:
               </span>
               <div className="flex flex-wrap gap-2">
                 {selectedVenue.amenities.map((facility) => (
                   <span
                     key={facility}
-                    className="font-mono text-[10px] px-2.5 py-1 rounded bg-white/5 border border-white/10 text-white/70"
+                    className="font-grotesk text-xs px-3 py-1 rounded-md bg-white/[0.04] border border-white/[0.08] text-white/80 inline-flex items-center gap-1.5"
                   >
-                    ✓ {facility}
+                    <Check className="w-3 h-3 text-emerald-400" />
+                    <span>{facility}</span>
                   </span>
                 ))}
               </div>
@@ -331,4 +338,3 @@ export default function CampusVenueGuide() {
     </section>
   );
 }
-

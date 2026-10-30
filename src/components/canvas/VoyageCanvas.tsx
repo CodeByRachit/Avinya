@@ -4,6 +4,8 @@ import React, { Suspense, useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import BioluminescentOcean from './BioluminescentOcean';
 import SplineTrack from './SplineTrack';
+import EveningSun from './EveningSun';
+import Seabirds from './Seabirds';
 import { IslandLastOutpost, IslandPandemonium, IslandCarnival } from './Islands';
 import SceneController from './SceneController';
 
@@ -36,12 +38,12 @@ export default function VoyageCanvas({ progress = 0, onWaypointReached }: Voyage
         {/* Deep Ocean Twilight Sky Gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#061022] via-[#0b1d3d] via-[#14284b] to-[#081226]" />
 
-        {/* Soft Evening Sunset Horizon Warmth (Left Horizon) */}
-        <div className="absolute top-1/4 left-1/4 w-[50rem] h-[30rem] bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-transparent rounded-full blur-[140px]" />
+        {/* Soft Evening Sunset Horizon Warmth (Right Horizon near Sun) */}
+        <div className="absolute top-1/4 right-1/4 w-[50rem] h-[30rem] bg-gradient-to-r from-amber-500/18 via-orange-500/12 to-transparent rounded-full blur-[140px]" />
 
         {/* Subtle Sunset Rose Glaze on Far Horizon */}
         <div
-          className="absolute top-1/3 right-10 w-[45rem] h-[32rem] bg-rose-500/12 rounded-full blur-[160px] animate-pulse"
+          className="absolute top-1/3 left-10 w-[45rem] h-[32rem] bg-rose-500/10 rounded-full blur-[160px] animate-pulse"
           style={{ animationDuration: '8s' }}
         />
 
@@ -53,7 +55,7 @@ export default function VoyageCanvas({ progress = 0, onWaypointReached }: Voyage
       {/* 2. THREE.JS WEBGL CANVAS                                 */}
       {/* ======================================================== */}
       <Canvas
-        camera={{ position: [6.2, 3.8, 42], fov: 52, near: 0.1, far: 500 }}
+        camera={{ position: [6.5, 4.5, 49.0], fov: 52, near: 0.1, far: 500 }}
         dpr={[1, 1.5]}
         gl={{
           antialias: true,
@@ -63,24 +65,16 @@ export default function VoyageCanvas({ progress = 0, onWaypointReached }: Voyage
         }}
       >
         {/* Natural deep oceanic evening haze fog (Rich blue twilight) */}
-        <fog attach="fog" args={['#091b36', 75, 340]} />
+        <fog attach="fog" args={['#081830', 85, 360]} />
 
         {/* ======================================================== */}
         {/* 3. CINEMATIC EVENING LIGHTING RIG                        */}
         {/* ======================================================== */}
         {/* Natural Ambient Ocean Sky Fill */}
-        <ambientLight intensity={1.3} color="#93c5fd" />
+        <ambientLight intensity={1.4} color="#93c5fd" />
 
         {/* Sky / Water Hemisphere Light */}
-        <hemisphereLight args={['#38bdf8', '#07152b', 1.3]} />
-
-        {/* Low-Angle Evening Sun Key Light */}
-        <directionalLight
-          position={[35, 24, -60]}
-          intensity={2.8}
-          color="#fef3c7"
-          castShadow
-        />
+        <hemisphereLight args={['#38bdf8', '#07152b', 1.4]} />
 
         {/* Soft Sunset Horizon Fill */}
         <directionalLight
@@ -90,20 +84,26 @@ export default function VoyageCanvas({ progress = 0, onWaypointReached }: Voyage
         />
 
         <Suspense fallback={null}>
+          {/* Luminous 3D Evening Sun Disk & Light Corona */}
+          <EveningSun position={[30, 22, -150]} />
+
+          {/* Flying Seabirds Circling the Archipelago */}
+          <Seabirds />
+
           {/* Deep Blue Natural Reflective Evening Ocean */}
           <BioluminescentOcean />
 
-          {/* Glowing Translucent Spline Navigation Ribbon */}
+          {/* Floating Channel Markers (Zero Artificial Track Line) */}
           <SplineTrack />
 
           {/* Island 1: The Last Outpost on the LEFT */}
-          <IslandLastOutpost position={[-34, 0, -58]} />
+          <IslandLastOutpost position={[-44, 0, -60]} />
 
           {/* Island 2: The Pandemonium on the RIGHT */}
-          <IslandPandemonium position={[40, 0, -144]} />
+          <IslandPandemonium position={[48, 0, -156]} />
 
           {/* Island 3: The Carnival Island on the LEFT */}
-          <IslandCarnival position={[-30, 0, -228]} />
+          <IslandCarnival position={[-46, 0, -248]} />
 
           {/* Navigating Skiff & Smooth S-Curve Cinematic Camera */}
           <SceneController

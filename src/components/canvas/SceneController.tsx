@@ -3,7 +3,7 @@
 import React, { useRef, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import { VOYAGE_CURVE, ISLAND_WAYPOINTS } from './voyageConfig';
+import { VOYAGE_CURVE } from './voyageConfig';
 import CyberBoat from './CyberBoat';
 
 interface SceneControllerProps {
@@ -11,19 +11,21 @@ interface SceneControllerProps {
   onWaypointReached?: (day: 1 | 2 | 3) => void;
 }
 
-export default function SceneController({ progress, onWaypointReached }: SceneControllerProps) {
+export default function SceneController({ progress }: SceneControllerProps) {
   const { camera, scene } = useThree();
   const currentProgressRef = useRef(0);
   const boatRef = useRef<THREE.Group>(null);
   const lookTargetRef = useRef(new THREE.Vector3(0, 0, 0));
-  const currentFogColor = useRef(new THREE.Color('#091b36'));
-  const targetFogColor = useRef(new THREE.Color('#091b36'));
+  const currentFogColor = useRef(new THREE.Color('#081830'));
+  const targetFogColor = useRef(new THREE.Color('#081830'));
+  const bankAngleRef = useRef(0);
+  const previousHeadingRef = useRef(0);
 
-  // Wide-Angle Cinematic Camera FOV (Ensures the full 3D islands & sky fit in frame)
+  // Cinematic Wide-Angle Camera Field of View
   useEffect(() => {
     if ('isPerspectiveCamera' in camera && camera.isPerspectiveCamera) {
       const isMobile = window.innerWidth < 768;
-      camera.fov = isMobile ? 58 : 50;
+      camera.fov = isMobile ? 56 : 52;
       camera.updateProjectionMatrix();
     }
   }, [camera]);
@@ -34,7 +36,7 @@ export default function SceneController({ progress, onWaypointReached }: SceneCo
     currentProgressRef.current = THREE.MathUtils.damp(
       currentProgressRef.current,
       target,
-      2.2,
+      2.0,
       delta
     );
 
@@ -48,31 +50,34 @@ export default function SceneController({ progress, onWaypointReached }: SceneCo
     const aheadPoint = VOYAGE_CURVE.getPointAt(aheadT);
     const tangent = new THREE.Vector3().subVectors(aheadPoint, point).normalize();
 
-    // Normal vector perpendicular to tangent (to the right of boat)
-    const normal = new THREE.Vector3(-tangent.z, 0, tangent.x).normalize();
+    // Compute boat heading and dynamic banking into turns
+    const heading = Math.atan2(tangent.x, tangent.z);
+    const headingDelta = heading - previousHeadingRef.current;
+    previousHeadingRef.current = heading;
+
+    // Bank angle proportional to turn rate
+    const targetBank = THREE.MathUtils.clamp(-headingDelta * 8.0, -0.15, 0.15);
+    bankAngleRef.current = THREE.MathUtils.damp(bankAngleRef.current, targetBank, 3.0, delta);
 
     // Position and orient the boat
     if (boatRef.current) {
       boatRef.current.position.copy(point);
-
-      // Smooth boat heading alignment
-      const angle = Math.atan2(tangent.x, tangent.z);
-      boatRef.current.rotation.y = angle + Math.PI; // Face forward along the voyage
+      boatRef.current.rotation.y = heading + Math.PI; // Face forward along the voyage
     }
 
-    // Dynamic Atmospheric Blue-Evening Fog Morphing
-    if (t < 0.40) {
-      // Day 1: The Last Outpost on the Left (Desert Amber Sunset Glaze)
-      const weight = Math.max(0, 1 - Math.abs(t - 0.30) * 3.8);
-      targetFogColor.current.set('#091b36').lerp(new THREE.Color('#2e1810'), weight * 0.7);
-    } else if (t < 0.74) {
-      // Day 2: The Pandemonium on the Right (Cyber Wine Sunset)
-      const weight = Math.max(0, 1 - Math.abs(t - 0.62) * 3.8);
-      targetFogColor.current.set('#091b36').lerp(new THREE.Color('#281024'), weight * 0.7);
+    // Dynamic Atmospheric Twilight Fog Morphing
+    if (t < 0.42) {
+      // Day 1: Desert Sunset Amber Glaze
+      const weight = Math.max(0, 1 - Math.abs(t - 0.30) * 3.5);
+      targetFogColor.current.set('#081830').lerp(new THREE.Color('#221410'), weight * 0.65);
+    } else if (t < 0.76) {
+      // Day 2: Cyber Twilight Magenta/Wine Glaze
+      const weight = Math.max(0, 1 - Math.abs(t - 0.62) * 3.5);
+      targetFogColor.current.set('#081830').lerp(new THREE.Color('#1f0e20'), weight * 0.65);
     } else {
-      // Day 3: The Carnival Island on the Left (Festival Lagoon Navy)
-      const weight = Math.max(0, 1 - Math.abs(t - 0.90) * 3.8);
-      targetFogColor.current.set('#091b36').lerp(new THREE.Color('#0d2038'), weight * 0.7);
+      // Day 3: Carnival Lagoon Navy Glaze
+      const weight = Math.max(0, 1 - Math.abs(t - 0.90) * 3.5);
+      targetFogColor.current.set('#081830').lerp(new THREE.Color('#0b1a2e'), weight * 0.65);
     }
 
     currentFogColor.current.lerp(targetFogColor.current, delta * 2.0);
@@ -81,49 +86,61 @@ export default function SceneController({ progress, onWaypointReached }: SceneCo
     }
 
     // ========================================================
-    // WIDE CINEMATIC CAMERA CHOREOGRAPHY (FULL 3D VISIBILITY)
+    // CINEMATIC CAMERA CHOREOGRAPHY
+    // Designed so that the FULL 3D islands (citadel + moon,
+    // cyber towers + sun, Ferris wheel + tents) are displayed
+    // with water in front and clear sky above—NEVER clipping
+    // under or touching the top navbar.
     // ========================================================
-    const isMobile = state.size.width < 768;
-    const camDistance = isMobile ? 15.0 : 13.5;
-    const camHeight = isMobile ? 6.2 : 5.0;
-    const sideOffset = isMobile ? 3.0 : 5.0; // 3/4 quarter side perspective
+    const desiredCamPos = new THREE.Vector3();
+    const desiredLookTarget = new THREE.Vector3();
 
-    // Compute base follow camera position
-    const desiredCamPos = new THREE.Vector3(
-      point.x - tangent.x * camDistance + normal.x * sideOffset,
-      point.y + camHeight,
-      point.z - tangent.z * camDistance + normal.z * sideOffset
-    );
-
-    const desiredLookTarget = new THREE.Vector3(
-      point.x + tangent.x * 5.0,
-      point.y + 1.2,
-      point.z + tangent.z * 5.0
-    );
-
-    // Frame the FULL 3D elements majestically for each day:
     if (t < 0.12) {
-      // Hero view: Sizable wooden boat in lower right foreground, open blue sea in center
-      desiredCamPos.set(point.x + 6.2, point.y + 3.8, point.z + 12.0);
-      desiredLookTarget.set(point.x - 2.5, point.y + 1.2, point.z - 5.0);
-    } else if (t >= 0.12 && t < 0.42) {
-      // Day 1: Pull back & elevate to frame the FULL Citadel Fortress & Sandstone Moon
-      desiredCamPos.x += 10.0;
-      desiredCamPos.y += 4.5;
-      desiredCamPos.z += 8.0;
-      desiredLookTarget.set(point.x - 14, point.y + 8.5, point.z - 8);
-    } else if (t >= 0.42 && t < 0.74) {
-      // Day 2: Pull back & elevate to frame the FULL Cyber Skyline, Aqueducts & Giant Sun
-      desiredCamPos.x -= 12.0;
-      desiredCamPos.y += 5.0;
-      desiredCamPos.z += 8.0;
-      desiredLookTarget.set(point.x + 16, point.y + 9.5, point.z - 8);
-    } else if (t >= 0.74) {
-      // Day 3: Pull back & elevate to frame the FULL Rotating Ferris Wheel, Tents & Pier
-      desiredCamPos.x += 11.0;
-      desiredCamPos.y += 5.0;
-      desiredCamPos.z += 8.0;
-      desiredLookTarget.set(point.x - 12, point.y + 8.5, point.z - 8);
+      // HERO VIEW:
+      // Boat is prominently positioned in lower-right foreground.
+      // Open horizon and setting sun are showcased in center/right.
+      desiredCamPos.set(6.5, 4.5, 49.0);
+      desiredLookTarget.set(-2.0, 1.4, 20.0);
+    } else if (t < 0.44) {
+      // DAY 1: THE LAST OUTPOST (Citadel & Giant Moon on the LEFT)
+      // Transition smoothly from Hero into wide 3/4 aerial sailing shot
+      const blend = THREE.MathUtils.smoothstep(t, 0.12, 0.26);
+      const camX = THREE.MathUtils.lerp(6.5, 5.0, blend);
+      const camY = THREE.MathUtils.lerp(4.5, 10.5, blend);
+      const camZ = THREE.MathUtils.lerp(49.0, point.z + 14.0, blend);
+
+      desiredCamPos.set(camX, camY, camZ);
+      desiredLookTarget.set(-32.0, 6.0, point.z - 2.0);
+    } else if (t < 0.54) {
+      // TRANSITION TO DAY 2 (Crossing Open Twilight Sea)
+      const blend = THREE.MathUtils.smoothstep(t, 0.44, 0.54);
+      const camX = THREE.MathUtils.lerp(5.0, -6.0, blend);
+      const camY = THREE.MathUtils.lerp(10.5, 11.5, blend);
+      const camZ = point.z + 14.0;
+
+      const lookX = THREE.MathUtils.lerp(-32.0, 34.0, blend);
+      desiredCamPos.set(camX, camY, camZ);
+      desiredLookTarget.set(lookX, 6.5, point.z - 4.0);
+    } else if (t < 0.74) {
+      // DAY 2: THE PANDEMONIUM (Cyber Skyline & Sun on the RIGHT)
+      // Camera is on the left of channel, framing the full city & waterfalls
+      desiredCamPos.set(-6.0, 11.5, point.z + 14.0);
+      desiredLookTarget.set(34.0, 7.0, point.z - 2.0);
+    } else if (t < 0.84) {
+      // TRANSITION TO DAY 3 (Banking back across the Bay)
+      const blend = THREE.MathUtils.smoothstep(t, 0.74, 0.84);
+      const camX = THREE.MathUtils.lerp(-6.0, 5.0, blend);
+      const camY = THREE.MathUtils.lerp(11.5, 10.5, blend);
+      const camZ = point.z + 14.0;
+
+      const lookX = THREE.MathUtils.lerp(34.0, -32.0, blend);
+      desiredCamPos.set(camX, camY, camZ);
+      desiredLookTarget.set(lookX, 6.5, point.z - 4.0);
+    } else {
+      // DAY 3: THE CARNIVAL ISLAND (Ferris Wheel & Pier on the LEFT)
+      // Camera frames the rotating wheel, gondolas, marquees, and boardwalk
+      desiredCamPos.set(5.0, 10.5, point.z + 14.0);
+      desiredLookTarget.set(-32.0, 6.5, point.z - 2.0);
     }
 
     camera.position.lerp(desiredCamPos, delta * 2.5);
@@ -133,9 +150,12 @@ export default function SceneController({ progress, onWaypointReached }: SceneCo
 
   return (
     <group>
-      {/* Prominently Sized Handcrafted Wooden Voyager Boat */}
+      {/* Prominently Sized Handcrafted Wooden Voyager Vessel */}
       <group ref={boatRef}>
-        <CyberBoat scale={[1.7, 1.7, 1.7]} />
+        <CyberBoat
+          scale={[1.7, 1.7, 1.7]}
+          bankAngle={bankAngleRef.current}
+        />
       </group>
     </group>
   );

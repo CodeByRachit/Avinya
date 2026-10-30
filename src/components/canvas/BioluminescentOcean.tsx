@@ -7,12 +7,12 @@ import * as THREE from 'three';
 const OceanicBlueShader = {
   uniforms: {
     uTime: { value: 0 },
-    uDeepColor: { value: new THREE.Color('#051329') },     // Deep oceanic midnight navy
-    uSurfaceColor: { value: new THREE.Color('#0a2b54') },  // Coastal sapphire blue
-    uCrestColor: { value: new THREE.Color('#38bdf8') },    // Gentle azure wave crest
-    uSunReflection: { value: new THREE.Color('#f97316') }, // Sunset coral sun streak
-    uSpecularSun: { value: new THREE.Color('#fef08a') },   // Bright golden sun glitter
-    uSunPosition: { value: new THREE.Vector3(30, 18, -90) },
+    uDeepColor: { value: new THREE.Color('#071833') },     // Deep oceanic navy
+    uSurfaceColor: { value: new THREE.Color('#103b70') },  // Coastal sapphire blue
+    uCrestColor: { value: new THREE.Color('#38bdf8') },    // Azure wave crest
+    uSunReflection: { value: new THREE.Color('#f59e0b') }, // Warm golden evening sun reflection
+    uSpecularSun: { value: new THREE.Color('#fef08a') },   // Bright sun glint
+    uSunPosition: { value: new THREE.Vector3(30, 22, -150) },
   },
   vertexShader: `
     uniform float uTime;
@@ -21,12 +21,15 @@ const OceanicBlueShader = {
     varying vec3 vNormalVec;
     varying vec3 vWorldPosition;
 
-    // Compounded natural ocean swell & capillary waves
+    // Natural layered ocean wave calculation
     float getWave(vec2 p, float t) {
       float w = 0.0;
-      w += sin(p.x * 0.045 + t * 0.8) * cos(p.y * 0.038 + t * 0.6) * 0.38;
-      w += sin(p.x * 0.09 - t * 1.0) * sin(p.y * 0.075 + t * 0.8) * 0.18;
-      w += sin((p.x + p.y) * 0.2 + t * 1.3) * 0.06;
+      // Primary swell
+      w += sin(p.x * 0.045 + t * 0.7) * cos(p.y * 0.038 + t * 0.55) * 0.42;
+      // Secondary cross swell
+      w += sin(p.x * 0.08 - t * 0.9) * sin(p.y * 0.07 + t * 0.75) * 0.22;
+      // Capillary ripples
+      w += sin((p.x * 0.6 + p.y * 0.8) * 0.18 + t * 1.2) * 0.08;
       return w;
     }
 
@@ -37,8 +40,8 @@ const OceanicBlueShader = {
       pos.z += elevation;
       vElevation = elevation;
 
-      // Surface normal approximation
-      float delta = 0.14;
+      // Analytical normal estimation from height field
+      float delta = 0.12;
       float eX = getWave(pos.xy + vec2(delta, 0.0), uTime);
       float eY = getWave(pos.xy + vec2(0.0, delta), uTime);
       vec3 computedNormal = normalize(vec3(-(eX - elevation) / delta, -(eY - elevation) / delta, 1.0));
@@ -65,39 +68,42 @@ const OceanicBlueShader = {
     varying vec3 vWorldPosition;
 
     void main() {
-      // 1. Natural Deep Ocean Blue Gradient (Firmly on the Blue Side)
-      float depthMix = smoothstep(-0.4, 0.5, vElevation);
+      // 1. Natural Deep Ocean Blue Gradient (Rich Sapphire & Twilight Navy)
+      float depthMix = smoothstep(-0.45, 0.45, vElevation);
       vec3 water = mix(uDeepColor, uSurfaceColor, depthMix);
 
       // 2. Wave Crest Azure Highlights
-      float crest = smoothstep(0.18, 0.45, vElevation);
-      water = mix(water, uCrestColor, crest * 0.35);
+      float crest = smoothstep(0.22, 0.48, vElevation);
+      water = mix(water, uCrestColor, crest * 0.38);
 
-      // 3. Realistic Sunset Sun Reflection Trail (Directional Glint)
+      // 3. Directional Sun Glint & Specular Reflection Path
       vec3 normal = normalize(vNormalVec);
       vec3 viewDir = normalize(cameraPosition - vWorldPosition);
       vec3 sunDir = normalize(uSunPosition - vWorldPosition);
       vec3 halfVec = normalize(sunDir + viewDir);
 
       // Specular golden glitter on wave facets
-      float spec = pow(max(dot(normal, halfVec), 0.0), 32.0);
-      water += uSpecularSun * spec * 0.85;
+      float NdotH = max(dot(normal, halfVec), 0.0);
+      float spec = pow(NdotH, 36.0);
+      water += uSpecularSun * spec * 0.95;
 
-      // Soft sunset warm coral glaze only along the direct sun reflection lane
-      float sunLane = smoothstep(0.65, 0.98, dot(reflect(-sunDir, normal), -viewDir));
-      water = mix(water, uSunReflection, sunLane * 0.35);
+      // Warm golden reflection trail across the water toward the setting sun
+      vec3 reflectDir = reflect(-sunDir, normal);
+      float sunTrail = smoothstep(0.72, 0.99, max(dot(reflectDir, -viewDir), 0.0));
+      water = mix(water, uSunReflection, sunTrail * 0.42);
 
-      // 4. Subtle Grazing Fresnel (Soft sky reflection at extreme horizon)
-      float fresnel = pow(1.0 - max(dot(viewDir, normal), 0.0), 4.5);
-      vec3 horizonHaze = vec3(0.08, 0.22, 0.42); // Cool deep ocean twilight
-      water = mix(water, horizonHaze, fresnel * 0.35);
+      // 4. Subtle Sky Fresnel at Grazing Angles (Reflecting Twilight Indigo Sky)
+      float NdotV = max(dot(viewDir, normal), 0.0);
+      float fresnel = pow(1.0 - NdotV, 4.0);
+      vec3 skyReflection = vec3(0.09, 0.22, 0.42); // Deep twilight indigo
+      water = mix(water, skyReflection, fresnel * 0.4);
 
-      // 5. Distance fade into deep ocean indigo
-      float dist = length(vWorldPosition.xz);
-      float distFade = smoothstep(140.0, 320.0, dist);
-      water = mix(water, uDeepColor, distFade * 0.5);
+      // 5. Atmospheric Horizon Distance Fade
+      float dist = length(vWorldPosition.xz - cameraPosition.xz);
+      float distFade = smoothstep(160.0, 360.0, dist);
+      water = mix(water, uDeepColor, distFade * 0.55);
 
-      gl_FragColor = vec4(water, 0.96);
+      gl_FragColor = vec4(water, 0.97);
     }
   `,
 };
@@ -109,12 +115,12 @@ export default function BioluminescentOcean() {
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
-      uDeepColor: { value: new THREE.Color('#051329') },
-      uSurfaceColor: { value: new THREE.Color('#0a2b54') },
+      uDeepColor: { value: new THREE.Color('#071833') },
+      uSurfaceColor: { value: new THREE.Color('#103b70') },
       uCrestColor: { value: new THREE.Color('#38bdf8') },
-      uSunReflection: { value: new THREE.Color('#ea580c') },
+      uSunReflection: { value: new THREE.Color('#f59e0b') },
       uSpecularSun: { value: new THREE.Color('#fef08a') },
-      uSunPosition: { value: new THREE.Vector3(30, 18, -90) },
+      uSunPosition: { value: new THREE.Vector3(30, 22, -150) },
     }),
     []
   );
@@ -129,10 +135,10 @@ export default function BioluminescentOcean() {
     <mesh
       ref={meshRef}
       rotation={[-Math.PI / 2, 0, 0]}
-      position={[0, -0.16, -90]}
+      position={[0, -0.15, -110]}
       receiveShadow
     >
-      <planeGeometry args={[460, 460, 150, 150]} />
+      <planeGeometry args={[520, 520, 160, 160]} />
       <shaderMaterial
         ref={materialRef}
         vertexShader={OceanicBlueShader.vertexShader}

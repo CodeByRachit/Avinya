@@ -29,19 +29,20 @@ body {
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #05070d;
+  background: rgba(10, 15, 26, 0.6);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 240, 255, 0.25);
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 240, 255, 0.6);
+  background: rgba(255, 255, 255, 0.4);
 }
 
 /* Selection Highlight */
@@ -86,11 +87,29 @@ body {
   background-size: 40px 40px;
 }
 
-/* Hide default cursor on desktop when custom cursor active */
+/* Custom cursor management: always keep native cursor visible on scrollbars, modals, and interactive scroll zones */
 @media (min-width: 1024px) {
-  .custom-cursor-active,
-  .custom-cursor-active * {
+  body:not(.modal-open).custom-cursor-active,
+  body:not(.modal-open).custom-cursor-active *:not([data-lenis-prevent]):not([data-lenis-prevent] *):not(input):not(textarea):not(select) {
     cursor: none !important;
   }
-}
 
+  body.modal-open,
+  body.modal-open *,
+  [data-lenis-prevent],
+  [data-lenis-prevent] *,
+  [role="dialog"],
+  [role="dialog"] * {
+    cursor: auto !important;
+  }
+
+  body.modal-open button,
+  body.modal-open a,
+  body.modal-open [role="button"],
+  [data-lenis-prevent] button,
+  [data-lenis-prevent] a,
+  [role="dialog"] button,
+  [role="dialog"] a {
+    cursor: pointer !important;
+  }
+}
