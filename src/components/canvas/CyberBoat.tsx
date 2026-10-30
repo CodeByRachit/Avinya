@@ -4,27 +4,100 @@ import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-interface VoyageBoatProps {
+interface CyberBoatProps {
   position?: [number, number, number];
   rotation?: [number, number, number];
+  accentColor?: string;
 }
 
-export default function CyberBoat({ position = [0, 0, 0], rotation = [0, 0, 0] }: VoyageBoatProps) {
-  const boatGroup = useRef<THREE.Group>(null);
+export default function CyberBoat({
+  position = [0, 0, 0],
+  rotation = [0, 0, 0],
+  accentColor = '#00f0ff',
+}: CyberBoatProps) {
+  const boatRef = useRef<THREE.Group>(null);
   const lanternLightRef = useRef<THREE.PointLight>(null);
   const wakePointsRef = useRef<THREE.Points>(null);
 
-  // Wake ripple particles behind the stern
+  // Custom faceted hull geometry for an elite futuristic voyager skiff
+  const { hullGeo, keelGeo, deckGeo, neonEdgesGeo } = useMemo(() => {
+    // Sleek geometric tapered hull (sharp bow, chined sides, flat transom)
+    // Vertices layout (half-hull mirrored across X):
+    // Prow tip: (0, 0.4, -2.2)
+    // Keel prow: (0, -0.1, -1.8)
+    // Mid gunwales: (+-0.65, 0.45, 0)
+    // Mid chines: (+-0.5, 0.05, 0)
+    // Stern gunwales: (+-0.55, 0.4, 1.6)
+    // Stern transom bottom: (0, 0.1, 1.6)
+
+    const hullVertices = new Float32Array([
+      // Port Bow Upper Panel
+      0, 0.4, -2.2,   -0.65, 0.45, 0,   -0.5, 0.05, 0,
+      0, 0.4, -2.2,   -0.5, 0.05, 0,    0, -0.1, -1.8,
+      // Starboard Bow Upper Panel
+      0, 0.4, -2.2,   0.5, 0.05, 0,     0.65, 0.45, 0,
+      0, 0.4, -2.2,   0, -0.1, -1.8,    0.5, 0.05, 0,
+
+      // Port Mid/Aft Panel
+      -0.65, 0.45, 0, -0.55, 0.4, 1.6,  -0.45, 0.12, 1.6,
+      -0.65, 0.45, 0, -0.45, 0.12, 1.6, -0.5, 0.05, 0,
+      // Starboard Mid/Aft Panel
+      0.65, 0.45, 0,  0.45, 0.12, 1.6,  0.55, 0.4, 1.6,
+      0.65, 0.45, 0,  0.5, 0.05, 0,     0.45, 0.12, 1.6,
+
+      // Transom (Stern Flat Back)
+      -0.55, 0.4, 1.6, 0.55, 0.4, 1.6,  0, 0.1, 1.6,
+      -0.55, 0.4, 1.6, 0, 0.1, 1.6,     -0.45, 0.12, 1.6,
+      0.55, 0.4, 1.6,  0.45, 0.12, 1.6, 0, 0.1, 1.6,
+
+      // Bottom Keel Panels
+      0, -0.1, -1.8,  -0.5, 0.05, 0,    0, 0.02, 0,
+      0, -0.1, -1.8,  0, 0.02, 0,       0.5, 0.05, 0,
+      -0.5, 0.05, 0,  -0.45, 0.12, 1.6, 0, 0.08, 1.6,
+      -0.5, 0.05, 0,  0, 0.08, 1.6,     0, 0.02, 0,
+      0.5, 0.05, 0,   0, 0.02, 0,       0, 0.08, 1.6,
+      0.5, 0.05, 0,   0, 0.08, 1.6,     0.45, 0.12, 1.6,
+    ]);
+
+    const hull = new THREE.BufferGeometry();
+    hull.setAttribute('position', new THREE.BufferAttribute(hullVertices, 3));
+    hull.computeVertexNormals();
+
+    // Neon Gunwale Rail contour line (loops around the top sheer edge)
+    const neonPoints = [
+      new THREE.Vector3(0, 0.42, -2.25),
+      new THREE.Vector3(-0.66, 0.47, 0),
+      new THREE.Vector3(-0.56, 0.42, 1.62),
+      new THREE.Vector3(0.56, 0.42, 1.62),
+      new THREE.Vector3(0.66, 0.47, 0),
+      new THREE.Vector3(0, 0.42, -2.25),
+    ];
+    const neonCurve = new THREE.CatmullRomCurve3(neonPoints, true);
+    const neonTube = new THREE.TubeGeometry(neonCurve, 64, 0.025, 8, true);
+
+    // Sleek faceted cockpit interior
+    const deck = new THREE.BoxGeometry(0.85, 0.05, 1.8);
+    const keel = new THREE.BoxGeometry(0.06, 0.22, 3.4);
+
+    return {
+      hullGeo: hull,
+      keelGeo: keel,
+      deckGeo: deck,
+      neonEdgesGeo: neonTube,
+    };
+  }, []);
+
+  // Luminous hydro-wake particles trailing behind the stern
   const { wakePositions, wakeLifetimes } = useMemo(() => {
-    const count = 40;
+    const count = 48;
     const positions = new Float32Array(count * 3);
     const lifetimes = new Float32Array(count);
 
     for (let i = 0; i < count; i++) {
       lifetimes[i] = Math.random();
-      positions[i * 3] = (Math.random() - 0.5) * 0.8;
+      positions[i * 3] = (Math.random() - 0.5) * 0.4;
       positions[i * 3 + 1] = 0.02;
-      positions[i * 3 + 2] = 1.2 + Math.random() * 4.0;
+      positions[i * 3 + 2] = 1.6 + Math.random() * 3.5;
     }
 
     return { wakePositions: positions, wakeLifetimes: lifetimes };
@@ -34,32 +107,32 @@ export default function CyberBoat({ position = [0, 0, 0], rotation = [0, 0, 0] }
     const time = state.clock.getElapsedTime();
 
     // Natural hydro-dynamic wave pitching and heave
-    if (boatGroup.current) {
-      boatGroup.current.position.y = Math.sin(time * 1.8) * 0.08 + 0.14;
-      boatGroup.current.rotation.z = Math.sin(time * 1.4) * 0.04;
-      boatGroup.current.rotation.x = Math.cos(time * 1.6) * 0.035;
+    if (boatRef.current) {
+      boatRef.current.position.y = Math.sin(time * 2.2) * 0.04 + 0.12;
+      boatRef.current.rotation.z = Math.sin(time * 1.6) * 0.035;
+      boatRef.current.rotation.x = Math.cos(time * 1.8) * 0.025;
     }
 
-    // Incandescent lantern flame flicker
+    // Dynamic Bow Lantern Intensity
     if (lanternLightRef.current) {
-      lanternLightRef.current.intensity = 2.4 + Math.sin(time * 6) * 0.4 + Math.sin(time * 14) * 0.15;
+      lanternLightRef.current.intensity = 3.5 + Math.sin(time * 7) * 0.5;
     }
 
-    // Animate wake ripples trailing back and spreading outward
+    // Animate glowing wake particles
     if (wakePointsRef.current) {
       const positions = wakePointsRef.current.geometry.attributes.position.array as Float32Array;
       const count = wakeLifetimes.length;
 
       for (let i = 0; i < count; i++) {
-        wakeLifetimes[i] += delta * 0.9;
+        wakeLifetimes[i] += delta * 1.1;
         if (wakeLifetimes[i] > 1.0) {
           wakeLifetimes[i] = 0;
-          positions[i * 3] = (Math.random() - 0.5) * 0.5;
+          positions[i * 3] = (Math.random() - 0.5) * 0.35;
           positions[i * 3 + 1] = 0.02;
-          positions[i * 3 + 2] = 1.0;
+          positions[i * 3 + 2] = 1.6;
         } else {
-          positions[i * 3 + 2] += delta * 2.8;
-          positions[i * 3] += (positions[i * 3] >= 0 ? 1 : -1) * delta * 0.6;
+          positions[i * 3 + 2] += delta * 3.2;
+          positions[i * 3] += (positions[i * 3] >= 0 ? 1 : -1) * delta * 0.5;
         }
       }
       wakePointsRef.current.geometry.attributes.position.needsUpdate = true;
@@ -68,146 +141,90 @@ export default function CyberBoat({ position = [0, 0, 0], rotation = [0, 0, 0] }
 
   return (
     <group position={position} rotation={rotation}>
-      <group ref={boatGroup}>
-        {/* ======================================================== */}
-        {/* CRAFTED TIMBER VOYAGER HULL                              */}
-        {/* ======================================================== */}
-        
-        {/* Main curved boat hull (tapered keel & sheer line) */}
-        <mesh position={[0, 0.28, 0]} castShadow receiveShadow>
-          <cylinderGeometry args={[0.7, 0.45, 3.2, 16, 1, false, 0, Math.PI]} />
-          {/* Rotated so hollow side faces up */}
+      <group ref={boatRef}>
+        {/* Sleek Faceted Futuristic Hull (Deep Obsidian / Graphite with specular sheen) */}
+        <mesh geometry={hullGeo} castShadow receiveShadow>
           <meshStandardMaterial
-            color="#5a3825"
-            roughness={0.7}
-            metalness={0.1}
+            color="#141c2b"
+            roughness={0.25}
+            metalness={0.8}
+            side={THREE.DoubleSide}
           />
         </mesh>
 
-        {/* Outer Hull Clinker Planks (Warm Cedar Strakes) */}
-        <mesh position={[0, 0.26, 0]} rotation={[0, 0, Math.PI]}>
-          <cylinderGeometry args={[0.72, 0.48, 3.25, 14, 1, false, 0, Math.PI]} />
+        {/* Glowing Neon Contour Trim along Gunwales */}
+        <mesh geometry={neonEdgesGeo}>
+          <meshBasicMaterial color={accentColor} />
+        </mesh>
+
+        {/* Cockpit Floor / Interior Carbon Deck */}
+        <mesh geometry={deckGeo} position={[0, 0.22, 0.3]}>
           <meshStandardMaterial
-            color="#462b1c"
-            roughness={0.8}
-            metalness={0.05}
+            color="#0a0f18"
+            roughness={0.3}
+            metalness={0.9}
           />
         </mesh>
 
-        {/* Curved Bow Stem (Curving prow at the front) */}
-        <group position={[0, 0.52, -1.65]} rotation={[-0.35, 0, 0]}>
-          <mesh castShadow>
-            <boxGeometry args={[0.14, 0.85, 0.22]} />
-            <meshStandardMaterial color="#3a2215" roughness={0.6} />
-          </mesh>
-          {/* Carved Brass Prow Cap */}
-          <mesh position={[0, 0.45, 0]}>
-            <sphereGeometry args={[0.08, 12, 12]} />
-            <meshStandardMaterial color="#cba153" metalness={0.85} roughness={0.3} />
-          </mesh>
-        </group>
-
-        {/* Stern Transom (Flat timber aft backplate) */}
-        <mesh position={[0, 0.42, 1.62]} rotation={[0.2, 0, 0]}>
-          <boxGeometry args={[1.0, 0.55, 0.12]} />
-          <meshStandardMaterial color="#3a2215" roughness={0.6} />
+        {/* Sleek Forward Cyber Windshield / Deflector Shield */}
+        <mesh position={[0, 0.42, -0.6]} rotation={[0.42, 0, 0]}>
+          <boxGeometry args={[0.72, 0.18, 0.04]} />
+          <meshPhysicalMaterial
+            color="#00f0ff"
+            transmission={0.85}
+            opacity={1}
+            transparent
+            roughness={0.1}
+            ior={1.5}
+          />
         </mesh>
 
-        {/* Gunwale Railing (Port & Starboard Timber Trims) */}
-        <mesh position={[-0.58, 0.52, 0]}>
-          <boxGeometry args={[0.08, 0.08, 3.3]} />
-          <meshStandardMaterial color="#6e462d" roughness={0.5} />
-        </mesh>
-        <mesh position={[0.58, 0.52, 0]}>
-          <boxGeometry args={[0.08, 0.08, 3.3]} />
-          <meshStandardMaterial color="#6e462d" roughness={0.5} />
+        {/* Central Cyber Navigation Spire (Low profile, sleek) */}
+        <mesh position={[0, 0.65, 0.05]} rotation={[-0.2, 0, 0]}>
+          <coneGeometry args={[0.04, 0.7, 6]} />
+          <meshStandardMaterial color="#334155" metalness={0.9} roughness={0.2} />
         </mesh>
 
-        {/* ======================================================== */}
-        {/* INTERIOR TIMBER DETAILS & BENCHES (THWARTS)              */}
-        {/* ======================================================== */}
-        
-        {/* Forward Rowing Bench */}
-        <mesh position={[0, 0.42, -0.65]}>
-          <boxGeometry args={[1.1, 0.06, 0.35]} />
-          <meshStandardMaterial color="#784c2f" roughness={0.6} />
+        {/* Spire Neon Antenna Tip */}
+        <mesh position={[0, 1.0, -0.02]}>
+          <sphereGeometry args={[0.035, 12, 12]} />
+          <meshBasicMaterial color={accentColor} />
         </mesh>
 
-        {/* Midship Mast Bench */}
-        <mesh position={[0, 0.42, 0.15]}>
-          <boxGeometry args={[1.15, 0.06, 0.38]} />
-          <meshStandardMaterial color="#784c2f" roughness={0.6} />
-        </mesh>
-
-        {/* Aft Helm Bench */}
-        <mesh position={[0, 0.42, 0.95]}>
-          <boxGeometry args={[1.0, 0.06, 0.35]} />
-          <meshStandardMaterial color="#784c2f" roughness={0.6} />
-        </mesh>
-
-        {/* Floor Gratings / Floorboards */}
-        <mesh position={[0, 0.16, 0]}>
-          <boxGeometry args={[0.7, 0.04, 2.8]} />
-          <meshStandardMaterial color="#2d1c11" roughness={0.9} />
-        </mesh>
-
-        {/* Wooden Voyager Mast */}
-        <mesh position={[0, 1.1, 0.15]}>
-          <cylinderGeometry args={[0.04, 0.055, 1.5, 10]} />
-          <meshStandardMaterial color="#6e462d" roughness={0.7} />
-        </mesh>
-
-        {/* Furled Canvas Sail on Boom */}
-        <mesh position={[0, 1.3, 0.3]} rotation={[0.1, 0, 0]}>
-          <cylinderGeometry args={[0.08, 0.07, 1.2, 8]} />
-          <meshStandardMaterial color="#e5dfd5" roughness={0.9} />
-        </mesh>
-
-        {/* Brass Mast Collar & Ring */}
-        <mesh position={[0, 0.5, 0.15]}>
-          <cylinderGeometry args={[0.07, 0.07, 0.12, 12]} />
-          <meshStandardMaterial color="#cba153" metalness={0.9} roughness={0.3} />
-        </mesh>
-
-        {/* ======================================================== */}
-        {/* BRASS VOYAGE LANTERN (Bow Warm Amber Beacon)            */}
-        {/* ======================================================== */}
-        <group position={[0, 0.82, -1.65]}>
-          {/* Lantern Brass Frame */}
-          <mesh position={[0, 0, 0]}>
-            <cylinderGeometry args={[0.1, 0.12, 0.28, 8]} />
-            <meshStandardMaterial color="#cba153" metalness={0.85} roughness={0.25} />
-          </mesh>
-
-          {/* Glowing Incandescent Lantern Core */}
-          <mesh position={[0, 0, 0]}>
+        {/* High-Intensity Bow Lantern Beacon */}
+        <group position={[0, 0.48, -2.15]}>
+          <mesh>
             <sphereGeometry args={[0.07, 16, 16]} />
-            <meshBasicMaterial color="#ffb74d" />
+            <meshBasicMaterial color="#38bdf8" />
           </mesh>
-
-          {/* Point Light Casting Warm Reflection on Water */}
           <pointLight
             ref={lanternLightRef}
-            color="#ff9800"
-            intensity={3.2}
-            distance={8.5}
+            color="#00f0ff"
+            intensity={4.0}
+            distance={10}
             decay={1.8}
-            position={[0, -0.1, 0]}
           />
         </group>
 
-        {/* Aft Stern Lantern */}
-        <group position={[0, 0.65, 1.62]}>
-          <mesh>
-            <sphereGeometry args={[0.05, 12, 12]} />
-            <meshBasicMaterial color="#ffb74d" />
+        {/* Stern Energy Thrusters (Dual Neon Glow Ports) */}
+        <group position={[0, 0.24, 1.62]}>
+          <mesh position={[-0.22, 0, 0]}>
+            <cylinderGeometry args={[0.06, 0.08, 0.08, 12]} />
+            <meshBasicMaterial color="#f43f5e" />
           </mesh>
-          <pointLight color="#ff9800" intensity={1.5} distance={4.5} />
+          <mesh position={[0.22, 0, 0]}>
+            <cylinderGeometry args={[0.06, 0.08, 0.08, 12]} />
+            <meshBasicMaterial color="#f43f5e" />
+          </mesh>
+          <pointLight
+            color="#f43f5e"
+            intensity={2.5}
+            distance={5}
+            position={[0, 0, 0.2]}
+          />
         </group>
 
-        {/* ======================================================== */}
-        {/* NATURAL WATER WAKE PARTICLES                             */}
-        {/* ======================================================== */}
+        {/* Glowing Hydro Wake Particles */}
         <points ref={wakePointsRef}>
           <bufferGeometry>
             <bufferAttribute
@@ -216,11 +233,11 @@ export default function CyberBoat({ position = [0, 0, 0], rotation = [0, 0, 0] }
             />
           </bufferGeometry>
           <pointsMaterial
-            size={0.16}
-            color="#b0bec5"
+            size={0.18}
+            color="#38bdf8"
             transparent
-            opacity={0.5}
-            blending={THREE.NormalBlending}
+            opacity={0.65}
+            blending={THREE.AdditiveBlending}
           />
         </points>
       </group>
