@@ -14,6 +14,7 @@ const NAV_ITEMS: NavItem[] = [
   { name: 'About', href: '#about' },
   { name: 'Voyage', href: '#voyage', tag: '3 DAYS' },
   { name: 'Events', href: '#events', tag: '24' },
+  { name: 'Venues', href: '#venues', tag: 'MAP' },
   { name: 'Hack2Future', href: '#hack2future', tag: 'FLAGSHIP' },
   { name: 'Register', href: '#register' },
 ];

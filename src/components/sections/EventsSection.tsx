@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { FEST_EVENTS, FestEvent, EventCategory, EventDay } from '@/data/events';
 import TiltEventCard from '@/components/ui/TiltEventCard';
 import EventModal from '@/components/ui/EventModal';
+import CyberScramble from '@/components/ui/CyberScramble';
 import {
   Calendar,
   Filter,
@@ -100,7 +101,7 @@ export default function EventsSection() {
           </div>
 
           <h2 className="font-orbitron text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight">
-            ARENA DISPATCH
+            <CyberScramble text="ARENA DISPATCH" />
           </h2>
 
           <p className="font-grotesk text-white/60 text-sm sm:text-base mt-2 max-w-2xl">
@@ -250,3 +251,4 @@ export default function EventsSection() {
     </section>
   );
 }
+

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
+import CyberScramble from '@/components/ui/CyberScramble';
 import {
   Flame,
   ExternalLink,
@@ -108,7 +109,7 @@ export default function Hack2FutureSection() {
           </div>
 
           <h2 className="font-orbitron text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight">
-            HACK<span className="text-avinya-cyan">2</span>FUTURE
+            <CyberScramble text="HACK2FUTURE" />
           </h2>
 
           <p className="font-syne text-lg sm:text-xl text-white/80 font-medium mt-3">

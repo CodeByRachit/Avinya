@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Sparkles, Compass, ChevronDown, Flame } from 'lucide-react';
+import { Sparkles, Compass, ChevronDown, Flame, Radio } from 'lucide-react';
+import CyberScramble from '@/components/ui/CyberScramble';
 
 interface HeroOverlayProps {
   onBoardVoyage: () => void;
@@ -11,7 +12,7 @@ export default function HeroOverlay({ onBoardVoyage }: HeroOverlayProps) {
   return (
     <section
       id="hero"
-      className="relative z-10 w-full min-h-screen flex flex-col items-center justify-between px-4 pt-32 pb-28 text-center pointer-events-none select-none"
+      className="relative z-10 w-full min-h-screen flex flex-col items-center justify-between px-4 pt-32 pb-24 text-center pointer-events-none select-none"
     >
       {/* Top Banner Tag */}
       <div className="pointer-events-auto inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-white/15 bg-black/60 backdrop-blur-md shadow-[0_0_20px_rgba(0,0,0,0.6)] animate-pulse-slow">
@@ -23,9 +24,10 @@ export default function HeroOverlay({ onBoardVoyage }: HeroOverlayProps) {
 
       {/* Main Grand Typography */}
       <div className="flex flex-col items-center max-w-5xl my-auto">
-        <div className="flex items-center gap-3 mb-3">
+        <div className="flex items-center gap-2 mb-3">
+          <Radio className="w-3.5 h-3.5 text-avinya-cyan animate-pulse" />
           <span className="font-mono text-xs uppercase tracking-[0.3em] text-avinya-cyan font-semibold">
-            // THE TECHNO-CULTURAL ODYSSEY
+            <CyberScramble text="THE TECHNO-CULTURAL ODYSSEY" />
           </span>
         </div>
 
@@ -73,4 +75,3 @@ export default function HeroOverlay({ onBoardVoyage }: HeroOverlayProps) {
     </section>
   );
 }
-

@@ -5,7 +5,11 @@ import dynamic from 'next/dynamic';
 import HeroOverlay from '@/components/sections/HeroOverlay';
 import VoyageHUD from '@/components/hud/VoyageHUD';
 import EventsSection from '@/components/sections/EventsSection';
+import CampusVenueGuide from '@/components/sections/CampusVenueGuide';
 import Hack2FutureSection from '@/components/sections/Hack2FutureSection';
+import Preloader from '@/components/hud/Preloader';
+import NavigationChronometer from '@/components/hud/NavigationChronometer';
+import CyberScramble from '@/components/ui/CyberScramble';
 import { useLenis } from '@/components/providers/SmoothScroll';
 import {
   Sparkles,
@@ -13,6 +17,8 @@ import {
   Compass,
   ArrowUpRight,
   CheckCircle2,
+  MapPin,
+  Calendar,
 } from 'lucide-react';
 
 // Dynamic import of 3D Canvas with ssr disabled for flawless WebGL mounting
@@ -33,6 +39,7 @@ const VoyageCanvas = dynamic(() => import('@/components/canvas/VoyageCanvas'), {
 export default function Home() {
   const { lenis } = useLenis();
   const [voyageProgress, setVoyageProgress] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
   const voyageTrackRef = useRef<HTMLDivElement>(null);
 
   // Sync scroll progress with 3D boat voyage
@@ -81,7 +88,12 @@ export default function Home() {
   }, [handleSelectWaypoint]);
 
   return (
-    <main className="relative w-full min-h-screen text-white">
+    <main className="relative w-full min-h-screen text-white overflow-x-hidden">
+      {/* ======================================================== */}
+      {/* 0. FUTURISTIC INITIALIZING PRELOADER SCREEN             */}
+      {/* ======================================================== */}
+      <Preloader onComplete={() => setIsLoaded(true)} />
+
       {/* ======================================================== */}
       {/* 1. FIXED 3D WEBGL VOYAGE CANVAS & BIOLUMINESCENT OCEAN   */}
       {/* ======================================================== */}
@@ -236,9 +248,12 @@ export default function Home() {
       </div>
 
       {/* ======================================================== */}
-      {/* 3. GROUND DETAIL SECTIONS: ABOUT, EVENTS, HACK2FUTURE   */}
+      {/* 3. GROUND DETAIL SECTIONS: ABOUT, CHRONOMETER, EVENTS    */}
       {/* ======================================================== */}
-      <div className="relative z-20 bg-gradient-to-b from-transparent via-[#030408]/95 to-[#020306] backdrop-blur-md pt-20">
+      <div className="relative z-20 bg-gradient-to-b from-transparent via-[#030408]/95 to-[#020306] backdrop-blur-md pt-16">
+        {/* Navigation Chronometer Strip */}
+        <NavigationChronometer />
+
         {/* Section: About Avinya 2027 */}
         <section id="about" className="max-w-7xl mx-auto px-4 sm:px-6 py-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -248,7 +263,7 @@ export default function Home() {
                 THE TECHNO-CULTURAL FLAGSHIP OF IIIT DHARWAD
               </div>
               <h2 className="font-orbitron text-3xl sm:text-5xl font-black text-white leading-tight">
-                WHERE CODE, HARDWARE & ARTISTRY COLLIDE
+                <CyberScramble text="WHERE CODE, HARDWARE & ARTISTRY COLLIDE" />
               </h2>
               <p className="font-grotesk text-base text-white/70 mt-6 leading-relaxed">
                 Avinya 2027 marks the monumental annual gathering at the Indian Institute of Information Technology, Dharwad. Bringing together thousands of visionary technologists, artists, and competitors from institutions across India.
@@ -330,12 +345,17 @@ export default function Home() {
         <EventsSection />
 
         {/* ======================================================== */}
-        {/* 5. DEDICATED HACK2FUTURE ASTRONAUT & DEEP-SPACE SECTION */}
+        {/* 5. ON-GROUND CAMPUS VENUE GUIDE & RADAR STRIP            */}
+        {/* ======================================================== */}
+        <CampusVenueGuide />
+
+        {/* ======================================================== */}
+        {/* 6. DEDICATED HACK2FUTURE ASTRONAUT & DEEP-SPACE SECTION */}
         {/* ======================================================== */}
         <Hack2FutureSection />
 
         {/* ======================================================== */}
-        {/* 6. PASS PROCUREMENT & REGISTRATION GATEWAY               */}
+        {/* 7. PASS PROCUREMENT & REGISTRATION GATEWAY               */}
         {/* ======================================================== */}
         <section id="register" className="max-w-4xl mx-auto px-4 sm:px-6 py-28 text-center">
           <div className="glass-panel p-10 sm:p-16 rounded-3xl border border-white/15 relative overflow-hidden bg-black/80">
@@ -345,7 +365,7 @@ export default function Home() {
             </span>
 
             <h2 className="font-orbitron text-3xl sm:text-5xl font-black text-white mt-3">
-              CLAIM YOUR ALL-ACCESS PASS
+              <CyberScramble text="CLAIM YOUR ALL-ACCESS PASS" />
             </h2>
 
             <p className="font-grotesk text-white/70 max-w-xl mx-auto mt-4 text-sm sm:text-base leading-relaxed">
