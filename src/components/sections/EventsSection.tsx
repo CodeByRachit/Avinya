@@ -4,6 +4,7 @@ import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { FEST_EVENTS, FestEvent, EventCategory, EventDay } from '@/data/events';
 import TiltEventCard from '@/components/ui/TiltEventCard';
 import EventModal from '@/components/ui/EventModal';
+import { useLenis } from '@/components/providers/SmoothScroll';
 import {
   Calendar,
   Search,
@@ -63,6 +64,7 @@ function parseEventMinutes(timeStr: string): number {
 }
 
 export default function EventsSection() {
+  const { lenis } = useLenis();
   const [selectedDay, setSelectedDay] = useState<'all' | EventDay>('all');
   const [selectedCategory, setSelectedCategory] = useState<'all' | EventCategory>('all');
   const [timeFilter, setTimeFilter] = useState<'all' | 'morning' | 'afternoon' | 'evening'>('all');
@@ -141,7 +143,8 @@ export default function EventsSection() {
     };
   }, [updateScrollState, filteredEvents, viewMode]);
 
-  // Map mouse wheel vertically to horizontal scroll inside timeline stream
+  // Map mouse wheel vertically to horizontal scroll inside timeline stream,
+  // and seamlessly chain to webpage vertical scroll once the start or end is reached
   useEffect(() => {
     if (viewMode !== 'timeline') return;
     const el = scrollRef.current;
@@ -149,18 +152,30 @@ export default function EventsSection() {
 
     const onWheel = (e: WheelEvent) => {
       if (Math.abs(e.deltaX) < Math.abs(e.deltaY)) {
-        // Only convert if there is horizontal room to scroll
         const maxScroll = el.scrollWidth - el.clientWidth;
-        if (maxScroll > 0) {
+        if (maxScroll <= 0) return;
+
+        const isAtEnd = el.scrollLeft >= maxScroll - 6;
+        const isAtStart = el.scrollLeft <= 6;
+
+        // If scrolling forward and not yet at end, or scrolling backward and not yet at start:
+        if ((e.deltaY > 0 && !isAtEnd) || (e.deltaY < 0 && !isAtStart)) {
           e.preventDefault();
-          el.scrollLeft += e.deltaY * 0.9;
+          el.scrollLeft += e.deltaY * 0.95;
+        } else if ((e.deltaY > 0 && isAtEnd) || (e.deltaY < 0 && isAtStart)) {
+          // Reached the boundary! Forward the scroll to the main webpage
+          if (lenis) {
+            lenis.scrollTo(lenis.scroll + e.deltaY * 1.2, { immediate: false, duration: 0.25 });
+          } else {
+            window.scrollBy({ top: e.deltaY, behavior: 'auto' });
+          }
         }
       }
     };
 
     el.addEventListener('wheel', onWheel, { passive: false });
     return () => el.removeEventListener('wheel', onWheel);
-  }, [viewMode]);
+  }, [viewMode, lenis]);
 
   const scrollByAmount = (offset: number) => {
     if (scrollRef.current) {

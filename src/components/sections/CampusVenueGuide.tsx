@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   MapPin,
   Navigation,
@@ -10,6 +10,7 @@ import {
   Check,
 } from 'lucide-react';
 import CyberScramble from '@/components/ui/CyberScramble';
+import { useLenis } from '@/components/providers/SmoothScroll';
 
 interface CampusVenue {
   id: string;
@@ -148,7 +149,36 @@ const CAMPUS_VENUES: CampusVenue[] = [
 ];
 
 export default function CampusVenueGuide() {
+  const { lenis } = useLenis();
   const [selectedVenue, setSelectedVenue] = useState<CampusVenue>(CAMPUS_VENUES[0]);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  // Allow scrolling the venue list, but when the user hits the top or bottom boundary,
+  // pass the scroll through to the webpage naturally
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+
+    const onWheel = (e: WheelEvent) => {
+      const maxScroll = el.scrollHeight - el.clientHeight;
+      if (maxScroll <= 0) return;
+
+      const isAtBottom = el.scrollTop >= maxScroll - 6;
+      const isAtTop = el.scrollTop <= 6;
+
+      // When at boundary and attempting to scroll past, chain to webpage scroll
+      if ((e.deltaY > 0 && isAtBottom) || (e.deltaY < 0 && isAtTop)) {
+        if (lenis) {
+          lenis.scrollTo(lenis.scroll + e.deltaY * 1.2, { immediate: false, duration: 0.25 });
+        } else {
+          window.scrollBy({ top: e.deltaY, behavior: 'auto' });
+        }
+      }
+    };
+
+    el.addEventListener('wheel', onWheel, { passive: true });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, [lenis]);
 
   return (
     <section id="venues" className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-28">
@@ -180,7 +210,8 @@ export default function CampusVenueGuide() {
         {/* Left Venue Selector List (9 Venues) - Fully Scrollable */}
         <div className="lg:col-span-5 flex flex-col gap-2">
           <div
-            className="flex flex-col gap-2.5 max-h-[580px] overflow-y-auto overscroll-contain pr-2 select-none"
+            ref={listRef}
+            className="flex flex-col gap-2.5 max-h-[580px] overflow-y-auto pr-2 select-none"
             data-lenis-prevent="true"
             style={{
               scrollbarWidth: 'thin',
