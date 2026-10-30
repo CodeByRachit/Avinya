@@ -9,11 +9,8 @@ import {
   Clock,
   MapPin,
   Users,
-  ShieldAlert,
-  Sparkles,
-  ExternalLink,
+  ShieldCheck,
   Award,
-  CheckCircle,
 } from 'lucide-react';
 
 interface EventModalProps {
@@ -39,7 +36,7 @@ export default function EventModal({ event, onClose }: EventModalProps) {
   if (!event) return null;
 
   const isTech = event.category === 'technical';
-  const accentColor = isTech ? '#38bdf8' : '#fb7185';
+  const accentDotColor = isTech ? '#38bdf8' : '#fb7185';
 
   return (
     <AnimatePresence>
@@ -50,34 +47,22 @@ export default function EventModal({ event, onClose }: EventModalProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-black/80 backdrop-blur-xl transition-opacity"
+          className="fixed inset-0 bg-black/75 backdrop-blur-md transition-opacity"
         />
 
         {/* Modal Dialog Window */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          initial={{ opacity: 0, scale: 0.96, y: 16 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          transition={{ type: 'spring', duration: 0.5, bounce: 0.2 }}
-          className="relative w-full max-w-2xl bg-[#090d18]/95 border rounded-3xl p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.9)] overflow-hidden z-10"
-          style={{
-            borderColor: `${accentColor}40`,
-            boxShadow: `0 0 50px -10px ${accentColor}30`,
-          }}
+          exit={{ opacity: 0, scale: 0.96, y: 16 }}
+          transition={{ type: 'spring', duration: 0.45, bounce: 0.15 }}
+          className="relative w-full max-w-2xl bg-[#0c101a] border border-white/[0.12] rounded-2xl p-6 sm:p-8 shadow-[0_24px_64px_rgba(0,0,0,0.85),inset_0_1px_0_0_rgba(255,255,255,0.1)] overflow-hidden z-10"
         >
-          {/* Subtle Top Accent Glow Line */}
-          <div
-            className="absolute top-0 left-0 right-0 h-1"
-            style={{
-              background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)`,
-            }}
-          />
-
           {/* Close button */}
           <button
             type="button"
             onClick={onClose}
-            className="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+            className="absolute top-5 right-5 w-8 h-8 rounded-lg bg-white/[0.04] border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors"
             aria-label="Close dialog"
           >
             <X className="w-4 h-4" />
@@ -85,79 +70,80 @@ export default function EventModal({ event, onClose }: EventModalProps) {
 
           {/* Header Badges */}
           <div className="flex flex-wrap items-center gap-2 mb-3">
-            <span
-              className="font-mono text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full border"
-              style={{
-                backgroundColor: `${accentColor}15`,
-                borderColor: `${accentColor}40`,
-                color: accentColor,
-              }}
-            >
-              DAY 0{event.day} • {event.category.toUpperCase()}
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium tracking-wide bg-white/[0.05] border border-white/[0.08] text-white/80">
+              <span
+                className="w-1.5 h-1.5 rounded-full"
+                style={{
+                  backgroundColor: accentDotColor,
+                  boxShadow: `0 0 8px ${accentDotColor}80`,
+                }}
+              />
+              <span>Day {event.day} · {isTech ? 'Technical Track' : 'Cultural Track'}</span>
             </span>
-            <span className="font-mono text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-white/70">
+
+            <span className="px-2.5 py-1 rounded-md text-xs font-medium bg-white/[0.04] border border-white/[0.08] text-white/60">
               {event.dayThemeName}
             </span>
           </div>
 
           {/* Title */}
-          <h2 className="font-orbitron text-2xl sm:text-3xl font-black text-white tracking-wide">
+          <h2 className="font-syne text-2xl sm:text-3xl font-bold text-white tracking-tight leading-tight">
             {event.title}
           </h2>
 
           {/* Organizing Club Highlight */}
-          <div className="mt-2 text-xs font-grotesk text-white/70 flex items-center gap-2">
-            <span className="font-mono text-avinya-gold font-bold">ORGANIZED BY:</span>
-            <span className="font-semibold text-white px-2 py-0.5 rounded bg-white/5 border border-white/10">
+          <div className="mt-2 text-xs font-grotesk text-white/60 flex items-center gap-1.5">
+            <span className="text-white/40 uppercase tracking-wider font-mono text-[11px]">Organized by</span>
+            <span className="font-medium text-white/90 px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.08]">
               {event.club}
             </span>
           </div>
 
-          {/* Mission Telemetry Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 my-6 font-mono text-xs">
-            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/10">
-              <span className="text-[10px] text-white/40 block flex items-center gap-1">
-                <Calendar className="w-3 h-3 text-avinya-gold" /> DATE
+          {/* Schedule & Venue Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 my-5 font-grotesk text-xs">
+            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.07]">
+              <span className="text-[11px] text-white/40 flex items-center gap-1.5 mb-1">
+                <Calendar className="w-3.5 h-3.5 text-white/50" /> Date
               </span>
-              <span className="text-white font-medium mt-1 block">{event.date}</span>
+              <span className="text-white font-medium block truncate">{event.date}</span>
             </div>
 
-            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/10">
-              <span className="text-[10px] text-white/40 block flex items-center gap-1">
-                <Clock className="w-3 h-3 text-avinya-cyan" /> TIME SLOT
+            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.07]">
+              <span className="text-[11px] text-white/40 flex items-center gap-1.5 mb-1">
+                <Clock className="w-3.5 h-3.5 text-white/50" /> Time
               </span>
-              <span className="text-white font-medium mt-1 block">{event.time}</span>
+              <span className="text-white font-medium block truncate">{event.time}</span>
             </div>
 
-            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/10 col-span-2 sm:col-span-1">
-              <span className="text-[10px] text-white/40 block flex items-center gap-1">
-                <MapPin className="w-3 h-3 text-avinya-magenta" /> VENUE
+            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.07] col-span-2 sm:col-span-1">
+              <span className="text-[11px] text-white/40 flex items-center gap-1.5 mb-1">
+                <MapPin className="w-3.5 h-3.5 text-white/50" /> Venue
               </span>
-              <span className="text-white font-medium mt-1 block truncate">{event.venue}</span>
+              <span className="text-white font-medium block truncate">{event.venue}</span>
             </div>
           </div>
 
-          {/* Full Detailed Description */}
-          <div className="mb-6">
-            <h4 className="font-mono text-xs uppercase tracking-widest text-white/50 mb-2">
-              // BRIEF & OBJECTIVE
+          {/* Description */}
+          <div className="mb-5">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-white/40 mb-2 font-mono">
+              About This Event
             </h4>
-            <p className="font-grotesk text-sm text-white/80 leading-relaxed bg-white/[0.02] p-4 rounded-xl border border-white/5">
+            <p className="font-grotesk text-sm text-white/75 leading-relaxed bg-white/[0.02] p-4 rounded-xl border border-white/[0.06]">
               {event.description}
             </p>
           </div>
 
-          {/* Arena Rules & Regulations */}
-          <div className="mb-6 space-y-2">
-            <h4 className="font-mono text-xs uppercase tracking-widest text-white/50 mb-2 flex items-center gap-1.5">
-              <ShieldAlert className="w-3.5 h-3.5 text-avinya-cyan" />
-              RULES & PROTOCOLS
+          {/* Guidelines */}
+          <div className="mb-5 space-y-2">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-white/40 mb-2 flex items-center gap-1.5 font-mono">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+              Event Guidelines
             </h4>
-            <ul className="text-xs font-grotesk text-white/70 space-y-1.5 list-disc list-inside bg-white/[0.02] p-3 rounded-xl border border-white/5">
-              <li>All team members must carry valid institute/college identification cards.</li>
-              <li>Reporting time is strictly 20 minutes prior to scheduled slot at {event.venue}.</li>
-              <li>Decisions of the judge panel and {event.club} organizers are final and binding.</li>
-              <li>Fair play code of conduct is enforced across all collegiate arenas.</li>
+            <ul className="text-xs font-grotesk text-white/70 space-y-1.5 list-disc list-inside bg-white/[0.02] p-3.5 rounded-xl border border-white/[0.06]">
+              <li>All participants must carry a valid institute ID card during reporting.</li>
+              <li>Please report to {event.venue} at least 15 minutes before scheduled slot.</li>
+              <li>Decisions of the judge panel and {event.club} coordinators are final.</li>
+              <li>Fair play and respectful conduct are mandatory for all participants.</li>
             </ul>
           </div>
 
@@ -166,27 +152,27 @@ export default function EventModal({ event, onClose }: EventModalProps) {
             {event.tags.map((tag) => (
               <span
                 key={tag}
-                className="font-mono text-[10px] px-2.5 py-1 rounded bg-white/5 border border-white/10 text-white/60"
+                className="text-[11px] font-medium px-2.5 py-0.5 rounded-md bg-white/[0.03] border border-white/[0.06] text-white/55"
               >
-                #{tag}
+                {tag}
               </span>
             ))}
           </div>
 
           {/* Action Footer */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-white/10">
-            <div className="text-xs font-mono text-white/50 flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-white/[0.08]">
+            <div className="text-xs font-grotesk text-white/50 flex items-center gap-1.5">
               <Users className="w-3.5 h-3.5 text-white/40" />
-              <span>TEAM SIZE: <strong>{event.teamSize || 'Individual'}</strong></span>
+              <span>Team: <strong className="text-white/80 font-medium">{event.teamSize || 'Individual'}</strong></span>
             </div>
 
-            <div className="flex items-center gap-3 w-full sm:w-auto">
+            <div className="flex items-center gap-2.5 w-full sm:w-auto">
               <button
                 type="button"
                 onClick={onClose}
-                className="w-1/2 sm:w-auto px-5 py-2.5 rounded-full border border-white/20 text-xs font-mono text-white/70 hover:text-white hover:bg-white/5 transition-colors"
+                className="w-1/2 sm:w-auto px-4 py-2 rounded-lg border border-white/10 text-xs font-medium text-white/70 hover:text-white hover:bg-white/[0.05] transition-colors"
               >
-                Dismiss
+                Close
               </button>
               <button
                 type="button"
@@ -194,13 +180,9 @@ export default function EventModal({ event, onClose }: EventModalProps) {
                   alert(`Registration request logged for: ${event.title}! Welcome aboard Avinya 2027.`);
                   onClose();
                 }}
-                className="w-1/2 sm:w-auto px-6 py-2.5 rounded-full font-orbitron font-bold text-xs tracking-wider uppercase text-white shadow-lg transition-all"
-                style={{
-                  background: `linear-gradient(90deg, ${accentColor}, #8b5cf6)`,
-                  boxShadow: `0 0 20px ${accentColor}50`,
-                }}
+                className="w-1/2 sm:w-auto px-5 py-2 rounded-lg font-grotesk font-semibold text-xs tracking-wide text-black bg-white hover:bg-white/90 shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-all"
               >
-                Confirm Spot
+                Register for Event
               </button>
             </div>
           </div>
@@ -209,4 +191,3 @@ export default function EventModal({ event, onClose }: EventModalProps) {
     </AnimatePresence>
   );
 }
-

@@ -7,12 +7,14 @@ import * as THREE from 'three';
 interface CyberBoatProps {
   position?: [number, number, number];
   rotation?: [number, number, number];
+  scale?: [number, number, number] | number;
   accentColor?: string;
 }
 
 export default function CyberBoat({
   position = [0, 0, 0],
   rotation = [0, 0, 0],
+  scale = [1.65, 1.65, 1.65],
   accentColor = '#f59e0b',
 }: CyberBoatProps) {
   const boatRef = useRef<THREE.Group>(null);
@@ -184,7 +186,7 @@ export default function CyberBoat({
   });
 
   return (
-    <group position={position} rotation={rotation}>
+    <group position={position} rotation={rotation} scale={scale}>
       <group ref={boatRef}>
         {/* ======================================================== */}
         {/* 1. CARVED TIMBER HULL & CLINKER STRAKES                  */}

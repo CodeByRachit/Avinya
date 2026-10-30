@@ -53,7 +53,7 @@ export default function VoyageCanvas({ progress = 0, onWaypointReached }: Voyage
       {/* 2. THREE.JS WEBGL CANVAS                                 */}
       {/* ======================================================== */}
       <Canvas
-        camera={{ position: [5.2, 3.2, 36], fov: 40, near: 0.1, far: 480 }}
+        camera={{ position: [6.2, 3.8, 42], fov: 52, near: 0.1, far: 500 }}
         dpr={[1, 1.5]}
         gl={{
           antialias: true,

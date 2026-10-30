@@ -87,25 +87,25 @@ export default function EventsSection() {
         }}
       />
 
-      {/* Header & Mission Telemetry */}
+      {/* Header & Section Telemetry */}
       <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-12">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-md mb-3 font-mono text-xs">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-md mb-3 font-grotesk text-xs">
             <span
               className="w-2 h-2 rounded-full animate-pulse transition-colors duration-500"
               style={{ backgroundColor: currentAccent.color }}
             />
-            <span className="uppercase tracking-widest text-white/70">
-              COMMAND DECK // 24 OFFICIAL EVENTS
+            <span className="uppercase tracking-widest text-white/70 font-mono text-[11px]">
+              FESTIVAL SCHEDULE · 24 FLAGSHIP EVENTS
             </span>
           </div>
 
-          <h2 className="font-orbitron text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight">
-            <CyberScramble text="ARENA DISPATCH" />
+          <h2 className="font-syne text-3xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight">
+            <CyberScramble text="FLAGSHIP EVENTS" />
           </h2>
 
           <p className="font-grotesk text-white/60 text-sm sm:text-base mt-2 max-w-2xl">
-            Filter by day or track to inspect competitions across Cultural spectacles and Technical / Quantum engineering challenges.
+            Explore 24 competitions across Cultural spectacles and Technical / Quantum engineering challenges.
           </p>
         </div>
 
@@ -114,10 +114,10 @@ export default function EventsSection() {
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40" />
           <input
             type="text"
-            placeholder="Search event, club (GND_0, Limelight), venue..."
+            placeholder="Search event, club (Mosaic, Dynamight), venue..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-9 py-2.5 rounded-full bg-white/[0.04] border border-white/15 text-white placeholder-white/40 font-grotesk text-xs focus:outline-none focus:border-avinya-cyan transition-colors"
+            className="w-full pl-10 pr-9 py-2.5 rounded-xl bg-white/[0.04] border border-white/15 text-white placeholder-white/40 font-grotesk text-xs focus:outline-none focus:border-white/30 transition-colors"
           />
           {searchQuery && (
             <button
@@ -130,7 +130,7 @@ export default function EventsSection() {
         </div>
       </div>
 
-      {/* Filtering HUD: Day Selector Tabs with dynamic glowing border */}
+      {/* Filtering HUD: Day Selector Tabs */}
       <div className="glass-panel p-2 rounded-2xl border border-white/10 mb-6 flex flex-wrap items-center justify-between gap-2">
         {/* Day Selector Tabs */}
         <div className="flex items-center gap-1.5 flex-wrap w-full lg:w-auto">
@@ -146,7 +146,7 @@ export default function EventsSection() {
                 key={String(tab.id)}
                 type="button"
                 onClick={() => setSelectedDay(tab.id)}
-                className={`relative px-4 py-2 rounded-xl text-xs font-mono font-medium tracking-wide transition-all duration-300 flex items-center gap-2 ${
+                className={`relative px-4 py-2 rounded-xl text-xs font-grotesk font-medium tracking-wide transition-all duration-300 flex items-center gap-2 ${
                   isSelected
                     ? 'text-white shadow-lg'
                     : 'text-white/60 hover:text-white hover:bg-white/[0.04]'
@@ -201,14 +201,14 @@ export default function EventsSection() {
       </div>
 
       {/* Active Filter Metrics Readout */}
-      <div className="flex items-center justify-between text-xs font-mono text-white/40 mb-8 px-2">
+      <div className="flex items-center justify-between text-xs font-grotesk text-white/40 mb-8 px-2">
         <div className="flex items-center gap-2">
-          <span>ACTIVE DECK:</span>
-          <strong className="text-white font-semibold" style={{ color: currentAccent.color }}>
+          <span>Active Deck:</span>
+          <strong className="text-white font-medium" style={{ color: currentAccent.color }}>
             {currentAccent.label}
           </strong>
         </div>
-        <span>DISPLAYING {filteredEvents.length} OF 24 EVENTS</span>
+        <span className="font-mono text-[11px]">SHOWING {filteredEvents.length} OF 24 EVENTS</span>
       </div>
 
       {/* 3D Perspective Tilt Event Cards Grid */}
