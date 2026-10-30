@@ -84,8 +84,8 @@ export default function VoyageCanvas({ progress = 0, onWaypointReached }: Voyage
         />
 
         <Suspense fallback={null}>
-          {/* Luminous 3D Evening Sun Disk & Light Corona */}
-          <EveningSun position={[30, 22, -150]} />
+          {/* Luminous 3D Evening Sun Disk & Light Corona stationed on the far ocean horizon */}
+          <EveningSun position={[40, 52, -450]} />
 
           {/* Flying Seabirds Circling the Archipelago */}
           <Seabirds />

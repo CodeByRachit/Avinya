@@ -1,7 +1,13 @@
 'use client';
 
-import React, { useRef } from 'react';
-import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import React, { useRef, useState } from 'react';
+import {
+  motion,
+  useScroll,
+  useSpring,
+  useTransform,
+  useMotionValueEvent,
+} from 'framer-motion';
 import {
   Rocket,
   FileCode,
@@ -122,20 +128,35 @@ export const MISSION_MILESTONES: MilestoneItem[] = [
   },
 ];
 
-// High-fidelity SVG Space Shuttle Pointer with thruster glow
-function SpaceShuttlePointer() {
-  return (
-    <div className="relative w-16 h-20 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none">
-      {/* Warm Ambient Pulsing Aura */}
-      <div className="absolute inset-0 rounded-full bg-amber-500/25 blur-xl animate-pulse" />
+// High-fidelity SVG Space Shuttle Pointer with dynamic rotation & thruster plume
+interface SpaceShuttleProps {
+  rotation: number;
+}
 
-      {/* Thruster exhaust beam glowing downwards */}
-      <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-3 h-8 bg-gradient-to-b from-amber-400 via-orange-500 to-transparent blur-[2px] opacity-90 animate-pulse" />
+function SpaceShuttlePointer({ rotation }: SpaceShuttleProps) {
+  return (
+    <motion.div
+      animate={{
+        rotate: rotation,
+      }}
+      transition={{
+        type: 'spring',
+        stiffness: 240,
+        damping: 20,
+        mass: 0.8,
+      }}
+      className="relative w-16 h-20 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none"
+    >
+      {/* Warm Ambient Pulsing Aura */}
+      <div className="absolute inset-0 rounded-full bg-amber-500/30 blur-xl animate-pulse" />
+
+      {/* Thruster exhaust beam glowing behind the engines */}
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-3.5 h-10 bg-gradient-to-b from-amber-300 via-orange-500 to-transparent blur-[2px] opacity-90 animate-pulse" />
 
       {/* SVG Space Orbiter */}
       <svg
         viewBox="0 0 100 120"
-        className="w-full h-full drop-shadow-[0_4px_16px_rgba(245,158,11,0.6)]"
+        className="w-full h-full drop-shadow-[0_4px_16px_rgba(245,158,11,0.65)]"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -190,26 +211,20 @@ function SpaceShuttlePointer() {
         />
 
         {/* Cockpit Canopy Windows */}
-        <polygon points="48,32 50,30 52,32 50,34" fill="#38bdf8" opacity="0.9" />
+        <polygon points="48,32 50,30 52,32 50,34" fill="#38bdf8" opacity="0.95" />
         <polygon points="45,34 48,33 48,36 45,36" fill="#0284c7" />
         <polygon points="55,34 52,33 52,36 55,36" fill="#0284c7" />
 
         {/* Vertical Stabilizer Tail Fin */}
-        <path
-          d="M 50 54 L 50 96 L 48 94 L 48 60 Z"
-          fill="#64748b"
-        />
-        <path
-          d="M 50 54 L 52 60 L 52 94 L 50 96 Z"
-          fill="#94a3b8"
-        />
+        <path d="M 50 54 L 50 96 L 48 94 L 48 60 Z" fill="#64748b" />
+        <path d="M 50 54 L 52 60 L 52 94 L 50 96 Z" fill="#94a3b8" />
 
         {/* OMS Engine Pods */}
         <rect x="40" y="88" width="5" height="10" rx="2" fill="#334155" />
         <rect x="55" y="88" width="5" height="10" rx="2" fill="#334155" />
         <rect x="47.5" y="92" width="5" height="10" rx="2" fill="#1e293b" />
       </svg>
-    </div>
+    </motion.div>
   );
 }
 
@@ -227,6 +242,8 @@ export default function ScrollTimeline({
   accentColor = '#f59e0b',
 }: ScrollTimelineProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isScrollingDown, setIsScrollingDown] = useState(true);
+  const [bankAngle, setBankAngle] = useState(0);
 
   // Normalize data: If events are passed, convert them into milestone timeline items
   const timelineItems: MilestoneItem[] = React.useMemo(() => {
@@ -250,9 +267,28 @@ export default function ScrollTimeline({
   }, [items, events]);
 
   // Framer Motion Scroll Progress for the shuttle pointer and glowing rail
-  const { scrollYProgress } = useScroll({
+  const { scrollY, scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start 65%', 'end 85%'],
+  });
+
+  // Track global scroll delta to detect scroll direction (down vs up)
+  useMotionValueEvent(scrollY, 'change', (current) => {
+    const prev = scrollY.getPrevious() ?? current;
+    const diff = current - prev;
+    if (diff > 1) {
+      setIsScrollingDown(true);
+    } else if (diff < -1) {
+      setIsScrollingDown(false);
+    }
+  });
+
+  // Calculate subtle banking tilt as shuttle navigates between alternating nodes
+  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
+    const segments = Math.max(4, timelineItems.length);
+    // Smooth roll banking tilt between -7 deg and +7 deg
+    const bank = Math.sin(latest * Math.PI * segments) * 7;
+    setBankAngle(bank);
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
@@ -263,6 +299,11 @@ export default function ScrollTimeline({
 
   const lineScaleY = useTransform(smoothProgress, [0, 1], [0, 1]);
   const pointerTop = useTransform(smoothProgress, [0, 1], ['0%', '100%']);
+
+  // Direction angle:
+  // When scrolling DOWN: Base is 180° (nose pointing downwards, thrusters at top firing upwards)
+  // When scrolling UP: Base is 0° (nose pointing upwards, thrusters at bottom firing downwards)
+  const shuttleRotation = isScrollingDown ? 180 - bankAngle : 0 + bankAngle;
 
   return (
     <div ref={containerRef} className="relative w-full max-w-5xl mx-auto py-12 px-4 sm:px-6">
@@ -286,7 +327,7 @@ export default function ScrollTimeline({
           top: pointerTop,
         }}
       >
-        <SpaceShuttlePointer />
+        <SpaceShuttlePointer rotation={shuttleRotation} />
       </motion.div>
 
       {/* Alternating Milestone Items */}
