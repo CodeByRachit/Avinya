@@ -50,15 +50,30 @@ export function IslandLastOutpost({ position = [-44, 0, -60] as [number, number,
   return (
     <group position={position}>
       {/* ======================================================== */}
-      {/* 1. LUMINOUS CELESTIAL MOON (REALISTIC - NO GREY WASHER)  */}
+      {/* 1. LUMINOUS CELESTIAL MOON (REALISTIC - NO FLAT SOLID DISC) */}
       {/* ======================================================== */}
       <group position={[6, 26, -26]}>
-        {/* Radiant Celestial Moon Sphere */}
+        {/* Radiant Celestial Moon Sphere with Soft Lunar Shading */}
         <mesh ref={moonRef}>
           <sphereGeometry args={[16, 64, 64]} />
-          <meshBasicMaterial color="#fff3db" />
+          <meshStandardMaterial
+            color="#fff6e5"
+            emissive="#fde68a"
+            emissiveIntensity={0.65}
+            roughness={0.9}
+            metalness={0.05}
+          />
         </mesh>
         {/* Soft Volumetric Lunar Atmosphere Glow Halo */}
+        <mesh position={[0, 0, 0.2]}>
+          <ringGeometry args={[16, 25, 64]} />
+          <meshBasicMaterial
+            color="#fef08a"
+            transparent
+            opacity={0.2}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
         <pointLight color="#fde68a" intensity={4.5} distance={60} decay={1.6} />
       </group>
 
