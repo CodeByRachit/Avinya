@@ -379,23 +379,17 @@ export default function CyberBoat({
         </group>
 
         {/* ======================================================== */}
-        {/* 5. LUMINOUS HYDRO WAKE RIPPLES                           */}
+        {/* 5. NATURAL TRANSLUCENT WATER WAKE RIPPLE                 */}
         {/* ======================================================== */}
-        <points ref={wakePointsRef}>
-          <bufferGeometry>
-            <bufferAttribute
-              attach="attributes-position"
-              args={[wakePositions, 3]}
-            />
-          </bufferGeometry>
-          <pointsMaterial
-            size={0.22}
-            color="#7dd3fc"
+        <mesh position={[0, 0.03, 2.6]} rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[1.2, 2.6]} />
+          <meshBasicMaterial
+            color="#bae6fd"
             transparent
-            opacity={0.65}
-            blending={THREE.AdditiveBlending}
+            opacity={0.18}
+            depthWrite={false}
           />
-        </points>
+        </mesh>
       </group>
     </group>
   );

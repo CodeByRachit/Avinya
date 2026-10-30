@@ -21,7 +21,7 @@ export default function VoyageCanvas({ progress = 0, onWaypointReached }: Voyage
 
   if (!mounted) {
     return (
-      <div className="fixed inset-0 z-0 bg-gradient-to-b from-[#1a103c] via-[#2d124d] to-[#0f172a] flex items-center justify-center">
+      <div className="fixed inset-0 z-0 bg-gradient-to-b from-[#0a1428] via-[#0d2242] to-[#050d1a] flex items-center justify-center">
         <div className="w-8 h-8 rounded-full border-2 border-amber-300 border-t-transparent animate-spin" />
       </div>
     );
@@ -30,33 +30,30 @@ export default function VoyageCanvas({ progress = 0, onWaypointReached }: Voyage
   return (
     <div className="fixed inset-0 z-0 pointer-events-auto w-full h-full overflow-hidden">
       {/* ======================================================== */}
-      {/* 1. RADIANT EVENING SUNSET SKY (WARM GOLDEN HOUR GLOW)    */}
+      {/* 1. NATURAL EVENING SKY (DEEP TWILIGHT BLUE WITH SUNSET)  */}
       {/* ======================================================== */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Deep Twilight Zenith to Radiant Sunset Horizon */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#120e28] via-[#241334] via-[#451a2e] to-[#1a0f24]" />
+        {/* Deep Ocean Twilight Sky Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#061022] via-[#0b1d3d] via-[#14284b] to-[#081226]" />
 
-        {/* Golden Hour Sun Flare on Mid-Left Horizon */}
-        <div className="absolute top-1/4 left-1/4 w-[55rem] h-[35rem] bg-gradient-to-r from-amber-500/25 via-orange-500/20 to-transparent rounded-full blur-[140px]" />
+        {/* Soft Evening Sunset Horizon Warmth (Left Horizon) */}
+        <div className="absolute top-1/4 left-1/4 w-[50rem] h-[30rem] bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-transparent rounded-full blur-[140px]" />
 
-        {/* Radiant Sunset Crimson Aura on Right Horizon */}
+        {/* Subtle Sunset Rose Glaze on Far Horizon */}
         <div
-          className="absolute top-1/3 right-0 w-[50rem] h-[38rem] bg-rose-600/20 rounded-full blur-[160px] animate-pulse"
-          style={{ animationDuration: '7s' }}
+          className="absolute top-1/3 right-10 w-[45rem] h-[32rem] bg-rose-500/12 rounded-full blur-[160px] animate-pulse"
+          style={{ animationDuration: '8s' }}
         />
 
-        {/* Sunset Lagoon Water Horizon Reflection */}
-        <div className="absolute bottom-1/4 left-1/3 w-[55rem] h-[28rem] bg-amber-400/15 rounded-full blur-[150px]" />
-
         {/* Soft Vignette */}
-        <div className="absolute inset-0 bg-radial from-transparent via-[#0f0a1c]/25 to-[#07040d]/70" />
+        <div className="absolute inset-0 bg-radial from-transparent via-[#050b18]/20 to-[#02060e]/65" />
       </div>
 
       {/* ======================================================== */}
       {/* 2. THREE.JS WEBGL CANVAS                                 */}
       {/* ======================================================== */}
       <Canvas
-        camera={{ position: [4.8, 3.2, 28], fov: 40, near: 0.1, far: 450 }}
+        camera={{ position: [5.2, 3.2, 36], fov: 40, near: 0.1, far: 480 }}
         dpr={[1, 1.5]}
         gl={{
           antialias: true,
@@ -65,57 +62,50 @@ export default function VoyageCanvas({ progress = 0, onWaypointReached }: Voyage
           stencil: false,
         }}
       >
-        {/* Warm evening sunset haze fog (never solid black) */}
-        <fog attach="fog" args={['#241528', 65, 300]} />
+        {/* Natural deep oceanic evening haze fog (Rich blue twilight) */}
+        <fog attach="fog" args={['#091b36', 75, 340]} />
 
         {/* ======================================================== */}
-        {/* 3. WARM EVENING GOLDEN-HOUR LIGHTING                     */}
+        {/* 3. CINEMATIC EVENING LIGHTING RIG                        */}
         {/* ======================================================== */}
-        {/* Warm Evening Ambient Fill */}
-        <ambientLight intensity={1.5} color="#fed7aa" />
+        {/* Natural Ambient Ocean Sky Fill */}
+        <ambientLight intensity={1.3} color="#93c5fd" />
 
-        {/* Sky / Water Hemisphere Bounce */}
-        <hemisphereLight args={['#fb923c', '#1e1b4b', 1.4]} />
+        {/* Sky / Water Hemisphere Light */}
+        <hemisphereLight args={['#38bdf8', '#07152b', 1.3]} />
 
-        {/* Primary Low-Angle Sunset Golden Key Light */}
+        {/* Low-Angle Evening Sun Key Light */}
         <directionalLight
-          position={[35, 22, -60]}
-          intensity={3.4}
-          color="#fef08a"
+          position={[35, 24, -60]}
+          intensity={2.8}
+          color="#fef3c7"
           castShadow
         />
 
-        {/* Sunset Rose / Coral Horizon Fill */}
+        {/* Soft Sunset Horizon Fill */}
         <directionalLight
-          position={[-35, 25, -30]}
-          intensity={1.8}
-          color="#fb7185"
-        />
-
-        {/* Deep Water Twilight Blue Fill */}
-        <directionalLight
-          position={[0, -10, 20]}
-          intensity={0.9}
-          color="#38bdf8"
+          position={[-30, 20, -30]}
+          intensity={1.5}
+          color="#f97316"
         />
 
         <Suspense fallback={null}>
-          {/* Natural Reflective Evening Ocean Plane */}
+          {/* Deep Blue Natural Reflective Evening Ocean */}
           <BioluminescentOcean />
 
-          {/* Luminous Navigation Wake */}
+          {/* Glowing Translucent Spline Navigation Ribbon */}
           <SplineTrack />
 
-          {/* Island 1: The Last Outpost (Desert Citadel & Moon) */}
-          <IslandLastOutpost position={[-28, 0, -48]} />
+          {/* Island 1: The Last Outpost on the LEFT */}
+          <IslandLastOutpost position={[-34, 0, -58]} />
 
-          {/* Island 2: The Pandemonium (Cyber Spires & Sunset Sun) */}
-          <IslandPandemonium position={[34, 0, -125]} />
+          {/* Island 2: The Pandemonium on the RIGHT */}
+          <IslandPandemonium position={[40, 0, -144]} />
 
-          {/* Island 3: The Carnival Island (Ferris Wheel & Boardwalk Pier) */}
-          <IslandCarnival position={[-26, 0, -202]} />
+          {/* Island 3: The Carnival Island on the LEFT */}
+          <IslandCarnival position={[-30, 0, -228]} />
 
-          {/* Navigating Skiff & 3/4 Cinematic Follow Camera */}
+          {/* Navigating Skiff & Smooth S-Curve Cinematic Camera */}
           <SceneController
             progress={progress}
             onWaypointReached={onWaypointReached}

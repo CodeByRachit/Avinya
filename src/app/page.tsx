@@ -83,7 +83,7 @@ export default function Home() {
 
   // Board the voyage button triggers smooth scroll to Day 1: The Last Outpost
   const handleBoardVoyage = useCallback(() => {
-    handleSelectWaypoint(0.22);
+    handleSelectWaypoint(0.30);
   }, [handleSelectWaypoint]);
 
   return (
@@ -99,12 +99,12 @@ export default function Home() {
       <VoyageCanvas progress={voyageProgress} />
 
       {/* ======================================================== */}
-      {/* 2. DEDICATED 3D VOYAGE SCROLL TRACK (320vh of 3D Steer) */}
+      {/* 2. DEDICATED 3D VOYAGE SCROLL TRACK (Smooth Slow Voyage) */}
       {/* ======================================================== */}
-      <div id="voyage" ref={voyageTrackRef} className="relative h-[320vh] w-full">
-        {/* Sticky Hero & Island Overlays inside the Voyage Track */}
+      <div id="voyage" ref={voyageTrackRef} className="relative h-[520vh] w-full">
+        {/* Sticky Hero inside the Voyage Track */}
         <div className="sticky top-0 h-screen w-full flex flex-col justify-between overflow-hidden">
-          {/* Hero Typography & CTA (prominent at t = 0 to 0.15) */}
+          {/* Hero Typography & CTA (fades smoothly as voyage begins) */}
           <div
             className="w-full transition-opacity duration-500 ease-out"
             style={{
@@ -115,115 +115,7 @@ export default function Home() {
             <HeroOverlay onBoardVoyage={handleBoardVoyage} />
           </div>
 
-          {/* Island 1 Announcement Overlay (Active around t = 0.16 to 0.36) */}
-          <div
-            className="absolute inset-0 z-10 flex flex-col justify-center items-start px-6 sm:px-16 pointer-events-none transition-all duration-500"
-            style={{
-              opacity: voyageProgress >= 0.16 && voyageProgress <= 0.36 ? 1 : 0,
-              transform: `translateY(${
-                voyageProgress >= 0.16 && voyageProgress <= 0.36 ? 0 : 20
-              }px)`,
-            }}
-          >
-            <div className="max-w-md glass-panel p-5 rounded-2xl border border-amber-500/30 bg-[#0e0a07]/85 shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden relative">
-              <div className="relative w-full h-28 rounded-xl overflow-hidden mb-3 border border-white/10">
-                <Image
-                  src="/images/themes/day1-last-outpost.jpg"
-                  alt="The Last Outpost"
-                  fill
-                  className="object-cover object-center"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                <span className="absolute bottom-2 left-3 font-mono text-[10px] text-amber-300 font-bold">
-                  DAY 01 // MARCH 12
-                </span>
-              </div>
-
-              <h2 className="font-syne text-2xl font-black text-white">
-                THE LAST OUTPOST
-              </h2>
-              <p className="font-syne text-xs text-amber-300 font-medium mt-0.5">
-                Dune Desert & Mountain Fortress
-              </p>
-              <p className="font-grotesk text-xs text-white/70 mt-2 leading-relaxed">
-                Arid sandstone canyons & CP relays under the giant desert moon.
-              </p>
-            </div>
-          </div>
-
-          {/* Island 2 Announcement Overlay (Active around t = 0.50 to 0.68) */}
-          <div
-            className="absolute inset-0 z-10 flex flex-col justify-center items-end px-6 sm:px-16 pointer-events-none transition-all duration-500"
-            style={{
-              opacity: voyageProgress >= 0.50 && voyageProgress <= 0.68 ? 1 : 0,
-              transform: `translateY(${
-                voyageProgress >= 0.50 && voyageProgress <= 0.68 ? 0 : 20
-              }px)`,
-            }}
-          >
-            <div className="max-w-md glass-panel p-5 rounded-2xl border border-rose-500/30 bg-[#12080d]/85 shadow-[0_20px_50px_rgba(0,0,0,0.8)] text-right overflow-hidden relative">
-              <div className="relative w-full h-28 rounded-xl overflow-hidden mb-3 border border-white/10">
-                <Image
-                  src="/images/themes/day2-pandemonium.jpg"
-                  alt="The Pandemonium"
-                  fill
-                  className="object-cover object-center"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                <span className="absolute bottom-2 right-3 font-mono text-[10px] text-rose-300 font-bold">
-                  DAY 02 // MARCH 13
-                </span>
-              </div>
-
-              <h2 className="font-syne text-2xl font-black text-white">
-                THE PANDEMONIUM
-              </h2>
-              <p className="font-syne text-xs text-rose-300 font-medium mt-0.5">
-                Sunset River Delta & Spires
-              </p>
-              <p className="font-grotesk text-xs text-white/70 mt-2 leading-relaxed">
-                Cybernetic spires & quantum hacks beneath the crimson sunset.
-              </p>
-            </div>
-          </div>
-
-          {/* Island 3 Announcement Overlay (Active around t = 0.80 to 0.98) */}
-          <div
-            className="absolute inset-0 z-10 flex flex-col justify-center items-start px-6 sm:px-16 pointer-events-none transition-all duration-500"
-            style={{
-              opacity: voyageProgress >= 0.80 && voyageProgress <= 0.98 ? 1 : 0,
-              transform: `translateY(${
-                voyageProgress >= 0.80 && voyageProgress <= 0.98 ? 0 : 20
-              }px)`,
-            }}
-          >
-            <div className="max-w-md glass-panel p-5 rounded-2xl border border-amber-400/30 bg-[#0e0c07]/85 shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden relative">
-              <div className="relative w-full h-28 rounded-xl overflow-hidden mb-3 border border-white/10">
-                <Image
-                  src="/images/themes/day3-carnival-island.jpg"
-                  alt="The Carnival Island"
-                  fill
-                  className="object-cover object-center"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                <span className="absolute bottom-2 left-3 font-mono text-[10px] text-amber-300 font-bold">
-                  DAY 03 // MARCH 14
-                </span>
-              </div>
-
-              <h2 className="font-syne text-2xl font-black text-white">
-                THE CARNIVAL ISLAND
-              </h2>
-              <p className="font-syne text-xs text-amber-300 font-medium mt-0.5">
-                Luminous Pier & Ferris Wheel
-              </p>
-              <p className="font-grotesk text-xs text-white/70 mt-2 leading-relaxed">
-                Illuminated boardwalk, runway couture & pro DJ night.
-              </p>
-            </div>
-          </div>
-
-          {/* Connected Island Artwork Cards at Bottom */}
+          {/* Connected Island Timeline Cards at Bottom */}
           <VoyageHUD
             progress={voyageProgress}
             onSelectWaypoint={handleSelectWaypoint}

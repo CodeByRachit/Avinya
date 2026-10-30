@@ -16,8 +16,8 @@ export default function SceneController({ progress, onWaypointReached }: SceneCo
   const currentProgressRef = useRef(0);
   const boatRef = useRef<THREE.Group>(null);
   const lookTargetRef = useRef(new THREE.Vector3(0, 0, 0));
-  const currentFogColor = useRef(new THREE.Color('#241528'));
-  const targetFogColor = useRef(new THREE.Color('#241528'));
+  const currentFogColor = useRef(new THREE.Color('#091b36'));
+  const targetFogColor = useRef(new THREE.Color('#091b36'));
 
   // Responsive camera FOV setup
   useEffect(() => {
@@ -29,12 +29,12 @@ export default function SceneController({ progress, onWaypointReached }: SceneCo
   }, [camera]);
 
   useFrame((state, delta) => {
-    // Smooth dampening towards target progress
+    // Smooth dampening towards target progress (creates smooth, natural sailing velocity)
     const target = THREE.MathUtils.clamp(progress, 0, 0.999);
     currentProgressRef.current = THREE.MathUtils.damp(
       currentProgressRef.current,
       target,
-      2.6,
+      2.2, // Smooth, stately sailing rate
       delta
     );
 
@@ -55,24 +55,24 @@ export default function SceneController({ progress, onWaypointReached }: SceneCo
     if (boatRef.current) {
       boatRef.current.position.copy(point);
 
-      // Align boat to tangent direction
+      // Smooth boat heading alignment
       const angle = Math.atan2(tangent.x, tangent.z);
       boatRef.current.rotation.y = angle + Math.PI; // Face forward along the voyage
     }
 
-    // Dynamic Evening Fog Morphing (Rich twilight sunset hues)
-    if (t < 0.38) {
-      // Day 1: The Last Outpost (Warm Desert Sunset Terracotta / Amber)
-      const weight = Math.max(0, 1 - Math.abs(t - 0.22) * 4.5);
-      targetFogColor.current.set('#241528').lerp(new THREE.Color('#421e10'), weight * 0.85);
-    } else if (t < 0.72) {
-      // Day 2: The Pandemonium (Sunset Crimson / Cyber Wine)
-      const weight = Math.max(0, 1 - Math.abs(t - 0.58) * 4.5);
-      targetFogColor.current.set('#241528').lerp(new THREE.Color('#3d1124'), weight * 0.85);
+    // Dynamic Atmospheric Blue-Evening Fog Morphing
+    if (t < 0.40) {
+      // Day 1: The Last Outpost on the Left (Desert Amber Sunset Glaze)
+      const weight = Math.max(0, 1 - Math.abs(t - 0.30) * 3.8);
+      targetFogColor.current.set('#091b36').lerp(new THREE.Color('#2e1810'), weight * 0.7);
+    } else if (t < 0.74) {
+      // Day 2: The Pandemonium on the Right (Cyber Wine Sunset)
+      const weight = Math.max(0, 1 - Math.abs(t - 0.62) * 3.8);
+      targetFogColor.current.set('#091b36').lerp(new THREE.Color('#281024'), weight * 0.7);
     } else {
-      // Day 3: The Carnival Island (Festive Twilight Navy / Amber)
-      const weight = Math.max(0, 1 - Math.abs(t - 0.88) * 4.5);
-      targetFogColor.current.set('#241528').lerp(new THREE.Color('#1c1e3a'), weight * 0.85);
+      // Day 3: The Carnival Island on the Left (Festival Lagoon Navy)
+      const weight = Math.max(0, 1 - Math.abs(t - 0.90) * 3.8);
+      targetFogColor.current.set('#091b36').lerp(new THREE.Color('#0d2038'), weight * 0.7);
     }
 
     currentFogColor.current.lerp(targetFogColor.current, delta * 2.0);
@@ -81,50 +81,51 @@ export default function SceneController({ progress, onWaypointReached }: SceneCo
     }
 
     // ========================================================
-    // DYNAMIC 3/4 CINEMATIC CAMERA CHOREOGRAPHY
+    // CINEMATIC S-CURVE CAMERA CHOREOGRAPHY
     // ========================================================
     const isMobile = state.size.width < 768;
-    const camDistance = isMobile ? 10.2 : 8.8;
+    const camDistance = isMobile ? 10.5 : 9.0;
     const camHeight = isMobile ? 3.4 : 2.6;
-    const sideOffset = isMobile ? 1.5 : 3.2; // Offset to the right for 3/4 perspective
+    const sideOffset = isMobile ? 1.4 : 3.0; // 3/4 quarter side perspective
 
-    // Compute desired camera position with 3/4 quarter offset
+    // Compute base follow camera position
     const desiredCamPos = new THREE.Vector3(
       point.x - tangent.x * camDistance + normal.x * sideOffset,
       point.y + camHeight,
       point.z - tangent.z * camDistance + normal.z * sideOffset
     );
 
-    // Frame the islands majestically as we approach them
-    if (t < 0.15) {
-      // At Hero view: Give a wide three-quarter vista so boat is in lower-right
-      desiredCamPos.x += 1.8;
+    // Frame each island as the boat navigates:
+    // Departure -> LEFT (Day 1) -> RIGHT (Day 2) -> LEFT (Day 3)
+    if (t < 0.12) {
+      // Hero view: Elevated 3/4 vista with boat in lower right, open blue water in center
+      desiredCamPos.x += 1.6;
       desiredCamPos.y += 0.4;
-    } else if (t >= 0.15 && t < 0.40) {
-      // Day 1: Frame Outpost Citadel & Moon on the left
+    } else if (t >= 0.12 && t < 0.42) {
+      // Day 1: Boat steers LEFT towards Outpost Citadel (Frame Island 1 on Left)
+      desiredCamPos.x += 3.4;
+      desiredCamPos.y += 0.7;
+    } else if (t >= 0.42 && t < 0.74) {
+      // Day 2: Boat steers RIGHT towards Cyber City (Frame Island 2 on Right)
+      desiredCamPos.x -= 3.6;
+      desiredCamPos.y += 0.8;
+    } else if (t >= 0.74) {
+      // Day 3: Boat steers back LEFT towards Carnival Island (Frame Island 3 on Left)
       desiredCamPos.x += 3.2;
-      desiredCamPos.y += 0.8;
-    } else if (t >= 0.40 && t < 0.72) {
-      // Day 2: Frame Cyber City towers & Sunset Sun on the right
-      desiredCamPos.x -= 3.5;
-      desiredCamPos.y += 1.0;
-    } else if (t >= 0.72) {
-      // Day 3: Frame Ferris Wheel & Carnival Pier on the left
-      desiredCamPos.x += 3.0;
-      desiredCamPos.y += 0.8;
+      desiredCamPos.y += 0.7;
     }
 
-    camera.position.lerp(desiredCamPos, delta * 2.6);
+    camera.position.lerp(desiredCamPos, delta * 2.4);
 
-    // Look target ahead of the boat, slightly offset to center the vista
-    const lookOffset = t < 0.15 ? -1.2 : 0;
+    // Look target ahead of the boat
+    const lookOffset = t < 0.12 ? -1.0 : 0;
     const desiredLookTarget = new THREE.Vector3(
-      point.x + tangent.x * 5.0 + normal.x * lookOffset,
-      point.y + 0.4,
-      point.z + tangent.z * 5.0 + normal.z * lookOffset
+      point.x + tangent.x * 5.2 + normal.x * lookOffset,
+      point.y + 0.35,
+      point.z + tangent.z * 5.2 + normal.z * lookOffset
     );
 
-    lookTargetRef.current.lerp(desiredLookTarget, delta * 3.2);
+    lookTargetRef.current.lerp(desiredLookTarget, delta * 3.0);
     camera.lookAt(lookTargetRef.current);
   });
 

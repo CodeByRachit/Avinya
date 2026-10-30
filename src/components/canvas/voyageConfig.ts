@@ -16,26 +16,27 @@ export interface IslandWaypoint {
   highlights: string[];
 }
 
-// Expansive, smooth spline track connecting the start and the 3 distinct island stations
+// Expansive, natural S-curve spline: Departure -> LEFT (Day 1) -> RIGHT (Day 2) -> LEFT (Day 3)
 export const VOYAGE_POINTS: THREE.Vector3[] = [
-  new THREE.Vector3(0, 0, 26),        // 0.00: Departure Estuary (Hero Frame)
-  new THREE.Vector3(-6, 0, 0),        // 0.10: Open Sunset Waters
-  new THREE.Vector3(-22, 0, -36),     // 0.22: Day 1 Arrival - THE LAST OUTPOST
-  new THREE.Vector3(-14, 0, -72),     // 0.38: Desert Canyon Pass
-  new THREE.Vector3(10, 0, -96),      // 0.48: Approaching Sunset Delta
-  new THREE.Vector3(28, 0, -120),     // 0.58: Day 2 Arrival - THE PANDEMONIUM
-  new THREE.Vector3(14, 0, -154),     // 0.72: River Channel
-  new THREE.Vector3(-8, 0, -178),     // 0.80: Lagoon Approach
-  new THREE.Vector3(-22, 0, -198),    // 0.88: Day 3 Arrival - THE CARNIVAL ISLAND
-  new THREE.Vector3(0, 0, -235),      // 1.00: Open Horizon
+  new THREE.Vector3(0, 0, 32),        // 0.00: Departure Estuary (Hero Frame - open blue water)
+  new THREE.Vector3(-6, 0, 8),        // 0.10: Beginning smooth glide forward
+  new THREE.Vector3(-22, 0, -32),     // 0.20: Banking LEFT towards Day 1
+  new THREE.Vector3(-30, 0, -56),     // 0.30: DAY 1 ARRIVAL (The Last Outpost on the Left)
+  new THREE.Vector3(-14, 0, -92),     // 0.42: Turning out of Desert Canyons
+  new THREE.Vector3(12, 0, -118),     // 0.52: Crossing open sunset sea to the RIGHT
+  new THREE.Vector3(34, 0, -142),     // 0.62: DAY 2 ARRIVAL (The Pandemonium on the Right)
+  new THREE.Vector3(18, 0, -180),     // 0.74: Leaving Cyber River Delta
+  new THREE.Vector3(-6, 0, -206),     // 0.82: Crossing lagoon back to the LEFT
+  new THREE.Vector3(-26, 0, -228),    // 0.90: DAY 3 ARRIVAL (The Carnival Island on the Left)
+  new THREE.Vector3(-10, 0, -260),    // 1.00: Open Festival Bay
 ];
 
-export const VOYAGE_CURVE = new THREE.CatmullRomCurve3(VOYAGE_POINTS, false, 'catmullrom', 0.2);
+export const VOYAGE_CURVE = new THREE.CatmullRomCurve3(VOYAGE_POINTS, false, 'catmullrom', 0.25);
 
 export const ISLAND_WAYPOINTS: IslandWaypoint[] = [
   {
     day: 1,
-    t: 0.22,
+    t: 0.30,
     id: 'last-outpost',
     title: 'Day 01 // Dune Desert',
     codename: 'THE LAST OUTPOST',
@@ -43,12 +44,12 @@ export const ISLAND_WAYPOINTS: IslandWaypoint[] = [
     theme: 'Desert Canyons & Citadel Fortress',
     accentColor: '#E08A3C',
     image: '/images/themes/day1-last-outpost.jpg',
-    position: [-28, 0, -48],
+    position: [-34, 0, -58],
     highlights: ['Code Royale 3v3', 'AI Arcade RAG Hunt', 'Treasure Hunt', 'Opening Pro Night'],
   },
   {
     day: 2,
-    t: 0.58,
+    t: 0.62,
     id: 'pandemonium',
     title: 'Day 02 // Sunset Delta',
     codename: 'THE PANDEMONIUM',
@@ -56,12 +57,12 @@ export const ISLAND_WAYPOINTS: IslandWaypoint[] = [
     theme: 'Crimson Sunset & Aqueduct Cascades',
     accentColor: '#E11D48',
     image: '/images/themes/day2-pandemonium.jpg',
-    position: [34, 0, -125],
+    position: [40, 0, -144],
     highlights: ['Yukti 2.0 Quantum Hack', 'Build with Gemma', 'Battle of Bands', 'Mega Rush Esports'],
   },
   {
     day: 3,
-    t: 0.88,
+    t: 0.90,
     id: 'carnival-island',
     title: 'Day 03 // Carnival Night',
     codename: 'THE CARNIVAL ISLAND',
@@ -69,7 +70,7 @@ export const ISLAND_WAYPOINTS: IslandWaypoint[] = [
     theme: 'Luminous Pier, Ferris Wheel & Castles',
     accentColor: '#F59E0B',
     image: '/images/themes/day3-carnival-island.jpg',
-    position: [-26, 0, -202],
+    position: [-30, 0, -228],
     highlights: ['Kernel Panic Linux Fest', 'Fashion Show Runway', 'Grand DJ Night', 'Awards Finale'],
   },
 ];

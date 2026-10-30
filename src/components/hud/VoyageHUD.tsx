@@ -12,8 +12,8 @@ interface VoyageHUDProps {
 
 export default function VoyageHUD({ progress, onSelectWaypoint }: VoyageHUDProps) {
   const getActiveWaypoint = (): IslandWaypoint => {
-    if (progress < 0.4) return ISLAND_WAYPOINTS[0];
-    if (progress < 0.75) return ISLAND_WAYPOINTS[1];
+    if (progress < 0.48) return ISLAND_WAYPOINTS[0];
+    if (progress < 0.78) return ISLAND_WAYPOINTS[1];
     return ISLAND_WAYPOINTS[2];
   };
 
