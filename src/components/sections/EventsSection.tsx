@@ -466,15 +466,20 @@ export default function EventsSection() {
 
           {/* Timeline Visual Track Progress Line */}
           <div className="mt-4 px-1">
-            <div className="w-full h-1 bg-white/[0.05] rounded-full overflow-hidden relative">
+            <div className="w-full h-2 bg-black/40 backdrop-blur-sm rounded-full p-[2px] border border-white/10 shadow-[inset_0_1px_3px_rgba(0,0,0,0.6)] relative overflow-visible">
               <div
-                className="h-full rounded-full transition-all duration-150 ease-out"
+                className="relative h-full rounded-full transition-all duration-300 ease-out"
                 style={{
-                  width: `${Math.max(8, scrollProgress)}%`,
+                  width: `${Math.max(3, scrollProgress)}%`,
                   background: `linear-gradient(90deg, #38bdf8, ${currentAccent.color})`,
-                  boxShadow: `0 0 10px ${currentAccent.color}80`,
+                  boxShadow: `0 0 12px ${currentAccent.color}80`,
                 }}
-              />
+              >
+                <div 
+                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-3.5 h-3.5 rounded-full bg-white shadow-[0_0_12px_#38bdf8] border-2 pointer-events-none z-10"
+                  style={{ borderColor: currentAccent.color }}
+                />
+              </div>
             </div>
             <div className="flex items-center justify-between text-[10px] font-mono text-white/40 mt-2">
               <span>START OF DAY · 09:00 AM</span>

@@ -25,15 +25,20 @@ export default function VoyageHUD({ progress, onSelectWaypoint }: VoyageHUDProps
       className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 w-full max-w-4xl px-4 pointer-events-none"
     >
       <div className="glass-pill p-3 sm:p-4 rounded-3xl pointer-events-auto border border-white/15 bg-[#0a0d14]/85 shadow-[0_16px_45px_rgba(0,0,0,0.85)]">
-        {/* Subtle voyage progress bar */}
-        <div className="relative w-full h-1 bg-white/10 rounded-full mb-3 overflow-hidden">
+        {/* Silky smooth voyage progress bar with glowing traveler beacon */}
+        <div className="relative w-full h-2 bg-black/50 backdrop-blur-md rounded-full mb-3.5 p-[2px] border border-white/10 shadow-[inset_0_1px_4px_rgba(0,0,0,0.8)] overflow-visible">
           <div
-            className="h-full rounded-full transition-all duration-300 ease-out"
+            className="relative h-full rounded-full transition-all duration-300 ease-out shadow-[0_0_14px_rgba(245,158,11,0.6)]"
             style={{
-              width: `${Math.min(100, Math.max(0, progress * 100))}%`,
-              background: `linear-gradient(90deg, #e08a3c 0%, #e11d48 50%, #f59e0b 100%)`,
+              width: `${Math.min(100, Math.max(1.8, progress * 100))}%`,
+              background: 'linear-gradient(90deg, #f59e0b 0%, #ef4444 50%, #ec4899 100%)',
             }}
-          />
+          >
+            {/* Glowing traveling head beacon with smooth round geometry */}
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-3.5 h-3.5 rounded-full bg-white shadow-[0_0_10px_#f59e0b,0_0_20px_#f43f5e] border-2 border-amber-400 pointer-events-none z-10 flex items-center justify-center">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+            </div>
+          </div>
         </div>
 
         {/* 3 Connected Island Artwork Cards */}
