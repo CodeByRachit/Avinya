@@ -25,16 +25,7 @@ import {
 // Dynamic import of 3D Canvas with ssr disabled for flawless WebGL mounting
 const VoyageCanvas = dynamic(() => import('@/components/canvas/VoyageCanvas'), {
   ssr: false,
-  loading: () => (
-    <div className="fixed inset-0 z-0 bg-[#06080e] flex items-center justify-center">
-      <div className="flex flex-col items-center gap-3">
-        <div className="w-8 h-8 rounded-full border-2 border-amber-300 border-t-transparent animate-spin" />
-        <span className="font-mono text-xs uppercase tracking-widest text-white/50">
-          INITIALIZING AVINYA CONTINUUM...
-        </span>
-      </div>
-    </div>
-  ),
+  loading: () => <div className="fixed inset-0 z-0 bg-[#06080e]" />,
 });
 
 export default function Home() {
