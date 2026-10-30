@@ -118,19 +118,9 @@ export default function Hack2FutureSection() {
 
         {/* 3D Zero-G Astronaut Visual & Mission Brief Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-20">
-          {/* Left: 3D Zero-Gravity Astronaut Centerpiece */}
+          {/* Left: 3D Autonomous AI Cyber-Android Robot Centerpiece */}
           <div className="lg:col-span-6 relative flex items-center justify-center">
-            <div className="absolute inset-0 rounded-full border border-white/10 bg-radial-gradient from-transparent to-black/40 pointer-events-none" />
             <AstronautCanvas />
-
-            {/* Astronaut Model Badge */}
-            <div className="absolute bottom-4 left-6 right-6 sm:left-12 sm:right-12 p-2.5 px-4 rounded-xl border border-white/10 bg-[#0c101a]/90 backdrop-blur-md flex items-center justify-between text-xs font-grotesk shadow-lg">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-white/85 text-xs font-medium">Hack2Future 2027 Arena</span>
-              </div>
-              <span className="text-amber-300 text-xs font-semibold">IIIT Dharwad Campus</span>
-            </div>
           </div>
 
           {/* Right: Sci-Fi Mission Telemetry & Direct Portal Action */}

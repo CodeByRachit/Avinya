@@ -9,13 +9,10 @@ import * as THREE from 'three';
 // ISLAND 1: THE LAST OUTPOST (Dune Desert Mountain Citadel)
 // High-vector-density Petra/Dune ancient sandstone citadel:
 // - Deep submerged bedrock foundation down to Y = -18 (NEVER FLOATING)
-// - 64-segment terraced rock strata with carved stone staircases
-// - Central palace with fluted colonnade portico & crenelated battlements
-// - 6 high-polygon watchtowers (32 segments) with arched stone embrasures
-// - Double-barrel vaulted canyon viaduct bridge with keystones
-// - Glowing ancient techno-runes carved into the stone
-// - Tripod fire braziers & stone harbor quay
-// - Realistic luminous celestial moon (NO weird grey washer rings)
+// - Citadel anchored firmly on the plateau at Y = 8.7 with ZERO AIR GAPS
+// - Colonnade portico, central donjon, watchtowers & viaduct piers plunge
+//   deeply into the stone foundation
+// - Realistic luminous celestial moon with soft volumetric glow
 // =========================================================================
 export function IslandLastOutpost({ position = [-44, 0, -60] as [number, number, number] }) {
   const flagsRef = useRef<THREE.Group>(null);
@@ -111,7 +108,7 @@ export function IslandLastOutpost({ position = [-44, 0, -60] as [number, number,
         />
       </mesh>
 
-      {/* Upper Citadel Plateau */}
+      {/* Upper Citadel Plateau (Surface at Y = 8.7) */}
       <mesh position={[0, 6.8, 0]} receiveShadow castShadow>
         <cylinderGeometry args={[15.5, 19.5, 3.8, 64, 4]} />
         <meshStandardMaterial
@@ -175,18 +172,25 @@ export function IslandLastOutpost({ position = [-44, 0, -60] as [number, number,
 
       {/* ======================================================== */}
       {/* 4. MONUMENTAL MOUNTAIN CITADEL FORTRESS                  */}
+      {/* Anchored at Y = 8.7 directly on plateau with ZERO GAPS   */}
       {/* ======================================================== */}
-      <group position={[0, 8.8, 0]}>
+      <group position={[0, 8.7, 0]}>
+        {/* Massive Stone Foundation Plinth (Penetrating into plateau) */}
+        <mesh position={[0, 0.45, 0]} castShadow receiveShadow>
+          <boxGeometry args={[11.5, 1.1, 11.5]} />
+          <meshStandardMaterial color="#8a4720" roughness={0.88} />
+        </mesh>
+
         {/* Central Palace Donjon (Multi-Tiered Stepped Keep) */}
-        <group position={[0, 5.0, 0]}>
-          {/* Base Palace Block */}
-          <mesh castShadow receiveShadow>
-            <boxGeometry args={[9.5, 8.5, 9.5]} />
+        <group position={[0, 0, 0]}>
+          {/* Base Palace Block - Sits on plinth from Y = 1.0 to 9.2 */}
+          <mesh position={[0, 5.1, 0]} castShadow receiveShadow>
+            <boxGeometry args={[9.5, 8.2, 9.5]} />
             <meshStandardMaterial color="#be733d" roughness={0.75} />
           </mesh>
 
           {/* Stepped Upper Tier with Bevelled Cornice */}
-          <mesh position={[0, 4.8, 0]} castShadow>
+          <mesh position={[0, 10.6, 0]} castShadow>
             <boxGeometry args={[7.6, 3.2, 7.6]} />
             <meshStandardMaterial color="#cf844e" roughness={0.72} />
           </mesh>
@@ -194,11 +198,11 @@ export function IslandLastOutpost({ position = [-44, 0, -60] as [number, number,
           {/* Palace Roof Parapet / Crenelated Battlements */}
           {[-3.4, -1.7, 0, 1.7, 3.4].map((cx, idx) => (
             <React.Fragment key={idx}>
-              <mesh position={[cx, 6.7, 3.85]}>
+              <mesh position={[cx, 12.5, 3.85]}>
                 <boxGeometry args={[0.75, 0.65, 0.25]} />
                 <meshStandardMaterial color="#965225" />
               </mesh>
-              <mesh position={[cx, 6.7, -3.85]}>
+              <mesh position={[cx, 12.5, -3.85]}>
                 <boxGeometry args={[0.75, 0.65, 0.25]} />
                 <meshStandardMaterial color="#965225" />
               </mesh>
@@ -207,51 +211,64 @@ export function IslandLastOutpost({ position = [-44, 0, -60] as [number, number,
         </group>
 
         {/* Grand Colonnade Portico Entrance (Petra Style) */}
-        <group position={[0, 2.8, 5.0]}>
-          {/* Portico Pediment Gable */}
-          <mesh position={[0, 3.8, 0]}>
-            <boxGeometry args={[6.0, 0.65, 1.4]} />
-            <meshStandardMaterial color="#d48a52" roughness={0.7} />
-          </mesh>
-          <mesh position={[0, 4.5, 0]}>
-            <coneGeometry args={[3.4, 1.1, 4]} />
-            <meshStandardMaterial color="#c27740" roughness={0.7} />
+        <group position={[0, 0, 5.2]}>
+          {/* Portico Ground Terrace Platform - Sits on plateau Y = 0 to 0.7 */}
+          <mesh position={[0, 0.35, 0]} castShadow receiveShadow>
+            <boxGeometry args={[6.8, 0.7, 2.6]} />
+            <meshStandardMaterial color="#8a4720" roughness={0.85} />
           </mesh>
 
-          {/* 4 Fluted Stone Columns (24 segments each) */}
+          {/* 4 Fluted Stone Columns (Resting solidly on portico floor at Y = 0.7) */}
           {[-2.3, -0.78, 0.78, 2.3].map((colX, idx) => (
-            <group key={idx} position={[colX, 1.6, 0]}>
-              <mesh castShadow>
-                <cylinderGeometry args={[0.24, 0.28, 3.6, 24]} />
+            <group key={idx} position={[colX, 0.7, 0]}>
+              {/* Column Base Plinth */}
+              <mesh position={[0, 0.12, 0]}>
+                <boxGeometry args={[0.62, 0.24, 0.62]} />
+                <meshStandardMaterial color="#c27740" />
+              </mesh>
+              {/* Fluted Column Shaft */}
+              <mesh position={[0, 2.0, 0]} castShadow>
+                <cylinderGeometry args={[0.24, 0.28, 3.52, 24]} />
                 <meshStandardMaterial color="#e8a370" roughness={0.65} />
               </mesh>
               {/* Column Capital */}
-              <mesh position={[0, 1.9, 0]}>
+              <mesh position={[0, 3.88, 0]}>
                 <boxGeometry args={[0.58, 0.24, 0.58]} />
                 <meshStandardMaterial color="#f5b686" metalness={0.1} />
-              </mesh>
-              {/* Column Base Plinth */}
-              <mesh position={[0, -1.9, 0]}>
-                <boxGeometry args={[0.62, 0.24, 0.62]} />
-                <meshStandardMaterial color="#c27740" />
               </mesh>
             </group>
           ))}
 
+          {/* Portico Entablature & Pediment (Resting on column capitals) */}
+          <mesh position={[0, 5.0, 0]}>
+            <boxGeometry args={[6.4, 0.65, 1.4]} />
+            <meshStandardMaterial color="#d48a52" roughness={0.7} />
+          </mesh>
+          <mesh position={[0, 5.7, 0]}>
+            <coneGeometry args={[3.6, 1.2, 4]} />
+            <meshStandardMaterial color="#c27740" roughness={0.7} />
+          </mesh>
+
           {/* Arched Recessed Portal with Warm Glowing Interior */}
-          <mesh position={[0, 1.4, -0.4]}>
-            <boxGeometry args={[2.5, 3.4, 0.5]} />
+          <mesh position={[0, 2.5, -0.4]}>
+            <boxGeometry args={[2.5, 3.6, 0.5]} />
             <meshBasicMaterial color="#1a0a03" />
           </mesh>
-          <mesh position={[0, 1.4, -0.3]}>
-            <planeGeometry args={[1.9, 3.0]} />
+          <mesh position={[0, 2.5, -0.3]}>
+            <planeGeometry args={[1.9, 3.2]} />
             <meshBasicMaterial color="#f59e0b" />
           </mesh>
-          <pointLight color="#f59e0b" intensity={3.5} distance={10} position={[0, 1.5, 0.2]} />
+          <pointLight color="#f59e0b" intensity={3.5} distance={10} position={[0, 2.5, 0.2]} />
+
+          {/* Stone Approach Steps in front of Portico */}
+          <mesh position={[0, 0.18, 1.5]}>
+            <boxGeometry args={[5.5, 0.36, 0.6]} />
+            <meshStandardMaterial color="#a0592a" />
+          </mesh>
         </group>
 
         {/* Central High Spire Keep (32 segments) */}
-        <group position={[0, 11.8, 0]}>
+        <group position={[0, 9.2, 0]}>
           <mesh castShadow>
             <cylinderGeometry args={[1.7, 2.4, 7.8, 32]} />
             <meshStandardMaterial color="#a86030" roughness={0.72} />
@@ -273,36 +290,36 @@ export function IslandLastOutpost({ position = [-44, 0, -60] as [number, number,
           </mesh>
         </group>
 
-        {/* 4 Corner Round Watchtowers (32 segments each with arched windows) */}
+        {/* 4 Corner Round Watchtowers (Plunging down to Y = -1.2 to eliminate gaps) */}
         {[
-          [-5.4, 5.2, 5.4],
-          [5.4, 5.2, 5.4],
-          [-5.4, 5.2, -5.4],
-          [5.4, 5.2, -5.4],
+          [-5.4, 5.0, 5.4],
+          [5.4, 5.0, 5.4],
+          [-5.4, 5.0, -5.4],
+          [5.4, 5.0, -5.4],
         ].map(([tx, ty, tz], idx) => (
           <group key={idx} position={[tx, ty, tz]}>
-            {/* Tower Shaft (32 segments) */}
+            {/* Tower Shaft (32 segments, height 12.5, bottom at Y = -1.25) */}
             <mesh castShadow>
-              <cylinderGeometry args={[1.5, 1.8, 9.8, 32]} />
+              <cylinderGeometry args={[1.5, 1.8, 12.5, 32]} />
               <meshStandardMaterial color="#9c5427" roughness={0.78} />
             </mesh>
             {/* Corbelled Gallery Ring */}
-            <mesh position={[0, 5.2, 0]}>
+            <mesh position={[0, 6.5, 0]}>
               <cylinderGeometry args={[2.0, 1.6, 0.6, 32]} />
               <meshStandardMaterial color="#be733d" />
             </mesh>
             {/* Conical Roof (32 segments) */}
-            <mesh position={[0, 7.1, 0]}>
+            <mesh position={[0, 8.4, 0]}>
               <coneGeometry args={[2.0, 3.6, 32]} />
               <meshStandardMaterial color="#3c1c0a" roughness={0.65} />
             </mesh>
             {/* Arched Recessed Amber Window (Front) */}
-            <mesh position={[0, 2.5, 1.6]}>
+            <mesh position={[0, 3.5, 1.6]}>
               <planeGeometry args={[0.6, 1.2]} />
               <meshBasicMaterial color="#fbbf24" />
             </mesh>
             {/* Secondary Window (Side) */}
-            <mesh position={[1.6, 2.5, 0]} rotation={[0, Math.PI / 2, 0]}>
+            <mesh position={[1.6, 3.5, 0]} rotation={[0, Math.PI / 2, 0]}>
               <planeGeometry args={[0.6, 1.2]} />
               <meshBasicMaterial color="#fbbf24" />
             </mesh>
@@ -310,35 +327,35 @@ export function IslandLastOutpost({ position = [-44, 0, -60] as [number, number,
         ))}
 
         {/* Grand Double-Arched Stone Viaduct Bridge across Canyon */}
-        <group position={[0, 1.8, 8.8]}>
-          {/* Bridge Roadway Deck with Balustrades */}
-          <mesh position={[0, 3.5, 0]}>
-            <boxGeometry args={[9.8, 0.75, 2.8]} />
+        <group position={[0, 0, 8.8]}>
+          {/* Bridge Roadway Deck - Flush with portico steps */}
+          <mesh position={[0, 0.5, 0]}>
+            <boxGeometry args={[9.8, 0.6, 2.8]} />
             <meshStandardMaterial color="#a86030" roughness={0.8} />
           </mesh>
           {/* Balustrade Rails */}
-          <mesh position={[0, 4.0, 1.3]}>
-            <boxGeometry args={[9.8, 0.42, 0.22]} />
+          <mesh position={[0, 0.95, 1.3]}>
+            <boxGeometry args={[9.8, 0.35, 0.22]} />
             <meshStandardMaterial color="#d48a52" />
           </mesh>
-          <mesh position={[0, 4.0, -1.3]}>
-            <boxGeometry args={[9.8, 0.42, 0.22]} />
+          <mesh position={[0, 0.95, -1.3]}>
+            <boxGeometry args={[9.8, 0.35, 0.22]} />
             <meshStandardMaterial color="#d48a52" />
           </mesh>
 
-          {/* 3 Heavy Pier Stanchions (32 segments) */}
+          {/* 3 Heavy Pier Stanchions - Plunge deep into lower canyon shelf (Y = -6.0) */}
           {[-4.2, 0, 4.2].map((px, idx) => (
-            <group key={idx} position={[px, 1.2, 0]}>
+            <group key={idx} position={[px, -2.5, 0]}>
               <mesh>
-                <cylinderGeometry args={[0.85, 1.05, 3.9, 24]} />
+                <cylinderGeometry args={[0.9, 1.2, 6.5, 24]} />
                 <meshStandardMaterial color="#7c3f1d" />
               </mesh>
             </group>
           ))}
 
-          {/* Two Semicircular Barrel Vault Arches */}
+          {/* Semicircular Barrel Vault Arches */}
           {[-2.1, 2.1].map((ax, idx) => (
-            <mesh key={idx} position={[ax, 2.4, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <mesh key={idx} position={[ax, -0.4, 0]} rotation={[0, 0, Math.PI / 2]}>
               <cylinderGeometry args={[1.55, 1.55, 2.5, 32, 1, false, 0, Math.PI]} />
               <meshStandardMaterial color="#582a12" side={THREE.BackSide} />
             </mesh>
@@ -346,7 +363,7 @@ export function IslandLastOutpost({ position = [-44, 0, -60] as [number, number,
         </group>
 
         {/* Cast-Iron Tripod Fire Braziers on Ramparts */}
-        <group position={[0, 10.0, 4.8]}>
+        <group position={[0, 9.8, 4.8]}>
           <mesh>
             <cylinderGeometry args={[0.45, 0.28, 0.55, 16]} />
             <meshStandardMaterial color="#221208" roughness={0.85} metalness={0.6} />
