@@ -65,12 +65,11 @@ export default function Preloader({ onComplete }: PreloaderProps) {
           {/* Top telemetry brackets */}
           <div className="w-full max-w-6xl flex items-center justify-between text-[11px] font-mono text-white/40">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-avinya-cyan animate-ping" />
-              <span className="text-avinya-cyan font-semibold">BOOT SEQUENCE // VER 27.04</span>
+              <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+              <span className="text-amber-300 font-semibold">AVINYA 2027 // ODYSSEY</span>
             </div>
-            <div className="flex items-center gap-3">
-              <span>LAT: 15.2917° N</span>
-              <span>LONG: 75.0505° E</span>
+            <div className="text-white/60">
+              <span>IIIT DHARWAD</span>
             </div>
           </div>
 

@@ -396,7 +396,7 @@ export default function Home() {
 
           <div className="mt-4 sm:mt-0 flex items-center gap-6">
             <span>MARCH 12, 13 & 14, 2027</span>
-            <span className="text-amber-300">15.2917° N, 75.0505° E</span>
+            <span className="text-amber-300">DHARWAD, KARNATAKA</span>
           </div>
         </footer>
       </div>

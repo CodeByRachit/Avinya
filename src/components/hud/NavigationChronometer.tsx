@@ -158,8 +158,8 @@ export default function NavigationChronometer() {
         {/* Footer Chrono Footnote */}
         <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-white/10 text-xs font-mono text-white/40">
           <div className="flex items-center gap-2">
-            <Radio className="w-3.5 h-3.5 text-avinya-cyan" />
-            <span>BROADCASTING FROM IIIT DHARWAD HUB // 15.2917° N, 75.0505° E</span>
+            <Radio className="w-3.5 h-3.5 text-amber-300" />
+            <span>IIIT DHARWAD MAIN CAMPUS</span>
           </div>
           <span className="text-white/60">GATES UNLOCK 08:00 AM IST</span>
         </div>
