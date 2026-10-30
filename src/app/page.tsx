@@ -19,6 +19,7 @@ import {
   CheckCircle2,
   MapPin,
   Calendar,
+  Sparkles,
 } from 'lucide-react';
 
 // Dynamic import of 3D Canvas with ssr disabled for flawless WebGL mounting
@@ -99,9 +100,9 @@ export default function Home() {
       <VoyageCanvas progress={voyageProgress} />
 
       {/* ======================================================== */}
-      {/* 2. DEDICATED 3D VOYAGE SCROLL TRACK (Smooth Slow Voyage) */}
+      {/* 2. DEDICATED 3D VOYAGE SCROLL TRACK (Smooth Responsive)  */}
       {/* ======================================================== */}
-      <div id="voyage" ref={voyageTrackRef} className="relative h-[520vh] w-full">
+      <div id="voyage" ref={voyageTrackRef} className="relative h-[320vh] w-full">
         {/* Sticky Hero inside the Voyage Track */}
         <div className="sticky top-0 h-screen w-full flex flex-col justify-between overflow-hidden">
           {/* Hero Typography & CTA (fades smoothly as voyage begins) */}
@@ -231,48 +232,52 @@ export default function Home() {
         <Hack2FutureSection />
 
         {/* ======================================================== */}
-        {/* 7. PASS PROCUREMENT & REGISTRATION GATEWAY               */}
+        {/* 7. PASS REGISTRATION GATEWAY                             */}
         {/* ======================================================== */}
-        <section id="register" className="max-w-4xl mx-auto px-4 sm:px-6 py-28 text-center">
-          <div className="glass-panel p-10 sm:p-16 rounded-3xl border border-white/15 relative overflow-hidden bg-[#0c0e15]/90">
-            <span className="font-mono text-xs uppercase tracking-widest text-amber-300/90 flex items-center justify-center gap-2">
-              <Compass className="w-3.5 h-3.5" />
-              OFFICIAL REGISTRATION GATEWAY
+        <section id="register" className="max-w-4xl mx-auto px-4 sm:px-6 py-24 text-center">
+          <div className="p-8 sm:p-14 rounded-2xl border border-white/[0.1] relative overflow-hidden bg-[#0c101a]/90 backdrop-blur-xl shadow-[0_24px_64px_rgba(0,0,0,0.7)]">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-grotesk text-amber-300 font-medium mb-4">
+              <Sparkles className="w-3.5 h-3.5" />
+              Official Registration Gateway
             </span>
 
-            <h2 className="font-syne text-3xl sm:text-5xl font-black text-white mt-3">
-              <CyberScramble text="CLAIM YOUR ALL-ACCESS PASS" />
+            <h2 className="font-syne text-3xl sm:text-5xl font-bold text-white tracking-tight leading-tight">
+              Secure Your Festival Pass
             </h2>
 
             <p className="font-grotesk text-white/70 max-w-xl mx-auto mt-4 text-sm sm:text-base leading-relaxed">
-              Open to undergraduate and postgraduate delegates from technical and cultural colleges nationwide. Access all 24 events, pro-nights, workshops, and accommodation.
+              Open to collegiate delegates nationwide. Access all 24 cultural spectacles, technical competitions, pro-night concerts, and campus workshops.
             </p>
 
-            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
               <button
                 type="button"
-                onClick={() => alert("Delegate Registration Gateway: Pass secured for Avinya 2027! See you on campus March 12-14.")}
-                className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-gradient-to-r from-amber-300 via-amber-400 to-amber-300 text-black font-syne font-bold text-xs sm:text-sm tracking-wider uppercase shadow-[0_4px_25px_rgba(245,158,11,0.35)] hover:shadow-[0_4px_35px_rgba(245,158,11,0.5)] transition-all hover:scale-[1.02]"
-                data-cursor-text="REGISTER"
+                onClick={() => alert("Registration Gateway: Delegate spot secured for Avinya 2027! Welcome aboard.")}
+                className="w-full sm:w-auto px-7 py-3 rounded-xl bg-white text-black font-grotesk font-semibold text-sm hover:bg-white/90 shadow-[0_4px_20px_rgba(255,255,255,0.2)] transition-all cursor-pointer flex items-center justify-center gap-2"
               >
-                Procure All-Access Delegate Pass
+                <span>Get All-Access Pass</span>
+                <ArrowUpRight className="w-4 h-4" />
               </button>
               <a
                 href="#events"
-                className="w-full sm:w-auto px-8 py-3.5 rounded-full border border-white/20 bg-white/5 text-white font-syne font-semibold text-xs sm:text-sm tracking-wider uppercase hover:bg-white/10 transition-all"
+                className="w-full sm:w-auto px-7 py-3 rounded-xl border border-white/10 bg-white/[0.04] text-white/85 font-grotesk font-medium text-sm hover:bg-white/[0.08] transition-all"
               >
-                Browse Individual Events
+                Explore 24 Events
               </a>
             </div>
 
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs font-mono text-white/40">
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs font-grotesk text-white/50">
               <span className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                VERIFIED COLLEGE ID REQUIRED
+                Verified College ID Required
               </span>
               <span className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                CERTIFICATES & MERCH INCLUDED
+                Certificates & Kits Included
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                All-Access to Flagship Tracks
               </span>
             </div>
           </div>

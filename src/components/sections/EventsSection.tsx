@@ -144,7 +144,7 @@ export default function EventsSection() {
   }, [updateScrollState, filteredEvents, viewMode]);
 
   // Map mouse wheel vertically to horizontal scroll inside timeline stream,
-  // and seamlessly chain to webpage vertical scroll once the start or end is reached
+  // and immediately pass through to webpage scroll when at start or end
   useEffect(() => {
     if (viewMode !== 'timeline') return;
     const el = scrollRef.current;
@@ -155,17 +155,16 @@ export default function EventsSection() {
         const maxScroll = el.scrollWidth - el.clientWidth;
         if (maxScroll <= 0) return;
 
-        const isAtEnd = el.scrollLeft >= maxScroll - 6;
-        const isAtStart = el.scrollLeft <= 6;
+        const isAtEnd = el.scrollLeft >= maxScroll - 4;
+        const isAtStart = el.scrollLeft <= 4;
 
-        // If scrolling forward and not yet at end, or scrolling backward and not yet at start:
         if ((e.deltaY > 0 && !isAtEnd) || (e.deltaY < 0 && !isAtStart)) {
           e.preventDefault();
-          el.scrollLeft += e.deltaY * 0.95;
+          el.scrollLeft += e.deltaY * 0.9;
         } else if ((e.deltaY > 0 && isAtEnd) || (e.deltaY < 0 && isAtStart)) {
-          // Reached the boundary! Forward the scroll to the main webpage
+          // Reached the boundary: pass scroll to webpage immediately without lag
           if (lenis) {
-            lenis.scrollTo(lenis.scroll + e.deltaY * 1.2, { immediate: false, duration: 0.25 });
+            lenis.scrollTo(window.scrollY + e.deltaY, { immediate: true });
           } else {
             window.scrollBy({ top: e.deltaY, behavior: 'auto' });
           }

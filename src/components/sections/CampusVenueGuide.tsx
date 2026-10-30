@@ -154,7 +154,7 @@ export default function CampusVenueGuide() {
   const listRef = useRef<HTMLDivElement>(null);
 
   // Allow scrolling the venue list, but when the user hits the top or bottom boundary,
-  // pass the scroll through to the webpage naturally
+  // pass the scroll through to the webpage immediately
   useEffect(() => {
     const el = listRef.current;
     if (!el) return;
@@ -163,13 +163,13 @@ export default function CampusVenueGuide() {
       const maxScroll = el.scrollHeight - el.clientHeight;
       if (maxScroll <= 0) return;
 
-      const isAtBottom = el.scrollTop >= maxScroll - 6;
-      const isAtTop = el.scrollTop <= 6;
+      const isAtBottom = el.scrollTop >= maxScroll - 4;
+      const isAtTop = el.scrollTop <= 4;
 
-      // When at boundary and attempting to scroll past, chain to webpage scroll
+      // When at boundary and attempting to scroll past, chain to webpage scroll immediately
       if ((e.deltaY > 0 && isAtBottom) || (e.deltaY < 0 && isAtTop)) {
         if (lenis) {
-          lenis.scrollTo(lenis.scroll + e.deltaY * 1.2, { immediate: false, duration: 0.25 });
+          lenis.scrollTo(window.scrollY + e.deltaY, { immediate: true });
         } else {
           window.scrollBy({ top: e.deltaY, behavior: 'auto' });
         }

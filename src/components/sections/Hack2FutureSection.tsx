@@ -123,100 +123,100 @@ export default function Hack2FutureSection() {
             <div className="absolute inset-0 rounded-full border border-white/10 bg-radial-gradient from-transparent to-black/40 pointer-events-none" />
             <AstronautCanvas />
 
-            {/* Astronaut Mission HUD Tag */}
-            <div className="absolute bottom-4 left-6 right-6 sm:left-12 sm:right-12 glass-pill p-3 rounded-xl border border-white/15 bg-black/80 flex items-center justify-between text-xs font-mono">
+            {/* Astronaut Model Badge */}
+            <div className="absolute bottom-4 left-6 right-6 sm:left-12 sm:right-12 p-2.5 px-4 rounded-xl border border-white/10 bg-[#0c101a]/90 backdrop-blur-md flex items-center justify-between text-xs font-grotesk shadow-lg">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                <span className="text-white/80 text-[11px]">ORBITAL STATUS: NOMINAL</span>
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-white/85 text-xs font-medium">Hack2Future 2027 Arena</span>
               </div>
-              <span className="text-amber-300 text-[11px] font-bold">SECTOR: IIIT-DWD</span>
+              <span className="text-amber-300 text-xs font-semibold">IIIT Dharwad Campus</span>
             </div>
           </div>
 
           {/* Right: Sci-Fi Mission Telemetry & Direct Portal Action */}
           <div className="lg:col-span-6 flex flex-col justify-between space-y-6">
             {/* Mission Telemetry Metrics HUD */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="glass-panel p-5 rounded-2xl border border-white/10 hover:border-amber-400/40 transition-colors">
-                <span className="font-mono text-[10px] text-white/40 uppercase tracking-widest block">
-                  CONTINUOUS SPRINT
+            <div className="grid grid-cols-2 gap-3.5">
+              <div className="p-5 rounded-xl border border-white/[0.08] bg-[#0c101a]/80 hover:bg-[#101524]/90 hover:border-white/20 transition-all shadow-md">
+                <span className="font-mono text-[10px] text-white/40 uppercase tracking-wider block">
+                  SPRINT DURATION
                 </span>
-                <span className="font-syne text-2xl sm:text-3xl font-black text-amber-300 mt-1 block">
-                  36 HOURS
+                <span className="font-syne text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1.5 block">
+                  36 Hours
                 </span>
-                <span className="text-xs text-white/60 font-grotesk mt-1 block">
-                  Non-stop prototyping marathon
+                <span className="text-xs text-white/55 font-grotesk mt-1 block">
+                  Continuous prototyping sprint
                 </span>
               </div>
 
-              <div className="glass-panel p-5 rounded-2xl border border-white/10 hover:border-white/30 transition-colors">
-                <span className="font-mono text-[10px] text-white/40 uppercase tracking-widest block">
-                  SCALE & TIER
+              <div className="p-5 rounded-xl border border-white/[0.08] bg-[#0c101a]/80 hover:bg-[#101524]/90 hover:border-white/20 transition-all shadow-md">
+                <span className="font-mono text-[10px] text-white/40 uppercase tracking-wider block">
+                  SCALE & PRESTIGE
                 </span>
-                <span className="font-syne text-2xl sm:text-3xl font-black text-white mt-1 block">
-                  NATIONAL
+                <span className="font-syne text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1.5 block">
+                  National
                 </span>
-                <span className="text-xs text-white/60 font-grotesk mt-1 block">
+                <span className="text-xs text-white/55 font-grotesk mt-1 block">
                   500+ qualified collegiate builders
                 </span>
               </div>
 
-              <div className="glass-panel p-5 rounded-2xl border border-white/10 hover:border-rose-400/40 transition-colors">
-                <span className="font-mono text-[10px] text-white/40 uppercase tracking-widest block">
-                  LOCATION BASE
+              <div className="p-5 rounded-xl border border-white/[0.08] bg-[#0c101a]/80 hover:bg-[#101524]/90 hover:border-white/20 transition-all shadow-md">
+                <span className="font-mono text-[10px] text-white/40 uppercase tracking-wider block">
+                  HOST ARENA
                 </span>
-                <span className="font-syne text-2xl sm:text-3xl font-black text-rose-300 mt-1 block">
-                  IIIT DHARWAD
+                <span className="font-syne text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1.5 block">
+                  IIIT Dharwad
                 </span>
-                <span className="text-xs text-white/60 font-grotesk mt-1 block">
+                <span className="text-xs text-white/55 font-grotesk mt-1 block">
                   Incubation & Innovation Complex
                 </span>
               </div>
 
-              <div className="glass-panel p-5 rounded-2xl border border-white/10 hover:border-emerald-400/40 transition-colors">
-                <span className="font-mono text-[10px] text-white/40 uppercase tracking-widest block">
-                  INNOVATION TRACKS
+              <div className="p-5 rounded-xl border border-white/[0.08] bg-[#0c101a]/80 hover:bg-[#101524]/90 hover:border-white/20 transition-all shadow-md">
+                <span className="font-mono text-[10px] text-white/40 uppercase tracking-wider block">
+                  CORE TRACKS
                 </span>
-                <span className="font-syne text-2xl sm:text-3xl font-black text-emerald-400 mt-1 block">
-                  4 DOMAINS
+                <span className="font-syne text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1.5 block">
+                  4 Domains
                 </span>
-                <span className="text-xs text-white/60 font-grotesk mt-1 block">
-                  AI, Web3, Hardware, Open Tech
+                <span className="text-xs text-white/55 font-grotesk mt-1 block">
+                  AI/ML, Web3, Hardware, Open Tech
                 </span>
               </div>
             </div>
 
             {/* Launch Portal CTA Card */}
-            <div className="glass-panel p-6 sm:p-8 rounded-2xl border border-amber-400/30 bg-gradient-to-br from-amber-500/10 via-black/80 to-transparent">
-              <span className="font-mono text-[10px] text-amber-300 uppercase tracking-widest block mb-2">
-                OFFICIAL PORTAL // HACK2FUTURE.IIITDWD.AC.IN
+            <div className="p-6 sm:p-7 rounded-2xl border border-white/[0.1] bg-[#0c101a]/90 backdrop-blur-xl shadow-lg">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium bg-amber-400/10 text-amber-300 border border-amber-400/20 mb-3 font-grotesk">
+                <Radio className="w-3 h-3 text-amber-300" />
+                Registrations Now Open
               </span>
 
-              <h3 className="font-syne text-xl sm:text-2xl font-bold text-white">
-                READY FOR THE COUNTDOWN?
+              <h3 className="font-syne text-xl sm:text-2xl font-bold text-white tracking-tight">
+                Ready to Build the Future?
               </h3>
 
               <p className="font-grotesk text-xs sm:text-sm text-white/70 mt-2 leading-relaxed">
-                Registrations, rulebook, problem tracks, mentor roster, and accommodation details are officially accessible via the dedicated Hack2Future portal.
+                Problem statements, mentor roster, schedule, and team registration are officially accessible via the dedicated Hack2Future platform.
               </p>
 
-              <div className="mt-6 flex flex-wrap items-center gap-4">
+              <div className="mt-6 flex flex-wrap items-center gap-3">
                 <a
                   href="https://hack2future.iiitdwd.ac.in/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-7 py-3.5 rounded-full bg-gradient-to-r from-amber-300 via-amber-200 to-amber-300 text-black font-syne font-bold text-xs sm:text-sm tracking-wider uppercase shadow-[0_4px_25px_rgba(245,158,11,0.35)] hover:shadow-[0_4px_35px_rgba(245,158,11,0.5)] transition-all flex items-center gap-2 hover:scale-[1.02] active:scale-[0.98]"
-                  data-cursor-text="LAUNCH"
+                  className="px-6 py-2.5 rounded-xl bg-white text-black font-grotesk font-semibold text-xs sm:text-sm hover:bg-white/90 shadow-[0_4px_15px_rgba(255,255,255,0.2)] transition-all flex items-center gap-2 cursor-pointer"
                 >
                   <span>Launch Hack2Future Portal</span>
-                  <ExternalLink className="w-4 h-4 text-black" />
+                  <ExternalLink className="w-3.5 h-3.5 text-black" />
                 </a>
 
                 <a
                   href="#events"
-                  className="px-6 py-3.5 rounded-full border border-white/20 text-white font-syne font-semibold text-xs tracking-wider uppercase hover:bg-white/5 transition-colors"
+                  className="px-5 py-2.5 rounded-xl border border-white/10 bg-white/[0.04] text-white/80 font-grotesk font-medium text-xs sm:text-sm hover:bg-white/[0.08] transition-colors"
                 >
-                  View Fest Events
+                  View All Fest Events
                 </a>
               </div>
             </div>
